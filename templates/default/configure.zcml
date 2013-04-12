@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configure xmlns="http://namespaces.zope.org/zope">
+
+    <adapter
+        provides=".NetBotzDevice.INetBotzDeviceInfo"
+        for=".NetBotzDevice.NetBotzDevice"
+        factory=".NetBotzDevice.NetBotzDeviceInfo"
+        />
+
+    <adapter
+        provides=".TemperatureSensor.ITemperatureSensorInfo"
+        for=".TemperatureSensor.TemperatureSensor"
+        factory=".TemperatureSensor.TemperatureSensorInfo"
+        />
+
+    <adapter
+        provides=".Enclosure.IEnclosureInfo"
+        for=".Enclosure.Enclosure"
+        factory=".Enclosure.EnclosureInfo"
+        />
+
+    <!--
+    Utilities are a lot like adapters. The difference is that they have no
+    input or source object. They simply implement an interface.
+    -->
+    <!--
+    <utility
+        provides="Products.ZenModel.interfaces.IAction"
+        factory=".actions.SpeakAction"
+        name="speak"
+        />
+
+    <adapter
+        provides=".actions.ISpeakActionContentInfo"
+        for="Products.ZenModel.NotificationSubscription.NotificationSubscription"
+        factory=".actions.SpeakActionContentInfo"
+        />
+    -->
+    <include package=".browser"/>
+
+</configure>

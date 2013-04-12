@@ -2,6 +2,12 @@
 import json
 from collections import defaultdict
 
+try:
+    from yaml import dump
+except:
+    print "Yaml not found, try running easy_install PyYaml"
+    sys.exit(1)
+
 config = defaultdict(dict)
 config['zp']['NAME']="ZenPack.zenoss.Generated"
 config['zp']['VERSION']="1.0"
@@ -19,8 +25,7 @@ config['zp']['PREV_ZENPACK_NAME']= ""
 # components (Array)
 config['component'].setdefault('Array', {})
 config['component']['Array']['name'] = 'Array'
-config['component']['Array']['class'] = [('DeviceComponent','Products.ZenModel.DeviceComponent'), 
-                                          'Hardware', 'Products.ZenModel.Hardware')]
+config['component']['Array']['class'] = [('DeviceComponent','Products.ZenModel.DeviceComponent'), 'Hardware', 'Products.ZenModel.Hardware']
 config['component']['Array']['meta_type'] = 'EMCArray'
 # May want to investigate collapsing the defaults?
 config['component']['Array']['attributes'] = [('ArrayVendor','string','w', None),
@@ -32,8 +37,8 @@ config['component']['Array']['attributes'] = [('ArrayVendor','string','w', None)
                                               ('wbemClassName','string','w', ""),
                                               ('wbemIdentifyingNumber','string','w', ""),
                                               ('wbemTag','string','w',""),
-                                              ('wbemStatsInstanceId','string','w', None,
-
+                                              ('wbemStatsInstanceId','string','w', None)]
+           
 config['component']['Array']['base_properties'] = ['Hardware']
 config['component']['Array']['base_relations'] = ['Hardware']
 config['component']['Array']['display_template'] = True
@@ -105,6 +110,8 @@ class component(object):
  
 
 print json.dumps(config,indent=4)
+print "JSON END -------------"
+print dump(config,width=50,indent=4)
 c=component(config['component']['PowerSupply'])
 c.generate_output()
 c.output()

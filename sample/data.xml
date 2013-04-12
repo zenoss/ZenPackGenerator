@@ -1,0 +1,29 @@
+<zenpack id="ZenPacks.training.NetBotz" version="1.0.0" author="ZenossLabs <labs@zenoss.com>">
+   <license template="gpl.tmpl">
+
+   <comp>
+       <A>
+       <B>
+       <C>
+   </comp>
+
+</zenpack>
+
+
+
+NAMESPACE_PACKAGES = ['ZenPacks', 'ZenPacks.training']
+PACKAGES = ['ZenPacks', 'ZenPacks.training', 'ZenPacks.training.NetBotz']
+INSTALL_REQUIRES = []
+COMPAT_ZENOSS_VERS = ">=4.2"
+PREV_ZENPACK_NAME = ""
+
+
+tmplA.tmpl  sourced from component.tmpl
+tmplB.tmpl
+tmplC.tmpl
+
+
+
+phase2 parse the template -> A.py
+
+
