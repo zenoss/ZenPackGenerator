@@ -1,0 +1,7 @@
+Fill it out.
+
+# Development install
+python setup.py develop
+
+# Using
+zpg -h
