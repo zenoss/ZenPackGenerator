@@ -1,6 +1,6 @@
 from optparse import OptionParser
 import os
-def run():
+def main():
     print "running"
 
     parser = OptionParser()
@@ -15,4 +15,6 @@ def run():
             print "mandatory option is missing\n"
             parser.print_help()
             exit(-1)
-    
+
+if __name__ == '__main__':
+    main() 

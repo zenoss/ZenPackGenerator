@@ -17,8 +17,9 @@ setup(
     license = "GPL",
     keywords = "snmp zenpack",
     url = "https://github.com/zenoss/ZenPackGenerator",
-    packages=['zpg', 'tests'],
-    scripts=['scripts/zpg'],
+    package_dir={'': 'src'},
+    packages=['zpg'],
+    entry_points={'console_scripts': ['zpg = zpg.main:main'] },
     long_description=read('README'),
     classifiers=[
         "Development Status :: 1 - Planning",

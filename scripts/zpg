@@ -1,7 +1,0 @@
-#!/usr/bin/env python
-
-import zpg
-
-if __name__ == "__main__":
-    print "Welcome to the Zenoss ZenPack Generator"
-    zpg.run()
