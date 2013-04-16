@@ -23,19 +23,14 @@ class ${title}(#echo ', '.join($class)#):
         )
 #end if
 
-"""
+#if len($relations)>0
     _relations = ManagedEntity._relations + (
-        ('sensor_device', ToOne(ToManyCont,
-            'ZenPacks.training.NetBotz.NetBotzDevice',
-            'enclosures',
-            )),
+#for $rel in $relations
+        $rel
+#end for
+    )
+#end if
 
-        ('temperature_sensors', ToManyCont(ToOne,
-            'ZenPacks.training.NetBotz.TemperatureSensor',
-            'enclosure',
-            )),
-        )
-"""
     factory_type_information = ({
         'actions': ({
             'id': 'perfConf',
@@ -44,13 +39,28 @@ class ${title}(#echo ', '.join($class)#):
             'permissions': (ZEN_CHANGE_DEVICE,),
             },),
         },)
-"""
-    def device(self):
-        return self.sensor_device()
 
-    def getRRDTemplateName(self):
-        return 'Enclosure'
-"""
+
+    def device(self):
+        '''
+        Return device under which this component is contained.
+        '''
+        obj = self
+
+        for i in range(200):
+            if isinstance(obj, Device):
+                return obj
+
+            try:
+                obj = obj.getPrimaryParent()
+            except AttributeError as exc:
+                raise AttributeError(
+                    'Unable to determine parent at %s (%s) '
+                    'while getting device for %s' % (
+                        obj, exc, self))
+
+#    def getRRDTemplateName(self):
+#        return 'Enclosure'
 
 class I${title}Info(IComponentInfo):
 #if len($attributes)>0
@@ -87,3 +97,21 @@ class ${title}Info(ComponentInfo):
         # Using len on the results of calling the relationship is slow.
         # return len(self._object.temperature_sensors())
 """
+
+#if $custom_path['M-M'] or $custom_path['1-M']
+class ${title}PathReporter(DefaultPathReporter):
+    paths = super(${title}PathReporter, self).getPaths()
+    
+#for $path in $custom_path['M-M']
+    for obj in self.context.${path[0]}():
+        paths.extend(relPath(obj,'${path[1]}'))
+
+#end for
+#for $path in $custom_path['1-M']
+    obj = self.context.${path[0]}()
+    if obj:
+        paths.extend(relPath(obj,'${path[1]}'))
+
+#end for
+    return paths
+#end if

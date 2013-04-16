@@ -16,7 +16,7 @@ Ext.onReady(function() {
 var ZC = Ext.ns('Zenoss.component');
 
 Ext.apply(Zenoss.render, {
-    ${zp['NAME'].split('.')[-1]}_entityLinkFromGrid: function(obj, col, record) {
+    ${NAME.split('.')[-1]}_entityLinkFromGrid: function(obj, col, record) {
         if (!obj)
             return;
 
@@ -46,7 +46,7 @@ Ext.apply(Zenoss.render, {
     },
 });
 
-ZC.${zp['NAME'].split('.')[-1]}ComponentGridPanel = Ext.extend(ZC.ComponentGridPanel, {
+ZC.${NAME.split('.')[-1]}ComponentGridPanel = Ext.extend(ZC.ComponentGridPanel, {
     subComponentGridPanel: false,
 
     jumpToEntity: function(uid, meta_type) {
@@ -102,7 +102,7 @@ ZC.${zp['NAME'].split('.')[-1]}ComponentGridPanel = Ext.extend(ZC.ComponentGridP
 #for $c in $component.keys()
 ZC.registerName('${component[c]["unique_name"]}', _t('${component[c]["name"]}'), _t('${component[c]["names"]}'));
 
-ZC.${component[c]["unique_name"]}Panel = Ext.extend(ZC.${zp['NAME'].split('.')[-1]}ComponentGridPanel, {
+ZC.${component[c]["unique_name"]}Panel = Ext.extend(ZC.${NAME.split('.')[-1]}ComponentGridPanel, {
     constructor: function(config) {
         config = Ext.applyIf(config||{}, {
             componentType: '${component[c]["unique_name"]}',
@@ -145,7 +145,6 @@ ZC.${component[c]["unique_name"]}Panel = Ext.extend(ZC.${zp['NAME'].split('.')[-
 #for $a in $component[c]['attributes']
 #if $a['PanelDisplay']
             },{
-                id: '${a["id"]}',
                 dataIndex: '${a["id"]}',
                 header: _t('${a["Name"]}'),
 #if $a['PanelSortable']
@@ -157,6 +156,7 @@ ZC.${component[c]["unique_name"]}Panel = Ext.extend(ZC.${zp['NAME'].split('.')[-
 #if 'PanelWidth' in $a
                 width: ${a["PanelWidth"]},
 #end if
+                id: '${a["id"]}'
 #end if
 #end for
             },{

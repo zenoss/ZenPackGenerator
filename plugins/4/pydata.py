@@ -10,16 +10,16 @@ except:
 
 config = defaultdict(dict)
 '''Setup.py'''
-config['zp']['NAME']="ZenPack.zenoss.Generated"
-config['zp']['VERSION']="1.0"
-config['zp']['AUTHOR']="ZenossLabs <labs@zenoss.com>"
-config['zp']['LICENSE']="gpl"
-config['zp']['INSTALL_REQUIRES']= ["ZenPacks.zenoss.PyCollector <=1.0.1",
+config['NAME']="ZenPacks.zenoss.Foo"
+config['VERSION']="1.0"
+config['AUTHOR']="ZenossLabs <labs@zenoss.com>"
+config['LICENSE']="gpl"
+config['INSTALL_REQUIRES']= ["ZenPacks.zenoss.PyCollector <=1.0.1",
                                    "ZenPacks.zenoss.PyWBEM",
                                    "ZenPacks.zenoss.StorageBase"]
 
-config['zp']['COMPAT_ZENOSS_VERS']= ">=4.1.70"
-config['zp']['PREV_ZENPACK_NAME']= ""
+config['COMPAT_ZENOSS_VERS']= ">=4.1.70"
+config['PREV_ZENPACK_NAME']= ""
 # packages and name_spaces are calculated on the name
 '''End Setup.py'''
 
@@ -33,7 +33,7 @@ config['component']['Array']['class'] = ['Component']   #Aka import the things f
 config['component']['Array']['class'] = ['TemperatureSensor']   #assume its under Products.ZenModel  with TS.TS
 config['component']['Array']['class'] = ['ZenPacks.zenoss.Foo.Foo']  #== set the imports and then replace with just Foo 
 config['component']['Array']['class'] = ['Battery'] #if Battery then if we find this in the component config set the imports to import that file.
-config['component']['Array']['class'] = ['Battery','ZenPacks.zenoss.Foo.Foo'] 
+config['component']['Array']['class'] = ['Component'] 
 
 # Assume we dont need to this but provide if needed.
 config['component']['Array']['imports'] = ['import json',
@@ -92,8 +92,16 @@ config['component']['Array']['base_relations'] = ['Hardware']
 # probably just reference file snippet locations
 config['component']['Array']['custom_class_methods'] = "TODO"
 
-#Todo
-config['Relations'] = ['Array', '2MC', 'Device']
+config['Relations'] = [
+                      [('device', 'ZenPacks.zenoss.Foo.Device'), '1-MC', ('arrays', 'ZenPacks.zenoss.Foo.Array') ],
+                      [('battery', 'ZenPacks.zenoss.Foo.Battery'), '1-MC', ('arrays', 'ZenPacks.zenoss.Foo.Array') ],
+                      [('device', 'ZenPacks.zenoss.Foo.Device'), '1-MC', ('batteries', 'ZenPacks.zenoss.Foo.Battery') ],
+                      [('device', 'Device'), '1-MC', ('batteries', 'Battery') ],
+                      [('arrays', 'ZenPacks.zenoss.Foo.Array'), 'M-M', ('disks', 'ZenPacks.zenoss.Foo.Disk') ],
+                      [('array', 'ZenPacks.zenoss.Foo.Array'), '1-M', ('batteries', 'Battery') ],
+                      [('device', 'ZenPacks.zenoss.Foo.Device'), '1-MC', ('disks', 'ZenPacks.zenoss.Foo.Disk') ],
+                      [('array', 'ZenPacks.zenoss.Foo.Array'), '1-1', ('fan', 'ZenPacks.zenoss.Foo.Fan') ],
+                     ]
 
 # components (Battery)
 config['component'].setdefault('Battery', {})
