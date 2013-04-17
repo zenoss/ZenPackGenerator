@@ -1,0 +1,206 @@
+Ext.onReady(function() {
+    var DEVICE_OVERVIEW_ID = 'deviceoverviewpanel_summary';
+    Ext.ComponentMgr.onAvailable(DEVICE_OVERVIEW_ID, function(){
+        var overview = Ext.getCmp(DEVICE_OVERVIEW_ID);
+        overview.removeField('memory');
+
+        overview.addField({
+            name: 'temp_sensor_count',
+            fieldLabel: _t('# Temperature Sensors')
+        });
+    });
+});
+
+(function(){
+
+var ZC = Ext.ns('Zenoss.component');
+
+Ext.apply(Zenoss.render, {
+    ${NAME.split('.')[-1]}_entityLinkFromGrid: function(obj, col, record) {
+        if (!obj)
+            return;
+
+        if (typeof(obj) == 'string')
+            obj = record.data;
+
+        if (!obj.title && obj.name)
+            obj.title = obj.name;
+
+        var isLink = false;
+
+        if (this.refName == 'componentgrid') {
+            // Zenoss >= 4.2 / ExtJS4
+            if (this.subComponentGridPanel || this.componentType != obj.meta_type)
+                isLink = true;
+        } else {
+            // Zenoss < 4.2 / ExtJS3
+            if (!this.panel || this.panel.subComponentGridPanel)
+                isLink = true;
+        }
+
+        if (isLink) {
+            return '<a href="javascript:Ext.getCmp(\'component_card\').componentgrid.jumpToEntity(\''+obj.uid+'\', \''+obj.meta_type+'\');">'+obj.title+'</a>';
+        } else {
+            return obj.title;
+        }
+    },
+});
+
+ZC.${NAME.split('.')[-1]}ComponentGridPanel = Ext.extend(ZC.ComponentGridPanel, {
+    subComponentGridPanel: false,
+
+    jumpToEntity: function(uid, meta_type) {
+        var tree = Ext.getCmp('deviceDetailNav').treepanel;
+        var tree_selection_model = tree.getSelectionModel();
+        var components_node = tree.getRootNode().findChildBy(
+            function(n) {
+                if (n.data) {
+                    // Zenoss >= 4.2 / ExtJS4
+                    return n.data.text == 'Components';
+                }
+
+                // Zenoss < 4.2 / ExtJS3
+                return n.text == 'Components';
+            });
+
+        // Reset context of component card.
+        var component_card = Ext.getCmp('component_card');
+
+        if (components_node.data) {
+            // Zenoss >= 4.2 / ExtJS4
+            component_card.setContext(components_node.data.id, meta_type);
+        } else {
+            // Zenoss < 4.2 / ExtJS3
+            component_card.setContext(components_node.id, meta_type);
+        }
+
+        // Select chosen row in component grid.
+        component_card.selectByToken(uid);
+
+        // Select chosen component type from tree.
+        var component_type_node = components_node.findChildBy(
+            function(n) {
+                if (n.data) {
+                    // Zenoss >= 4.2 / ExtJS4
+                    return n.data.id == meta_type;
+                }
+
+                // Zenoss < 4.2 / ExtJS3
+                return n.id == meta_type;
+            });
+
+        if (component_type_node.select) {
+            tree_selection_model.suspendEvents();
+            component_type_node.select();
+            tree_selection_model.resumeEvents();
+        } else {
+            tree_selection_model.select([component_type_node], false, true);
+        }
+    }
+});
+
+#for $c in $component.keys()
+ZC.registerName('${component[c]["unique_name"]}', _t('${component[c]["name"]}'), _t('${component[c]["names"]}'));
+
+ZC.${component[c]["unique_name"]}Panel = Ext.extend(ZC.${NAME.split('.')[-1]}ComponentGridPanel, {
+    constructor: function(config) {
+        config = Ext.applyIf(config||{}, {
+            componentType: '${component[c]["unique_name"]}',
+            autoExpandColumn: 'name',
+#if 'PanelSort' in $component[c]
+            sortInfo: {
+                field: '${component[c]['PanelSort'][0]}',
+                direction: '${component[c]['PanelSort'][1]}',
+            },
+#end if
+            fields: [
+                {name: 'uid'},
+                {name: 'name'},
+                {name: 'meta_type'},
+                {name: 'status'},
+                {name: 'severity'},
+                {name: 'usesMonitorAttribute'},
+                {name: 'monitor'},
+                {name: 'monitored'},
+#for $a in $component[c]['attributes']
+#if $a['PanelDisplay']
+                {name: '${a["id"]}},
+#end if
+#end for
+                {name: 'locking'}
+            ],
+            columns: [{
+                id: 'severity',
+                dataIndex: 'severity',
+                header: _t('Events'),
+                renderer: Zenoss.render.severity,
+                sortable: true,
+                width: 50
+            },{
+                id: 'name',
+                dataIndex: 'name',
+                header: _t('Name'),
+                renderer: Zenoss.render.NetBotz_entityLinkFromGrid,
+                sortable: true
+#for $a in $component[c]['attributes']
+#if $a['PanelDisplay']
+            },{
+                dataIndex: '${a["id"]}',
+                header: _t('${a["Name"]}'),
+#if $a['PanelSortable']
+                sortable: true,
+#end if
+#if 'PanelRenderer' in $a
+                renderer: ${a["PanelRenderer"]},
+#end if
+#if 'PanelWidth' in $a
+                width: ${a["PanelWidth"]},
+#end if
+                id: '${a["id"]}'
+#end if
+#end for
+            },{
+                id: 'monitored',
+                dataIndex: 'monitored',
+                header: _t('Monitored'),
+                renderer: Zenoss.render.checkbox,
+                sortable: true,
+                width: 70
+            },{
+                id: 'locking',
+                dataIndex: 'locking',
+                header: _t('Locking'),
+                renderer: Zenoss.render.locking_icons,
+                width: 65
+            }]
+        });
+
+        ZC.${component[c]["unique_name"]}Panel.superclass.constructor.call(
+            this, config);
+    }
+});
+
+Ext.reg('${component[c]["unique_name"]}Panel', ZC.${component[c]["unique_name"]}Panel);
+
+#end for
+
+
+Zenoss.nav.appendTo('Component', [{
+    id: 'component_temperaturesensors',
+    text: _t('Temperature Sensors'),
+    xtype: 'NetBotzTemperatureSensorPanel',
+    subComponentGridPanel: true,
+    filterNav: function(navpanel) {
+        // Only show this menu option when a component with the following meta_type is selected.
+        if (navpanel.refOwner.componentType == 'NetBotzEnclosure') {
+            return true;
+        } else {
+            return false;
+        }
+    },
+    setContext: function(uid) {
+        ZC.NetBotzTemperatureSensorPanel.superclass.setContext.apply(this, [uid]);
+    }
+}]);
+
+})();

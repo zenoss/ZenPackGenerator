@@ -31,6 +31,8 @@ class DirLayout(object):
             f.write("__import__('pkg_resources').declare_namespace(__name__)\n")
             f.close()
         base = os.path.join(base, parts[-1])
+        if not os.path.exists(base):
+            os.mkdir(base)
 
         # Write the manifest ( Not a template because I dont think we have ever modified this file)
         f = open(os.path.join(destDir, 'MANIFEST.in'), 'w')

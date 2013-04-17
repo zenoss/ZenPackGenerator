@@ -97,7 +97,7 @@ class ${title}Info(ComponentInfo):
         # Using len on the results of calling the relationship is slow.
         # return len(self._object.temperature_sensors())
 """
-
+#if $varExists('custom_path')
 #if $custom_path['M-M'] or $custom_path['1-M']
 class ${title}PathReporter(DefaultPathReporter):
     paths = super(${title}PathReporter, self).getPaths()
@@ -114,4 +114,5 @@ class ${title}PathReporter(DefaultPathReporter):
 
 #end for
     return paths
+#end if
 #end if

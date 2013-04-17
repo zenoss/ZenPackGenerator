@@ -29,6 +29,10 @@ class Template(object):
     def write(self):
         self.findTemplate()
         self.buildSearch()
+        dirpart = os.path.dirname(self.dest_file)
+        if not os.path.exists(dirpart):
+            os.makedirs(dirpart)
+
         t = cTemplate(file=self.tfile, searchList=self.searchList)
         f = open(os.path.join(self.dest_file), 'w')
         f.write(t.respond())
