@@ -4,6 +4,9 @@ def KlassExpand(config, id, klasses=None):
         component = config['component'][id]
         klasses = component['class']
 
+    if isinstance(klasses,str):
+        klasses = [klasses]
+
     for klass in klasses:
         split = klass.split('.')
         if klass.lower() == 'component':

@@ -25,8 +25,7 @@ class Component(Template):
         super(Component, self).__init__(config,basedir)
         self.id = component
         self.source_template = 'component.tmpl'
-        subdir = "/".join(self.config['NAME'].split('.'))
-        self.dest_file = "%s/%s/%s/%s.py" % (basedir, config['NAME'],subdir,component)
+        self.dest_file = "%s/%s/%s/%s.py" % (self.basedir, self.name, self.subdir, component)
         self.imports = [
                         'from zope.component import adapts',
                         'from zope.component import implements',

@@ -13,9 +13,12 @@ class Template(object):
     def __init__(self,config,basedir):
         self.config = config
         self.basedir = basedir
+        self.name = config['NAME']
         self.source_template = None
         self.dest_file = None
         self.searchList = []
+        self.subdir = "/".join(self.config['NAME'].split('.'))
+        self.create_inits = False
 
     def run(self):
         pass

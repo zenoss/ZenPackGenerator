@@ -10,103 +10,100 @@ except:
 
 config = defaultdict(dict)
 '''Setup.py'''
-config['NAME']="ZenPacks.zenoss.Foo"
-config['VERSION']="1.0"
+config['NAME']="ZenPacks.training.NetBotz"
+config['VERSION']="1.0.0"
 config['AUTHOR']="ZenossLabs <labs@zenoss.com>"
-config['LICENSE']="gpl"
-config['INSTALL_REQUIRES']= ["ZenPacks.zenoss.PyCollector <=1.0.1",
-                                   "ZenPacks.zenoss.PyWBEM",
-                                   "ZenPacks.zenoss.StorageBase"]
-
-config['COMPAT_ZENOSS_VERS']= ">=4.1.70"
+config['LICENSE']="All Rights Reserved"
+config['INSTALL_REQUIRES']= []
+config['COMPAT_ZENOSS_VERS']= ">=4.2"
 config['PREV_ZENPACK_NAME']= ""
-# packages and name_spaces are calculated on the name
 '''End Setup.py'''
 
-config['answers']['readme'] = True
-
-# components (Array)
-config['component'].setdefault('Array', {})
-config['component']['Array']['name'] = 'Array'
-config['component']['Array']['names'] = 'Arrays'
-config['component']['Array']['class'] = ['Component']   #Aka import the things for them if using this
-config['component']['Array']['class'] = ['TemperatureSensor']   #assume its under Products.ZenModel  with TS.TS
-config['component']['Array']['class'] = ['ZenPacks.zenoss.Foo.Foo']  #== set the imports and then replace with just Foo 
-config['component']['Array']['class'] = ['Battery'] #if Battery then if we find this in the component config set the imports to import that file.
-config['component']['Array']['class'] = ['Component'] 
-
-# Assume we dont need to this but provide if needed.
-config['component']['Array']['imports'] = ['import json',
-                                           'import lxml']
-
-config['component']['Array']['meta_type'] = 'EMCArray'   # Aka unique name    # assume portal_type = meta_type
-config['component']['Array']['unique_name'] = 'EMCArray'   
-
-                                             # Name, details, grid, id, type, defaultValue
-config['component']['Array']['attributes'] = [ 
-                                               {'Name': 'WBEM Tag', 
-                                               'Names': 'WBEM Tags', 
-                                               'default': None,
-                                               'DetailDisplay': True,
-                                               'PanelDisplay': True,
-                                               'PanelWidth': 30,
-                                               'PanelSortable': False,
-                                               'type': 'string',
-                                               'id': 'wbemTag'},
-
-                                               {'Name': 'Cycle Count', 
-                                               'Names': 'Cycle Counts', 
-                                               'default': None,
-                                               'DetailDisplay': False,
-                                               'PanelDisplay': True,
-                                               'PanelWidth': 10,
-                                               'PanelRenderer': 'Zenoss.render.severity',
-                                               'PanelSortable': True,
-                                               'type': 'int',
-                                               'id': 'cycles'},
-
-                                               {'Name': 'Vendor', 
-                                               'Names': 'Vendors', 
-                                               'DetailDisplay': True,
-                                               'PanelDisplay': True,
-                                               'PanelWidth': 10,
-                                               'PanelSortable': True,
-                                               'default': 'Zenoss, Inc.',
-                                               'type': 'string',
-                                               'id': 'vendor'},
-                                             ]
-
-config['component']['Array']['PanelSort'] = [ 'name', 'ASC' ]
-config['component']['Array']['PanelDropDown'] = [ ('Battery', 'Battery Description'),
-                                                ]
-
-
-# mixins for defining the properties (optional)
-config['component']['Array']['base_properties'] = ['Hardware', 'Class2' ]
-# mixins for defining the relations (optional)
-config['component']['Array']['base_relations'] = ['Hardware']
-
-# Chet thinks we should always show the template on a component ( always add factory_type stanza )
-# config['component']['Array']['display_template'] = True   
-
-# probably just reference file snippet locations
-config['component']['Array']['custom_class_methods'] = "TODO"
-
 config['Relations'] = [
-                      [('device', 'ZenPacks.zenoss.Foo.Device'), '1-MC', ('arrays', 'ZenPacks.zenoss.Foo.Array') ],
-                      [('battery', 'ZenPacks.zenoss.Foo.Battery'), '1-MC', ('arrays', 'ZenPacks.zenoss.Foo.Array') ],
-                      [('device', 'ZenPacks.zenoss.Foo.Device'), '1-MC', ('batteries', 'ZenPacks.zenoss.Foo.Battery') ],
-                      [('device', 'Device'), '1-MC', ('batteries', 'Battery') ],
-                      [('arrays', 'ZenPacks.zenoss.Foo.Array'), 'M-M', ('disks', 'ZenPacks.zenoss.Foo.Disk') ],
-                      [('array', 'ZenPacks.zenoss.Foo.Array'), '1-M', ('batteries', 'Battery') ],
-                      [('device', 'ZenPacks.zenoss.Foo.Device'), '1-MC', ('disks', 'ZenPacks.zenoss.Foo.Disk') ],
-                      [('array', 'ZenPacks.zenoss.Foo.Array'), '1-1', ('fan', 'ZenPacks.zenoss.Foo.Fan') ],
-                     ]
+                      [('sensor_device', 'NetBotzDevice'), '1-MC', ('enclosures', 'Enclosure') ],
+                      [('enclosure', 'Enclosure'), '1-MC', ('temperature_sensors', 'TemperatureSensor') ],
+                      ]
 
-# components (Battery)
-config['component'].setdefault('Battery', {})
-config['component']['Battery']['name'] = 'Battery'
-config['component']['Battery']['names'] = 'Batteries'
-config['component']['Battery']['unique_name'] = 'Battery'
-config['component']['Battery']['class'] = ['Battery'] #if Battery then if we find this in the component config set the imports to import that file.
-config['component']['Battery']['attributes'] = [ ]
+# components (Enclosure)
+config['component'].setdefault('Enclosure', {})
+config['component']['Enclosure']['name'] = 'NetBotz Enclosure'
+config['component']['Enclosure']['names'] = 'NetBotz Enclosures'
+config['component']['Enclosure']['class'] = 'Component'
+config['component']['Enclosure']['unique_name'] = 'NetBotzEnclosure'
+#config['component']['Enclosure']['imports'] = ''
+config['component']['Enclosure']['PanelSort'] = [ 'name', 'ASC' ]
+config['component']['Enclosure']['attributes'] = [
+                                                  {'Name': 'Enclosure Status', 
+                                                  'Names': 'Enclosure Status', 
+                                                  'default': None,
+                                                  'DetailDisplay': True,
+                                                  'PanelDisplay': True,
+                                                  'PanelWidth': 30,
+                                                  'PanelSortable': True,
+                                                  'type': 'string',
+                                                  'id': 'enclosure_status'},
+                                                  {'Name': 'Error Status', 
+                                                  'Names': 'Error Status', 
+                                                  'default': None,
+                                                  'DetailDisplay': True,
+                                                  'PanelDisplay': True,
+                                                  'PanelWidth': 30,
+                                                  'PanelSortable': True,
+                                                  'type': 'string',
+                                                  'id': 'error_status'},
+                                                  {'Name': 'Parent Id', 
+                                                  'Names': 'Parent Ids', 
+                                                  'default': None,
+                                                  'DetailDisplay': True,
+                                                  'PanelDisplay': True,
+                                                  'PanelWidth': 30,
+                                                  'PanelSortable': True,
+                                                  'type': 'string',
+                                                  'id': 'parent_id'},
+                                                  {'Name': 'Docked Id', 
+                                                  'Names': 'Docked Ids', 
+                                                  'default': None,
+                                                  'DetailDisplay': True,
+                                                  'PanelDisplay': True,
+                                                  'PanelWidth': 30,
+                                                  'PanelSortable': True,
+                                                  'type': 'string',
+                                                  'id': 'docked_id'},
+                                                  ]
+
+# components (Temperature Sensor)
+config['component'].setdefault('TemperatureSensor', {})
+config['component']['TemperatureSensor']['name'] = 'Temperature Sensor'
+config['component']['TemperatureSensor']['names'] = 'Temperature Sensor'
+config['component']['TemperatureSensor']['class'] = 'Component'
+config['component']['TemperatureSensor']['unique_name'] = 'NetBotzTemperatureSensor'
+config['component']['TemperatureSensor']['attributes'] = [
+                                                          {'Name': 'Port',
+                                                           'Names': 'Ports', 
+                                                           'default': None,
+                                                           'DetailDisplay': True,
+                                                           'PanelDisplay': True,
+                                                           'PanelWidth': 30,
+                                                           'PanelSortable': False,
+                                                           'type': 'string',
+                                                           'id': 'port'},
+                                                         ]
+# components (Device)
+config['component'].setdefault('NetBotzDevice', {})
+config['component']['NetBotzDevice']['name'] = 'NetBotz Device'
+config['component']['NetBotzDevice']['names'] = 'NetBotz Device'
+config['component']['NetBotzDevice']['Device'] = True
+config['component']['NetBotzDevice']['class'] = 'Device'
+config['component']['NetBotzDevice']['unique_name'] = 'NetBotzDevice'
+#config['component']['NetBotzDevice']['imports'] = ''
+config['component']['NetBotzDevice']['attributes'] = [
+                                                          {'Name': 'Number of Temperature Sensors', 
+                                                           'Names': 'Number of Temperature Sensors', 
+                                                           'default': None,
+                                                           'DetailDisplay': True,
+                                                           'PanelDisplay': True,
+                                                           'PanelWidth': 30,
+                                                           'PanelSortable': False,
+                                                           'type': 'int',
+                                                           'id': 'temp_sensor_count'},
+                                                         ]

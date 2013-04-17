@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    >
+
+    <!-- API: Info Adapters -->
+#if $varExists('component')
+#for $c in $component
+    <adapter
+        provides=".${c}.I${c}Info"
+        for=".${c}.${c}"
+        factory=".${c}.${c}Info"
+        />
+#end for
+#end if
+
+#if $custom_path_reporter
+    <!-- Custom Path Reporters -->
+#for $c in $component
+#set $comp = $component[$c]
+#if $varExists("$comp['custom_path']")
+#if $component[$c]['custom_path']['M-M'] or $component[$c]['custom_path']['1-M']
+    <adapter
+        provides="Products.Zuul.catalog.interfaces.IPathReporter"
+        for=".${c}.${c}"
+        factory=".${c}.${c}PathReporter"
+        />
+#end if
+#end if
+#end for
+#end if
+#set $name = $NAME.replace('.','_')
+    <!-- Browser Resources -->
+    <browser:resourceDirectory
+        name="$name"
+        directory="resources"
+        />
+
+    <!-- JavaScript needed only for NetApp devices. -->
+    <browser:viewlet
+        name="js-$name"
+        paths="/++resource++$name/js/${name}.js"
+        for=".Device.Device"
+        weight="20"
+        manager="Products.ZenUI3.browser.interfaces.IJavaScriptSrcManager"
+        class="Products.ZenUI3.browser.javascript.JavaScriptSrcBundleViewlet"
+        permission="zope2.Public"
+        />
+
+</configure>

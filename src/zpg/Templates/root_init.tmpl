@@ -1,0 +1,28 @@
+import Globals
+from Products.ZenUtils.Utils import unused
+unused(Globals)
+import os
+from Products.CMFCore.DirectoryView import registerDirectory
+
+skinsDir = os.path.join(os.path.dirname(__file__), 'skins')
+if os.path.isdir(skinsDir):
+    registerDirectory(skinsDir, globals())
+
+#if len($classes) > 0
+# Modules containing model classes. Used by zenchkschema to validate
+# bidirectional integrity of defined relationships.
+productNames = (
+#for $c in $classes
+    '$c',
+#end for
+    )
+#end if
+
+# Useful to avoid making literal string references to module and class names
+# throughout the rest of the ZenPack.
+MODULE_NAME = {}
+CLASS_NAME = {}
+for product_name in productNames:
+    ZP_NAME = '${NAME}'
+    MODULE_NAME[product_name] = '.'.join([ZP_NAME, product_name])
+    CLASS_NAME[product_name] = '.'.join([ZP_NAME, product_name, product_name])

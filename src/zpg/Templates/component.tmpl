@@ -2,23 +2,28 @@
 $i
 #end for
 
+#if isinstance($class, basestring)
+class ${title}($class):
+#else
 class ${title}(#echo ', '.join($class)#):
+#end if
+#if not $Device
     meta_type = portal_type = '${unique_name}'
-
+#end if
 #for $attr in $attributes
 #if isinstance($attr.default, basestring)
-    $attr.Name = "$attr.default"
+    $attr.id = "$attr.default"
 #elif $attr.default is None 
-    $attr.Name = None
+    $attr.id = None
 #else
-    $attr.Name = $attr.default
+    $attr.id = $attr.default
 #end if
 #end for
 
 #if len($attributes)>0
     _properties = ManagedEntity._properties + (
 #for $attr in $attributes
-        {'id': '$attr.Name', 'type': '$attr.type'},
+        {'id': '$attr.id', 'type': '$attr.type'},
 #end for
         )
 #end if
@@ -40,10 +45,10 @@ class ${title}(#echo ', '.join($class)#):
             },),
         },)
 
-
+#if not $Device
     def device(self):
         '''
-        Return device under which this component is contained.
+        Return device under which this component/device is contained.
         '''
         obj = self
 
@@ -58,11 +63,14 @@ class ${title}(#echo ', '.join($class)#):
                     'Unable to determine parent at %s (%s) '
                     'while getting device for %s' % (
                         obj, exc, self))
+#end if
 
-#    def getRRDTemplateName(self):
-#        return 'Enclosure'
-
-class I${title}Info(IComponentInfo):
+#if $Device
+#set $ctype = 'Device'
+#else 
+#set $ctype = 'Component'
+#end if
+class I${title}Info(I${ctype}Info):
 #if len($attributes)>0
 #for $attr in $attributes
 #if $attr.type == 'string'
@@ -76,8 +84,9 @@ class I${title}Info(IComponentInfo):
     pass
 #end if
 
-class ${title}Info(ComponentInfo):
+class ${title}Info(${ctype}Info):
     implements(I${title}Info)
+
 #if len($attributes)>0
 #for $attr in $attributes
 #if $attr.DetailDisplay == True
@@ -87,16 +96,6 @@ class ${title}Info(ComponentInfo):
 #else
     pass
 #end if
-
-"""
-    @property
-    def temperature_sensor_count(self):
-        # Using countObjects is fast.
-        return self._object.temperature_sensors.countObjects()
-
-        # Using len on the results of calling the relationship is slow.
-        # return len(self._object.temperature_sensors())
-"""
 #if $varExists('custom_path')
 #if $custom_path['M-M'] or $custom_path['1-M']
 class ${title}PathReporter(DefaultPathReporter):
