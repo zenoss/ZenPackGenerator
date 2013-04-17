@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-import pydata
-import Attribute
+#import pydata
 import logging
 logging.basicConfig()
 log = logging.getLogger('Component')
 from Cheetah.Template import Template
 
 class ComponentFactory(object):
+    type = 'filter'
     def __init__(self,config):
         self.config = config
         self.zp_name = config['NAME']
@@ -159,7 +159,7 @@ class Component(object):
 
 if __name__ == "__main__":
 
-    config = pydata.config
+    #config = pydata.config
     cf = ComponentFactory(config)
     for component in cf.create():
         component.write()

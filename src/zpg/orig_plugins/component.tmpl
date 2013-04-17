@@ -1,0 +1,117 @@
+#for $i in $imports
+$i
+#end for
+
+class ${title}(#echo ', '.join($class)#):
+    meta_type = portal_type = '${unique_name}'
+
+#for $attr in $attributes
+#if isinstance($attr.default, basestring)
+    $attr.Name = "$attr.default"
+#elif $attr.default is None 
+    $attr.Name = None
+#else
+    $attr.Name = $attr.default
+#end if
+#end for
+
+#if len($attributes)>0
+    _properties = ManagedEntity._properties + (
+#for $attr in $attributes
+        {'id': '$attr.Name', 'type': '$attr.type'},
+#end for
+        )
+#end if
+
+#if len($relations)>0
+    _relations = ManagedEntity._relations + (
+#for $rel in $relations
+        $rel
+#end for
+    )
+#end if
+
+    factory_type_information = ({
+        'actions': ({
+            'id': 'perfConf',
+            'name': 'Template',
+            'action': 'objTemplates',
+            'permissions': (ZEN_CHANGE_DEVICE,),
+            },),
+        },)
+
+
+    def device(self):
+        '''
+        Return device under which this component is contained.
+        '''
+        obj = self
+
+        for i in range(200):
+            if isinstance(obj, Device):
+                return obj
+
+            try:
+                obj = obj.getPrimaryParent()
+            except AttributeError as exc:
+                raise AttributeError(
+                    'Unable to determine parent at %s (%s) '
+                    'while getting device for %s' % (
+                        obj, exc, self))
+
+#    def getRRDTemplateName(self):
+#        return 'Enclosure'
+
+class I${title}Info(IComponentInfo):
+#if len($attributes)>0
+#for $attr in $attributes
+#if $attr.type == 'string'
+    $attr.id = schema.TextLine(title=_t(u'$attr.Names'))
+#end if
+#if $attr.type == 'int'
+    $attr.id = schema.Int(title=_t(u'$attr.Names'))
+#end if
+#end for
+#else
+    pass
+#end if
+
+class ${title}Info(ComponentInfo):
+    implements(I${title}Info)
+#if len($attributes)>0
+#for $attr in $attributes
+#if $attr.DetailDisplay == True
+    $attr.id = ProxyProperty('$attr.id')
+#end if
+#end for
+#else
+    pass
+#end if
+
+"""
+    @property
+    def temperature_sensor_count(self):
+        # Using countObjects is fast.
+        return self._object.temperature_sensors.countObjects()
+
+        # Using len on the results of calling the relationship is slow.
+        # return len(self._object.temperature_sensors())
+"""
+
+#if $custom_path['M-M'] or $custom_path['1-M']
+class ${title}PathReporter(DefaultPathReporter):
+    paths = super(${title}PathReporter, self).getPaths()
+    
+#for $path in $custom_path['M-M']
+    for obj in self.context.${path[0]}():
+        paths.extend(relPath(obj,'${path[1]}'))
+
+#end for
+#for $path in $custom_path['1-M']
+    obj = self.context.${path[0]}()
+    if obj:
+        paths.extend(relPath(obj,'${path[1]}'))
+
+#end for
+    return paths
+#end if

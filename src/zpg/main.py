@@ -1,20 +1,25 @@
-from optparse import OptionParser
 import os
+from zpg.options import ZpgOptionParser
+from zpg.pluginmgr import PluginMgr
+import pydata
+
 def main():
     print "running"
 
-    parser = OptionParser()
-    cwd = os.getcwd()
-    parser.add_option('-d', "--destdir", dest="dest", default="%s/build" % os.getcwd(), help="Destination Directory for the zenpack. [%default]")
+    parser = ZpgOptionParser()
     (opts, args) = parser.parse_args()
+    pluginMgr = PluginMgr(opts.version)
+    pluginMgr.getPlugins()
+    config = pydata.config
+    for plugin in [p for p in pluginMgr.plugins if p.type == 'layout']:
+        p = plugin(config,opts.dest)
+        p.run()
 
-    # Making sure all mandatory options appeared.
-    mandatory = ['dest']
-    for m in mandatory:
-        if not opts.__dict__[m]:
-            print "mandatory option is missing\n"
-            parser.print_help()
-            exit(-1)
+    for plugin in pluginMgr.plugins:
+        if plugin.type == 'layout':
+            continue
+        p = plugin(config,opts.dest)
+        p.run()
 
 if __name__ == '__main__':
     main() 
