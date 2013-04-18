@@ -1,7 +1,13 @@
-Fill it out.
-
+# As zenoss user in zenoss 2.4+
 # Development install
 python setup.py develop
 
+# Edit the input file in ZenPackGenerator/src/pydata.py
+
+# plugins are found in ZenPackGenerator/src/zpg/plugins
+# templates are found in ZenPackGenerator/src/zpg/templates
+
 # Using
 zpg -h
+
+# zenpacks are placed in ZenPackGenerator/src/zpg/build/ by default
