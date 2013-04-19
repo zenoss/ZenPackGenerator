@@ -71,6 +71,14 @@ class ${title}(#echo ', '.join($class)#):
 #set $ctype = 'Component'
 #end if
 class I${title}Info(I${ctype}Info):
+#if not $Device
+#if len($count_rels)>0
+#for $rel in $count_rels
+#set $FNAME_rel = " ".join($rel[0].split('_'))
+    ${rel[0]}_count = schema.Int(title=_t(u'Number of ${FNAME_rel}))
+#end for
+#end if
+#end if
 #if len($attributes)>0
 #for $attr in $attributes
 #if $attr.type == 'string'
@@ -86,6 +94,23 @@ class I${title}Info(I${ctype}Info):
 
 class ${title}Info(${ctype}Info):
     implements(I${title}Info)
+
+#if not $Device
+#if len($count_rels)>0
+
+#for $rel in $count_rels
+    @property
+    def ${rel[0]}_count(self):
+        # Using countObjects is fast.
+        try:
+            return self._object.${rel[0]}.countObjects()
+        except:
+            # Using len on the results of calling the relationship is slow.
+            return len(self._object.${rel[0]}())
+   
+#end for
+#end if
+#end if
 
 #if len($attributes)>0
 #for $attr in $attributes

@@ -105,9 +105,12 @@ class ComponentFilter(object):
         for component in self.components:
             if 'custom_path' not in self.config['component'][component]:
                 self.config['component'][component]['custom_path'] = {'M-M': [], '1-M': []}
+            if 'count_rels' not in self.config['component'][component]:
+                self.config['component'][component]['count_rels'] = []
 
 
             self.config['component'][component]['relations'] = [] 
+            unique_name = self.config['component'][component]['unique_name']
             component_classes = KlassExpand(self.config,component,component)
             
             for relation in self.config['Relations']:
@@ -116,13 +119,35 @@ class ComponentFilter(object):
                 if classes[0] in component_classes:
                     relationship =  "('%s', %s, %s, '%s'))," % \
                         (relation[2][0],self.relationMap(relation[1],rev=True),".".join(classes[1]),relation[0][0])
+                    # data for relationship count methods
+                    if '-M' in relation[1]:
+                        self.config['component'][component]['count_rels'].append((relation[2][0],unique_name))
+
                 if classes[1] in component_classes:
                     relationship =  "('%s', %s, %s, '%s'))," % \
                         (relation[0][0],self.relationMap(relation[1]),".".join(classes[0]),relation[2][0])
+                    # data for relationship count methods
+                    if '1-' not in relation[1]:
+                        self.config['component'][component]['count_rels'].append((relation[0][0],unique_name))
+
                 if relationship:
                     self.config['component'][component]['relations'].append(relationship)
                     self.updateCustomPathReporter(relation,component)
 
+ 
+            for rel in self.config['component'][component]['count_rels']:
+                if 'dropdown' not in self.config:
+                    self.config['dropdown'] = {}
+                
+                # skip device components 
+                if self.config['component'][component]['Device']:
+                    continue 
+
+                if rel[0] not in self.config['dropdown']:
+                    self.config['dropdown'][rel[0]] = [rel[1]]
+                else:
+                    self.config['dropdown'][rel[0]].append(rel[1])
+            
     def run(self):
         for component in self.config['component']:
             # replace the component shorthand

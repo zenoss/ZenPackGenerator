@@ -14,9 +14,10 @@ Ext.onReady(function() {
 (function(){
 
 var ZC = Ext.ns('Zenoss.component');
+#set $NNAME="".join($NAME.split('.'))
 
 Ext.apply(Zenoss.render, {
-    ${NAME.split('.')[-1]}_entityLinkFromGrid: function(obj, col, record) {
+    ${NNAME}_entityLinkFromGrid: function(obj, col, record) {
         if (!obj)
             return;
 
@@ -46,7 +47,7 @@ Ext.apply(Zenoss.render, {
     },
 });
 
-ZC.${NAME.split('.')[-1]}ComponentGridPanel = Ext.extend(ZC.ComponentGridPanel, {
+ZC.${NNAME}ComponentGridPanel = Ext.extend(ZC.ComponentGridPanel, {
     subComponentGridPanel: false,
 
     jumpToEntity: function(uid, meta_type) {
@@ -100,9 +101,10 @@ ZC.${NAME.split('.')[-1]}ComponentGridPanel = Ext.extend(ZC.ComponentGridPanel, 
 });
 
 #for $c in $component.keys()
-ZC.registerName('${component[c]["unique_name"]}', _t('${component[c]["name"]}'), _t('${component[c]["names"]}'));
+#if not $component[$c]['Device']
+ZC.registerName('${component[$c]["unique_name"]}', _t('${component[$c]["name"]}'), _t('${component[$c]["names"]}'));
 
-ZC.${component[c]["unique_name"]}Panel = Ext.extend(ZC.${NAME.split('.')[-1]}ComponentGridPanel, {
+ZC.${component[c]["unique_name"]}Panel = Ext.extend(ZC.${NNAME}ComponentGridPanel, {
     constructor: function(config) {
         config = Ext.applyIf(config||{}, {
             componentType: '${component[c]["unique_name"]}',
@@ -182,25 +184,29 @@ ZC.${component[c]["unique_name"]}Panel = Ext.extend(ZC.${NAME.split('.')[-1]}Com
 
 Ext.reg('${component[c]["unique_name"]}Panel', ZC.${component[c]["unique_name"]}Panel);
 
+#end if
 #end for
 
-
+#for $c in $dropdown.keys()
+#set $cname = " ".join($c.split("_"))
 Zenoss.nav.appendTo('Component', [{
-    id: 'component_temperaturesensors',
-    text: _t('Temperature Sensors'),
-    xtype: 'NetBotzTemperatureSensorPanel',
+    id: 'component_${$c}',
+    text: _t('$cname.title'),
+    xtype: '${NNAME}${c}Panel',
     subComponentGridPanel: true,
     filterNav: function(navpanel) {
-        // Only show this menu option when a component with the following meta_type is selected.
-        if (navpanel.refOwner.componentType == 'NetBotzEnclosure') {
-            return true;
-        } else {
-            return false;
+        switch (navpanel.refOwner.componentType) {
+            // Only show this menu option when a component with the following meta_type is selected.
+#for $obj in $dropdown[$c]
+            case '${obj}': return true;
+#end for
+            default: return false;
         }
     },
     setContext: function(uid) {
         ZC.NetBotzTemperatureSensorPanel.superclass.setContext.apply(this, [uid]);
     }
 }]);
+#end for
 
 })();

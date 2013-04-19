@@ -88,6 +88,7 @@ config['component']['TemperatureSensor']['attributes'] = [
                                                            'type': 'string',
                                                            'id': 'port'},
                                                          ]
+
 # components (Device)
 config['component'].setdefault('NetBotzDevice', {})
 config['component']['NetBotzDevice']['name'] = 'NetBotz Device'
