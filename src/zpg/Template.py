@@ -47,6 +47,7 @@ class Template(object):
         if not os.path.exists(self.dest_tfile):
             tf = open(os.path.join(self.tfile), 'r')
             dtf = open(os.path.join(self.dest_tfile), 'w')
+            dtf.write('## Source Template %s \n' % self.tfile)
             dtf.write(tf.read())
             tf.close()
             dtf.close()
