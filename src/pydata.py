@@ -31,6 +31,14 @@ config['Relations'] = [
                       [('enclosure', 'Enclosure'), '1-MC', ('temperature_sensors', 'TemperatureSensor') ],
                       ]
 
+config['ZPROPERTY_CATEGORY'] = 'NetBotz'
+config['ZPROPERTIES'] = [
+                         "('zNetBotzExampleProperty', 300, 'int'),",
+                         "('zNetBotzExampleProperty2', '', 'string'),",
+                         "('zNetBotzExampleProperty3', True, 'boolean'),",
+                         "('zNetBotzExampleProperty4', '', 'password'),",
+                        ]
+
 # components (Enclosure)
 config['component'].setdefault('Enclosure', {})
 config['component']['Enclosure']['name'] = 'NetBotz Enclosure'

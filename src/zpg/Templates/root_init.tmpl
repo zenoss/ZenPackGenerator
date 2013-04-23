@@ -61,7 +61,21 @@ for product_name in productNames:
     CLASS_NAME[product_name] = '.'.join([ZP_NAME, product_name, product_name])
 
 
+_PACK_Z_PROPS = [
+#for $zprop in $ZPROPERTIES
+                $zprop
+#end for
+                ]
+
+#if len($ZPROPERTIES) > 0 and $ZPROPERTY_CATEGORY
+for name, default_value, type_ in _PACK_Z_PROPS:
+    setzPropertyCategory(name, '$ZPROPERTY_CATEGORY')
+#end if
+
+
 class ZenPack(ZenPackBase):
+
+    packZProperties = _PACK_Z_PROPS
 
     def install(self,app):
         super(ZenPack, self).install(app)
