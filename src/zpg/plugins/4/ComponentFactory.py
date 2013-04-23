@@ -9,20 +9,20 @@ from zpg.utils import KlassExpand
 class ComponentFactory(object):
     type = 'output'
    
-    def __init__(self,config,basedir):
+    def __init__(self,config,opts):
         self.config = config
-        self.basedir = basedir
+        self.opts = opts
  
     def run(self):
         self.components = []
         for component in self.config['component'].keys():
-            obj = Component(self.config,self.basedir,component)
+            obj = Component(self.config,self.opts,component)
             obj.run()
 
 class Component(Template):
     type = 'output'
-    def __init__(self,config,basedir,component):
-        super(Component, self).__init__(config,basedir)
+    def __init__(self,config,opts,component):
+        super(Component, self).__init__(config,opts)
         self.id = component
         self.source_template = 'component.tmpl'
         self.dest_file = "%s/%s/%s/%s.py" % (self.basedir, self.name, self.subdir, component)

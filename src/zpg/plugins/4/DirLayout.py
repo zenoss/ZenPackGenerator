@@ -9,9 +9,9 @@ def initpy(source):
 
 class DirLayout(object):
     type = 'layout'
-    def __init__(self,config,basedir):
+    def __init__(self,config,opts):
         self.config = config
-        self.basedir = basedir
+        self.basedir = opts.dest
 
     def run(self):
         destDir = os.path.join(self.basedir, self.config['NAME'])

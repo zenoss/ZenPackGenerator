@@ -7,10 +7,10 @@ from zpg.Template import Template
 
 class Setup(Template):
     type = 'output'
-    def __init__(self,config,basedir):
-        super(Setup, self).__init__(config,basedir)
+    def __init__(self,config,opts):
+        super(Setup, self).__init__(config,opts)
         self.source_template = 'setup.tmpl'
-        self.dest_file = "%s/%s/setup.py" % (basedir, config['NAME'])
+        self.dest_file = "%s/%s/setup.py" % (self.basedir, config['NAME'])
 
     def buildSearch(self):
         packages = []

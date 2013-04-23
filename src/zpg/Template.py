@@ -10,12 +10,15 @@ import zpg
 "/".join(inspect.getfile(zpg).split('/')[:-1])
 
 class Template(object):
-    def __init__(self,config,basedir):
+    def __init__(self,config,opts):
+
         self.config = config
-        self.basedir = basedir
+        self.basedir = opts.dest
+        self.opts = opts
         self.name = config['NAME']
         self.source_template = None
         self.dest_file = None
+        self.dest_tfile = None
         self.searchList = []
         self.subdir = "/".join(self.config['NAME'].split('.'))
         self.create_inits = False
@@ -24,11 +27,30 @@ class Template(object):
         pass
 
     def findTemplate(self):
-        self.tfile = "%s/Templates/%s" % ("/".join(inspect.getfile(zpg).split('/')[:-1]),self.source_template)
+        if not self.opts.skip:
+            basedir=self.dest_file.split(self.config['NAME'])[0]+'/%s/Templates' % self.config['NAME']
+            self.tfile=basedir+self.dest_file.split(self.config['NAME'])[1]+'.tmpl'
+            self.dest_tfile=self.tfile
+            if not os.path.exists(self.tfile):
+                self.tfile = "%s/Templates/%s" % ("/".join(inspect.getfile(zpg).split('/')[:-1]),self.source_template)
+        else:
+            self.tfile = "%s/Templates/%s" % ("/".join(inspect.getfile(zpg).split('/')[:-1]),self.source_template)
+        log.info('Using template %s' % self.tfile)
        
     def buildSearch(self):
         self.searchList = self.config
- 
+
+    def write_tfile(self): 
+        dirpart = os.path.dirname(self.dest_tfile)
+        if not os.path.exists(dirpart):
+            os.makedirs(dirpart)
+        if not os.path.exists(self.dest_tfile):
+            tf = open(os.path.join(self.tfile), 'r')
+            dtf = open(os.path.join(self.dest_tfile), 'w')
+            dtf.write(tf.read())
+            tf.close()
+            dtf.close()
+
     def write(self):
         self.findTemplate()
         self.buildSearch()
@@ -40,6 +62,8 @@ class Template(object):
         f = open(os.path.join(self.dest_file), 'w')
         f.write(t.respond())
         f.close()
+        if not self.opts.skip:
+            self.write_tfile()
 
 if __name__ == "__main__":
     #config = pydata.config

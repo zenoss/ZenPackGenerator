@@ -1,12 +1,24 @@
-import Globals
-from Products.ZenUtils.Utils import unused
-unused(Globals)
+import logging
+log = logging.getLogger('zen.${NAME}')
+
 import os
+import Globals
+
+from Products.ZenModel.Device import Device
+from Products.ZenModel.ZenPack import ZenPack as ZenPackBase
+from Products.ZenRelations.RelSchema import ToManyCont, ToOne
+from Products.ZenRelations.zPropertyCategory import setZPropertyCategory
 from Products.CMFCore.DirectoryView import registerDirectory
+from Products.Zuul.interfaces import ICatalogTool
+from Products.ZenUtils.Utils import unused
+
+unused(Globals)
 
 skinsDir = os.path.join(os.path.dirname(__file__), 'skins')
 if os.path.isdir(skinsDir):
     registerDirectory(skinsDir, globals())
+
+ZENPACK_NAME = '${NAME}'
 
 #if len($classes) > 0
 # Modules containing model classes. Used by zenchkschema to validate
@@ -18,6 +30,23 @@ productNames = (
     )
 #end if
 
+# Define new device relations.
+NEW_DEVICE_RELATIONS = (
+    $foo
+)
+
+NEW_COMPONENT_TYPES = (
+    $bar
+)
+
+# Add new relationships to Device if they don't already exist.
+for relname, modname in NEW_DEVICE_RELATIONS:
+    if relname not in (x[0] for x in Device._relations):
+        Device._relations += (
+            (relname, ToManyCont(ToOne,
+                '.'.join(ZENPACK_NAME, modname)), 'device')),
+            )
+
 # Useful to avoid making literal string references to module and class names
 # throughout the rest of the ZenPack.
 MODULE_NAME = {}
@@ -26,3 +55,38 @@ for product_name in productNames:
     ZP_NAME = '${NAME}'
     MODULE_NAME[product_name] = '.'.join([ZP_NAME, product_name])
     CLASS_NAME[product_name] = '.'.join([ZP_NAME, product_name, product_name])
+
+setZPropertyCategory('zSNMPNetBotz', 'NetBotz')
+
+class ZenPack(ZenPackBase):
+    packZProperties = [('zSNMPNetBotz', False, 'boolean')]
+
+    def install(self,app):
+        super(ZenPack, self).install(app)
+        log.info('Adding ${NAME} relationships to existing devices')
+
+        self._buildDeviceRelations()
+
+    def remove(self, app, leaveObjects=False):
+        if not leaveObjects:
+            log.info('Removing ${NAME} components')
+            cat = ICatalogTool(app.zport.dmd)
+
+            # Search the catalog for components of this zenpacks type.
+            for brain in cat.search(types=NEW_COMPONENT_TYPES):
+                component = brain.getObject()
+                component.getPrimaryParent()._delObject(component.id)
+
+            # Remove our Device relations additions.
+            Device._relations = tuple(
+                [x for x in Device._relations \
+                    if x[0] not in NEW_DEVICE_RELATIONS])
+
+            log.info('Removing ${NAME} relationships from existing devices')
+            self._buildDeviceRelations()
+ 
+        super(ZenPack, self).remove(app, leaveObjects=leaveObjects)
+
+    def _buildDeviceRelations(self):
+        for d in self.dmd.Devices.getSubDevicesGen():
+            d.buildRelations()

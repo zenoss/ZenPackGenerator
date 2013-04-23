@@ -7,8 +7,8 @@ from zpg.Template import Template
 
 class RootInit(Template):
     type = 'output'
-    def __init__(self,config,basedir):
-        super(RootInit, self).__init__(config,basedir)
+    def __init__(self,config,opts):
+        super(RootInit, self).__init__(config,opts)
         self.source_template = 'root_init.tmpl'
         self.dest_file = "%s/%s/%s/__init__.py" % (self.basedir, self.name, self.subdir)
 
