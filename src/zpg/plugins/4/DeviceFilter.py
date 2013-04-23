@@ -24,7 +24,6 @@ class DeviceFilter(object):
                 if Klasses[0] == ('Products.ZenModel', 'Device'):
                     self.config['NEW_COMPONENT_TYPES'].append("{0}.{1}.{1}".format(Klasses[1][0],Klasses[1][1]))
                     self.config['NEW_DEVICE_RELATIONS'].append("('{0}', '{1}', '{2}'),".format(relation[2][0],Klasses[1][1],relation[0][0]))
-                    import pdb;pdb.set_trace()
             
     def run(self):
         self.updateRelations()
