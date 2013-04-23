@@ -32,19 +32,23 @@ productNames = (
 
 # Define new device relations.
 NEW_DEVICE_RELATIONS = (
-    $foo
-)
+#for $dr in $NEW_DEVICE_RELATIONS
+    $dr
+#end for
+    )
 
 NEW_COMPONENT_TYPES = (
-    $bar
-)
+#for $ct in $NEW_COMPONENT_TYPES
+    '$ct',
+#end for
+    )
 
 # Add new relationships to Device if they don't already exist.
-for relname, modname in NEW_DEVICE_RELATIONS:
+for relname, modname, devrel in NEW_DEVICE_RELATIONS:
     if relname not in (x[0] for x in Device._relations):
         Device._relations += (
             (relname, ToManyCont(ToOne,
-                '.'.join(ZENPACK_NAME, modname)), 'device')),
+                '.'.join(ZENPACK_NAME, modname)), devrel)),
             )
 
 # Useful to avoid making literal string references to module and class names
@@ -56,10 +60,8 @@ for product_name in productNames:
     MODULE_NAME[product_name] = '.'.join([ZP_NAME, product_name])
     CLASS_NAME[product_name] = '.'.join([ZP_NAME, product_name, product_name])
 
-setZPropertyCategory('zSNMPNetBotz', 'NetBotz')
 
 class ZenPack(ZenPackBase):
-    packZProperties = [('zSNMPNetBotz', False, 'boolean')]
 
     def install(self,app):
         super(ZenPack, self).install(app)

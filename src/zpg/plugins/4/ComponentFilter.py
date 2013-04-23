@@ -7,9 +7,9 @@ from zpg.utils import KlassExpand
 
 class ComponentFilter(object):
     type = 'filter'
-    def __init__(self,config,basedir):
+    def __init__(self,config,opts):
         self.config = config
-        self.basedir = basedir
+        self.basedir = opts.dest
         self.imports = ['from zope.component import implements',
                         'from Products.ZenModel.ZenossSecurity import ZEN_CHANGE_DEVICE',
                         'from Products.Zuul.decorators import info',

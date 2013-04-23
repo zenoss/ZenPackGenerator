@@ -15,3 +15,4 @@ zpg -h
 
 #TODO
 1.) possible source template versioning so future tools can lookup the original templates.
+2.) packZproperties and groups on the root init.py
