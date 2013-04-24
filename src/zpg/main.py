@@ -15,6 +15,7 @@ def main():
     pluginMgr = PluginMgr(opts.version)
     pluginMgr.getPlugins()
     config = pydata.config
+
     for plugin in [p for p in pluginMgr.plugins if p.type == 'filter']:
         p = plugin(config,opts)
         config = p.run()

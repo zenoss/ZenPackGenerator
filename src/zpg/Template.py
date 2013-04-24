@@ -7,6 +7,7 @@ log = logging.getLogger('Template')
 from Cheetah.Template import Template as cTemplate
 import inspect
 import zpg
+from git import *
 "/".join(inspect.getfile(zpg).split('/')[:-1])
 
 class Template(object):
@@ -28,8 +29,8 @@ class Template(object):
 
     def findTemplate(self):
         if not self.opts.skip:
-            basedir=self.dest_file.split(self.config['NAME'])[0]+'/%s/Templates' % self.config['NAME']
-            self.tfile=basedir+self.dest_file.split(self.config['NAME'])[1]+'.tmpl'
+            self.basedir=self.dest_file.split(self.config['NAME'])[0]+'/%s/Templates' % self.config['NAME']
+            self.tfile=self.basedir+self.dest_file.split(self.config['NAME'])[1]+'.tmpl'
             self.dest_tfile=self.tfile
             if not os.path.exists(self.tfile):
                 self.tfile = "%s/Templates/%s" % ("/".join(inspect.getfile(zpg).split('/')[:-1]),self.source_template)
@@ -42,6 +43,12 @@ class Template(object):
 
     def write_tfile(self): 
         dirpart = os.path.dirname(self.dest_tfile)
+        repo = Repo.init(self.basedir)
+        try:
+            lcommit = repo.commit()
+        except:
+            repo.index.commit('Initial Commit from zpg')
+        
         if not os.path.exists(dirpart):
             os.makedirs(dirpart)
         if not os.path.exists(self.dest_tfile):
@@ -51,6 +58,9 @@ class Template(object):
             dtf.write(tf.read())
             tf.close()
             dtf.close()
+            repo.index.add([self.dest_tfile.split(self.basedir+'/')[1]])
+            if repo.is_dirty():
+                repo.index.commit('zpg: %s' % self.dest_tfile.split(self.basedir+'/')[1])
 
     def write(self):
         self.findTemplate()

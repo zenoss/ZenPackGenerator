@@ -19,8 +19,8 @@ setup(
     url = "https://github.com/zenoss/ZenPackGenerator",
     package_dir={'': 'src'},
     packages=['zpg'],
-    install_requires=['Cheetah','PyYaml'],
-    requires=['Cheetah','PyYaml'],
+    install_requires=['Cheetah','PyYaml', 'gitpython'],
+    requires=['Cheetah','PyYaml', 'gitpython'],
     entry_points={'console_scripts': ['zpg = zpg.main:main'] },
     long_description=read('README'),
     classifiers=[
