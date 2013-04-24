@@ -16,3 +16,4 @@ class ZpgOptionParser(OptionParser):
         self.add_option('-d', "--destdir", dest="dest", default=destdir, help="Destination Directory for the zenpack. [%default]")
         self.add_option('-v', "--version", dest="version", default="4", help="Zenpack type to build [%default]")
         self.add_option('-s', "--skip", action='store_true', dest="skip", default=False, help="Do Not use cached Templates.")
+        self.add_option('-r', "--read", action='store_true', dest="rmind", default=False, help="Mind Reader Input.")
