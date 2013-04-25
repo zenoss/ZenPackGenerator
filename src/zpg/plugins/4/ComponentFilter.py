@@ -149,6 +149,9 @@ class ComponentFilter(object):
                     self.config['dropdown'][rel[0]].append(rel[1])
             
     def run(self):
+        if not hasattr(self.config,'component'):
+            self.config['component'] = {}
+
         for component in self.config['component']:
             # replace the component shorthand
             if self.config['component'][component]['class'].lower() == 'component':
