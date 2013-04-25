@@ -20,7 +20,6 @@ config['PREV_ZENPACK_NAME']= ""
 '''End Setup.py'''
 
 config['zproperties'] = {'NetBotz':[('zNetBotzProperty', False, 'boolean')]}
-'''
 config['Relations'] = [
                       [('sensor_device', 'NetBotzDevice'), '1-MC', ('enclosures', 'Enclosure') ],
                       [('enclosure', 'Enclosure'), '1-MC', ('temperature_sensors', 'TemperatureSensor') ],
@@ -31,6 +30,7 @@ config['Relations'] = [
                       [('enclosure', 'Enclosure'), '1-MC', ('temperature_sensors', 'TemperatureSensor') ],
                       ]
 
+'''
 config['ZPROPERTY_CATEGORY'] = 'NetBotz'
 config['ZPROPERTIES'] = [
                          "('zNetBotzExampleProperty', 300, 'int'),",
@@ -123,3 +123,5 @@ config['component']['NetBotzDevice']['attributes'] = [
                                                            'type': 'int',
                                                            'id': 'temp_sensor_count'},
                                                          ]
+
+
