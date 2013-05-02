@@ -10,7 +10,6 @@
 import Globals
 from Products.ZenUtils.ZenScriptBase import ZenScriptBase
 from transaction import commit
-dmd = ZenScriptBase(connect=True).dmd
 
 import sys
 import json
@@ -27,91 +26,7 @@ from Products.Zuul.facades import ObjectNotFoundException
 
 log = logging.getLogger("zen.JsonTemplateLoader")
 
-def ExportProp(obj, primaryKey='uid', excludes=[]):
-    lcl_data = {}
-    for prop in dir(obj):
-        if prop.startswith('_') or prop.startswith('set') or prop in excludes \
-           or prop == primaryKey or prop in ['rename', 'meta_type', 'inspector_type']:
-            continue
-        try:
-            value = getattr(obj, prop)
-        except AttributeError:
-            continue
-        try:
-            value = value()
-        except:
-            pass
-        lcl_data[prop] = value
-    return lcl_data
-
-def TemplatesToJSONFile(dmd, templates, jsonFile):
-    tf=getFacade('template',dmd)
-    data = {}
-    for template in templates:
-	rrdTemplate = IInfo(template)
-	id_ = "%s|%s" % (rrdTemplate.uid.split('/rrdTemplates')[0], rrdTemplate.name)
-	data[id_] = {}
-	data[id_]['description'] = rrdTemplate.description
-	data[id_]['targetPythonClass'] = rrdTemplate.targetPythonClass
-
-	# Find the datasources
-	data_ds = {}
-	for ds in tf.getDataSources(rrdTemplate.uid):
-	    ds = tf.getDataSourceDetails(ds.uid)
-	    data_ds[ds.name] = ExportProps(ds, excludes=['id', 'getName', 'getDescription',
-							    'name', 'newId','source','testable','availableParsers'])
-            # Find the datapoints
-	    data_dp = {}
-	    for dp in tf.getDataSources(ds.uid):
-
-	        data_dp[dp.newId] = ExportProps(dp, excludes=['aliases', 'isrow', 'leaf',
-		    					     'availableRRDTypes', 'getDescription', 'id',
-							     'getName', 'name', 'newId', 'type'])
-	        # Find the aliases
-		data_dp_alias = {}
-		for alias in dp.aliases:
-	  	    data_dp_alias[alias.name] = ExportProps(alias, excludes=['id', 'name', 'getName', 'getDescription',
-									    'description'])
-
-		    # Setinfo would prefer the Nones be emptry strings here.
-	            if data_dp_alias[alias.name]['formula'] == None:
-		        data_dp_alias[alias.name]['formula'] = ""
-
-		data_dp[dp.newId]['aliases'] = data_dp_alias
-
-	    data_ds[ds.name]['datapoints'] = data_dp
-	data[id_]["datasources"] = data_ds
-
-	# Find the thresholds
-	data_thresh = {}
-	for threshold in tf.getThresholds(rrdTemplate.uid):
-	    data_thresh[threshold.name] = ExportProps(threshold, excludes=['getDescription', 
-									  'eventClass', 'dsnames',
-									  'getName', 'getDescription', 'id',
-									  'name', 'newId'])
-        data[id_]["thresholds"] = data_thresh
-
-	# Find the graphs
-	data_graph = {}
-	for graph in tf.getGraphs(rrdTemplate.uid):
-            data_graph[graph.name] = ExportProps(graph, excludes=['getDescription', 'getName', 'id', 'name', 'newId', 
-								 'graphPoints', 'rrdVariables', 'fakeGraphCommands'])
-
-            # Find the graph points
-	    data_graph_point = {}
-	    for graph_point in tf.getGraphPoints(graph.uid):
-	        data_graph_point[graph_point.name] = ExportProps(graph_point, excludes=['getDescription', 'getName', 
-                                                                                       'id', 'name', 'newId', 
-										       'rrdVariables'])
-	      
-	    data_graph[graph.name]["graphpoints"] = data_graph_point
-
-	data[id_]["graphs"] = data_graph
-
-    with open(jsonFile, 'w') as outputfile:
-        json.dump(data, outputfile, indent=4, sort_keys=True, separators=(',', ': '))
-
-def JSONFileToTemplates(dmd,jsonFile):
+def JSONFileToTemplates(dmd,jsonFile,ZenPack):
     tf=getFacade('template',dmd)
     data = None
     with open(jsonFile, 'r') as jsonFileHandle:
@@ -119,28 +34,28 @@ def JSONFileToTemplates(dmd,jsonFile):
 
     if data:
         for template_path, template_cfg in data.items():
-            add_template(dmd,template_path,template_cfg)
+            add_template(dmd, template_path, template_cfg, ZenPack)
         print "Templates loaded successfully."
         commit()
     else:
         print "No template found... exiting..."
         sys.exit(0)
 
-def JSONStringToTemplates(dmd,jsonString):
+def JSONStringToTemplates(dmd, jsonString, ZenPack):
     tf=getFacade('template',dmd)
     data = None
     data = json.loads(jsonString,object_pairs_hook=collections.OrderedDict)
 
     if data:
         for template_path, template_cfg in data.items():
-            add_template(dmd,template_path,template_cfg)
+            add_template(dmd,template_path, template_cfg, ZenPack)
         print "Templates loaded successfully."
         commit()
     else:
         print "No template found... exiting..."
         sys.exit(0)
 
-def add_template(dmd,path, cfg):
+def add_template(dmd,path, cfg, zenpack):
     tf=getFacade('template',dmd)
     if '/' not in path:
         die("%s is not a path. Include device class and template name", path)
@@ -160,6 +75,7 @@ def add_template(dmd,path, cfg):
         tf.deleteTemplate(existing_template[0].uid)
 
     template = tf.addTemplate(id_,device_class.uid)
+
     print "Loading template %s in %s" % (id_, device_class.uid) 
     if 'targetPythonClass' in cfg:
         template.targetPythonClass = cfg['targetPythonClass']
@@ -179,6 +95,10 @@ def add_template(dmd,path, cfg):
     if 'graphs' in cfg:
         for graph_id, graph_cfg in cfg['graphs'].items():
             add_graph(dmd, device_class,template, graph_id, graph_cfg)
+    
+    if zenpack:
+        print "Adding template %s in %s to ZenPack %s" % (id_, device_class.uid, zenpack.id) 
+        dmd.ZenPackManager.addToZenPack(ids=[template.uid],pack=zenpack.id)
 
 
 def add_datasource(dmd, template, id_, cfg):
@@ -333,14 +253,34 @@ def add_threshold(dmd, device_class,template, id_, cfg):
         if k not in ('dataPoints','type'):
             setattr(threshold, k, v)
 
-def main():
-    # sys.argv[0] is zendmd. Pop it so the script can use normal conventions.
-    sys.argv.pop(0)
-    if len(sys.argv) == 1:
-        JSONFileToTemplates(dmd,sys.argv[0])
-    else:
-        JSONStringToTemplates(dmd,sys.stdin.read())
+
+class ImportTemplate(ZenScriptBase):
+
+   def buildOptions(self):
+       ZenScriptBase.buildOptions(self)
+       self.parser.add_option("-z", "--zenpack", dest="zenpack",
+                     help="ZenPack to Add Templates To", metavar="ZenPack")
+
+   def run(self):
+      self.zenpack = None
+      if self.options.zenpack:
+          self.zenpack = self.dmd.ZenPackManager.packs._getOb(self.options.zenpack, None)
+          if self.zenpack:
+              if not self.zenpack.isDevelopment():
+                  print "%s is not a valid Development Mode Zenpack. Exiting...." % self.options.zenpack
+                  sys.exit(1)
+          else:
+              print "%s is not a valid Zenpack. Exiting...." % self.options.zenpack
+              sys.exit(1)
+
+      if self.args:
+          print "Reading Templates from %s" % self.args[0]
+          JSONFileToTemplates(self.dmd,self.args[0],self.zenpack)
+      else:
+          print "Reading Templates from StdIn"
+          JSONStringToTemplates(self.dmd,sys.stdin.read(),self.zenpack)
 
 
 if __name__ == "__main__":
-   main()
+   it = ImportTemplate(connect=True)
+   it.run()
