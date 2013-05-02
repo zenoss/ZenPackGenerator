@@ -103,6 +103,7 @@ class ComponentFilter(object):
 
     def updateRelations(self):
         for component in self.components:
+         
             if 'custom_path' not in self.config['component'][component]:
                 self.config['component'][component]['custom_path'] = {'M-M': [], '1-M': []}
             if 'count_rels' not in self.config['component'][component]:
@@ -149,7 +150,7 @@ class ComponentFilter(object):
                     self.config['dropdown'][rel[0]].append(rel[1])
             
     def run(self):
-        if not hasattr(self.config,'component'):
+        if 'component' not in self.config:
             self.config['component'] = {}
 
         for component in self.config['component']:
