@@ -27,6 +27,9 @@ else:
 tree = etree.parse(src)
 root = tree.getroot()
 
+#for obj in root.xpath('//*[@class="DeviceClass"]'):
+#    obj.getparent().remove(obj)
+
 for obj in root.xpath('//*[starts-with(@id,"rrdTemplate")]'):
     obj.getparent().remove(obj)
 
@@ -39,8 +42,8 @@ for obj in root.xpath('//*[starts-with(@class,"RRDTemplate")]'):
 for obj in root.xpath('//*[starts-with(@class,"OSProcess")]'):
     obj.getparent().remove(obj)
 
-#for obj in root.xpath('//*[starts-with(@class,"Event")]'):
-#    obj.getparent().remove(obj)
+for obj in root.xpath('//*[starts-with(@class,"Event")]'):
+    obj.getparent().remove(obj)
 
 for obj in root.xpath('//*[starts-with(@class,"Manufa")]'):
     obj.getparent().remove(obj)
@@ -49,6 +52,9 @@ for obj in root.xpath('//*[starts-with(@class,"IpServ")]'):
     obj.getparent().remove(obj)
 
 for obj in root.xpath('//*[starts-with(@class,"WinServ")]'):
+    obj.getparent().remove(obj)
+
+for obj in root.xpath('//*[starts-with(@class,"Report")]'):
     obj.getparent().remove(obj)
 
 for obj in root.xpath('//*[@class="HardwareClass"]'):
@@ -67,9 +73,9 @@ for obj in root.xpath('//comment()'):
 for obj in root.xpath('//*'):
     obj.text = obj.text.strip('\n')
     obj.text = obj.text.strip()
-    for attrib in ['type', 'mode','module', 'class', 'visible', 'select_variable']:
-        if attrib in obj.attrib:
-            del(obj.attrib[attrib])
+    #for attrib in ['type', 'mode','module', 'class', 'visible', 'select_variable']:
+    #    if attrib in obj.attrib:
+    #        del(obj.attrib[attrib])
         
 #for obj in root.xpath('//*[@class="HardwareClass"]'):
 #    print tree.getpath(obj), "HardwareClass",etree.tostring(obj)
