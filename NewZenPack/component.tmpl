@@ -1,0 +1,109 @@
+#for $i in $imports
+$i
+#end for
+
+class ${Class}(#echo ', '.join($ClassNames)#):
+    meta_type = portal_type = '$portal_type'
+
+#if $properties or $relations
+    Klasses = [#echo ', '.join($ClassNames)#]
+
+#end if
+## Add _properties
+#if $properties
+#for $key in $properties
+#set $p=$properties[key]
+    $p.id = $p.value
+#end for
+
+    for Klass in Klasses:
+        _properties = _properties + getattr(Klass,'_properties', None)
+
+    _properties = _properties + (
+#for $key in $properties
+#set $p=$properties[key]
+        {'id': '$p.id', 'type': '$p.Type', 'mode': '$p.mode'},
+#end for
+        )
+
+#end if    
+## Add _relations
+#if $relations
+    for Klass in Klasses:
+        _relations = _relations + getattr(Klass, '_relations', None)
+
+    _relations = _relations + (
+#for $rel in $relationstoArrayofStrings()
+        $rel
+#end for
+        )
+
+#end if
+    factory_type_information = ({
+        'actions': ({
+            'id': 'perfConf',
+            'name': 'Template',
+            'action': 'objTemplates',
+            'permissions': (ZEN_CHANGE_DEVICE,),
+            },),
+        },)
+
+    def device(self):
+        '''
+        Return device under which this component/device is contained.
+        '''
+        obj = self
+
+        for i in range(200):
+            if isinstance(obj, Device):
+                return obj
+
+            try:
+                obj = obj.getPrimaryParent()
+            except AttributeError as exc:
+                raise AttributeError(
+                    'Unable to determine parent at %s (%s) '
+                    'while getting device for %s' % (
+                        obj, exc, self))
+
+#if $displayInfo
+class I${name}Info(I${Type}Info):
+#for $prop in $properties.values()
+    $prop.id = schema.${prop.Schema}(title=_t(u'$prop.names'))
+#if $hasManyChildRelationship
+#for $child in $ManyChildren
+    ${child.relname}_count = schema.Int(title = 'Number of ${child.names}')
+#end for
+#end if
+#end for
+
+#end if
+#if $displayIInfo
+class ${name}Info(${Type}Info):
+    implements(I${name}Info)
+
+#for $prop in $properties.values()
+#if $prop.detailDisplay
+    $prop.id = ProxyProperty('${prop.id}')
+#end if
+#end for
+
+#if $hasManyChildRelationship
+#for $child in $ManyChildren
+    @property
+    def ${child.relname}_count(self):
+        # Using countObjects is fast.
+        try:
+            return self._object.${child.relnames}.countObjects()
+        except:
+            # Using len on the results of calling the relationship is slow.       
+            return self._object.${child.relnames}.countObjects()
+
+#end for
+#end if
+#end if
+
+class ${name}PathReporter(DefaultPathReporter):
+    paths = super(${name}PathReporter, self).getPaths()
+
+
