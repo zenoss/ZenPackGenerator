@@ -9,8 +9,6 @@
 ##############################################################################
 
 import unittest
-from Component import Component
-lookup = Component.lookup
 
 
 class Relationship(object):
@@ -21,6 +19,8 @@ class Relationship(object):
     def __init__(self, ZenPack, ComponentA, ComponentB, Type='1-M', Contained=True):
 
         self.ZenPack = ZenPack
+        from Component import Component
+        lookup = Component.lookup
         self.components = lookup(ZenPack, ComponentA), lookup(ZenPack, ComponentB)
         self.id = (self.components[0].id, self.components[1].id)
         self.Type = Type
@@ -38,10 +38,16 @@ class Relationship(object):
         return False
 
     @classmethod
-    def find(self, component):
+    def find(self, component, Contained=None, First=None, Types=None):
         rels = []
         for rel in Relationship.relationships.values():
             if rel.hasComponent(component):
+                if Contained and not rel.Contained == Contained: continue
+                if First and not rel.first(component) == First: continue
+                if isinstance(Types, basestring):
+                    if rel.Type == Types: continue
+                else:
+                    if Types and not rel.Type in Types: continue
                 rels.append(rel)
         return rels
 
@@ -171,6 +177,14 @@ class TestRelationship_FindComponents(SimpleSetup):
         self.maxDiff = None
         self.assertEqual([], Relationship.find(c2))
 
+    def test_ReturnsContainedRelationships(self):
+        c = Component('SampleComponent', self.zp)
+        c3 = Component('SampleComponent3', self.zp)
+        r = Relationship(self.zp, 'SampleDevice', 'SampleComponent')
+        r3 = Relationship(self.zp, 'SampleComponent3', 'SampleComponent4', Contained=False)
+        Relationship(self.zp, 'SampleComponent3', 'SampleComponent5')
+        self.assertEqual([r], Relationship.find(c, Contained=True))
+        self.assertEqual([r3], Relationship.find(c3, Contained=False))
 
 class TestRelationship_stringoutput(SimpleSetup):
     def test_returnsOneToManyCont(self):

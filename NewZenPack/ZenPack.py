@@ -6,6 +6,7 @@ from Relationship import Relationship
 from DeviceClass import DeviceClass
 from Defaults import Defaults
 from License import License
+#from UI import UI
 from memoize import memoize
 import unittest
 
@@ -116,6 +117,56 @@ class TestZenPackRelationships(SimpleSetup):
         self.zp.addRelation('Device', 'ClusterPeers')
 
 if __name__ == "__main__":
-    zp = ZenPack('a.b.c')
-    zp.addRelation('Device', 'Vservers')
+    zp = ZenPack('ZenPacks.zenoss.NetAppMonitor')
+    v = zp.addComponent('Volume')
+    v.addProperty('volume_name')
+    v.addProperty('size_total', Type='int')
+    v.addProperty('dsid', Type='int')
+    v.addProperty('fsid', Type='int')
+    v.addProperty('msid', Type='int')
+    v.addProperty('state')
+    v.addProperty('volume_type')
+    v.addProperty('volume_style')
+    v.addProperty('cluster_volume', Type=bool)
+    v.addProperty('constituent_volume', Type=bool)
+    v.addProperty('export_policy')
+    v.addProperty('junction_active', Type=bool)
+    v.addProperty('junction_parent_name')
+    v.addProperty('junction_path')
+    v.addProperty('cloneSnap', detailDisplay=False, gridDisplay=False)
+    v.addProperty('cloneOf', detailDisplay=False)
+    v.addProperty('uuid', detailDisplay=False)
+    v.addProperty('volType', detailDisplay=False)
+    v.addProperty('flone', detailDisplay=False)
+    v.addProperty('floneOf', detailDisplay=False)
+    v.addProperty('fsid', detailDisplay=False)
+    v.addProperty('owningHost', detailDisplay=False)
+    v.addProperty('volState', detailDisplay=False)
+    v.addProperty('volStatus', detailDisplay=False)
+    v.addProperty('options', detailDisplay=False)
+
+    vs = zp.addComponent('VServer')
+    filer = zp.addComponent('Filer')
+    rel1 = zp.addRelation('VServer', 'Volume', Type='1-M', Contained=False)
+    print rel1.first(v)
+    rel2 = zp.addRelation('Filer', 'VServer')
+    print rel1.toString(v)
+    print rel1.toString(vs)
+    print rel2.toString(vs)
+
+    v.custompaths()
+    a = zp.addComponent('Aggregate')
+    p = zp.addComponent('Plex')
+    sn = zp.addComponent('SystemNode')
+    #filer = zp.addComponent('Filer')
+    zp.addRelation('SystemNode', 'Aggregate', Type='M-M', Contained=False)
+    zp.addRelation('Plex', 'Aggregate')
+    v = zp.addComponent('Volume')
+    vs = zp.addComponent('VServer')
+    zp.addComponent('Device')
+    zp.addRelation('VServer', 'Volume', Type='1-M', Contained=False)
+    zp.addRelation('Filer', 'VServer')
+    zp.addRelation('Device', 'VServer')
+    sn.write()
+    v.write()
     unittest.main()

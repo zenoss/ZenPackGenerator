@@ -12,6 +12,7 @@ import unittest
 import inflect
 from Defaults import Defaults
 from Property import Property
+from Relationship import Relationship
 from Cheetah.Template import Template as cTemplate
 
 plural = inflect.engine().plural
@@ -136,7 +137,7 @@ class Component(object):
                 self.imports.append(istring)
         self._classes = classes
 
-    def ClassNames(self):
+    def klassNames(self):
         return [c.split('.')[-1] for c in self.klasses]
 
     def addProperty(self, id, **kwargs):
@@ -146,6 +147,34 @@ class Component(object):
     def relations(self):
         return self.zenpack.relationshipLookup(self)
 
+    def custompaths(self):
+        custompaths = {}
+
+        rels = Relationship.find(self, Contained=False, First=False)
+        for rel in rels:
+            for component in rel.components:
+                if component == self:
+                    continue
+                prel = Relationship.find(component, Contained=True, First=False)
+                if prel:
+                    prel = prel[0]
+                    if not rel.Type in custompaths.keys():
+                        custompaths[rel.Type] = [(component, prel.components[0])]
+                    else:
+                        custompaths[rel.Type].append((component, prel.components[0]))
+
+        return custompaths
+        #1-M
+        """obj = self.context.${first_component}()
+           if obj:
+              paths.extend(relPath(${first_component, '${prel.components[0]}'))
+        """
+
+    def ManyRelationships(self):
+        """return all of the ManyRelationships related to this component."""
+        rels = Relationship.find(self, First=True, Types=['1-M', 'M-M'])
+        return rels
+
     def relationstoArrayofStrings(self):
         rels = []
         for rel in self.relations():
@@ -153,7 +182,11 @@ class Component(object):
         return rels
 
     def displayInfo(self):
+        # TODO improve this method to include scenarios when
+        # we are adding one to many non-container relationships etc.
         if self.properties:
+            return True
+        if self.ManyRelationships():
             return True
         return False
 
@@ -161,38 +194,9 @@ class Component(object):
         for p in self.properties.values():
             if p.detailDisplay:
                 return True
+        if self.ManyRelationships():
+            return True
         return False
-
-
-
-
-    def hasManyChildRelationship(self):
-        for rel in self.relations():
-            if rel.hasManyChild(self):
-                return True
-        return False
-
-    def ManyChildren(self):
-        ManyChildren = []
-        for rel in self.relations():
-            if rel.hasManyChild(self):
-                ManyChildren.append(rel.ManyChild(self))
-        return ManyChildren
-
-    def customPaths(self):
-        for rel in self.relations():
-            if not rel.Contained:
-                path = rel.getParentPath(self)
-                Type = rel.Type
-                for c in rel.components:
-                    if not c == self:
-                        if Type == '1-1':
-                            print c.relname, path, Type
-                        if Type == '1-M':
-                            print c.relname, path, Type
-                        if Type == 'M-M':
-                            import pdb; pdb.set_trace()
-                            print c.relnames, path, Type
 
     @classmethod
     def lookup(self, zenpack, value):
@@ -213,8 +217,6 @@ class Component(object):
     def write(self):
         t = cTemplate(file='component.tmpl', searchList=[self])
         print t
-        print
-        print
         #f = open('a.out', 'w')
         #f.write(t.respond())
         #f.close()
@@ -338,6 +340,18 @@ class TestComponentImports(SimpleSetup):
                                       'from Products.Zuul.utils import ZuulMessageFactory as _t',
                                       'from Products.ZenModel.Software import Software',
                                       ])
+# custom path reporter test setup  (1-M)
+#    zp = ZenPack('ZenPacks.zenoss.NetAppMonitor')
+#    v = zp.addComponent('Volume')
+#    vs = zp.addComponent('VServer')
+#    zp.addComponent('Device')
+#    zp.addRelation('VServer', 'Volume', Type='1-M', Contained=False)
+#    zp.addRelation('Filer', 'VServer')
+#    zp.addRelation('Device', 'VServer')
+## Should generate something like this
+#    obj = self.context.vserver()
+#    if obj:
+#        paths.extend(relPath(obj,'filer'))
 
 
 class TestComponentProperties(SimpleSetup):
@@ -354,34 +368,19 @@ class TestComponentProperties(SimpleSetup):
 
 if __name__ == "__main__":
     from ZenPack import ZenPack
-    zp = ZenPack('a.b.c')
-    c1 = zp.addComponent('Enclosure')
-    c1.addProperty('foo')
-    #f1 = zp.addComponent('Fan')
-    #d1 = zp.addComponent('Device', namespace='Products.ZenModel')
-    #rel = zp.addRelation('Device','Enclosure')
-    #rel1 = zp.addRelation('Device','Fan', Type='1-1', Contained=False)
-    rel2 = zp.addRelation('Enclosure', 'Fan', Type='M-M', Contained=False)
-    #print 'Enclosure'
-    #print c1.relationstoArrayofStrings()
-    #print rel.hasManyChild(c1)
-    #print rel2.hasManyChild(c1)
-    #print c1.hasManyChildRelationship()
-    #print [c.id for c in c1.ManyChildren()]
-    #print
-    #print 'Fan'
-    #print f1.relationstoArrayofStrings()
-    #print rel1.hasManyChild(f1)
-    #print rel2.hasManyChild(f1)
-    #print f1.hasManyChildRelationship()
-    #print [c.id for c in f1.ManyChildren()]
-    #print
-    #print 'Device'
-    #print d1.relationstoArrayofStrings()
-    #print d1.hasManyChildRelationship()
-    #print [c.id for c in d1.ManyChildren()]
-    #print
-    #c1.write()
-    #os.write()
-    #interface.write()
+    zp = ZenPack('ZenPacks.zenoss.NetAppMonitor')
+    a = zp.addComponent('Aggregate')
+    p = zp.addComponent('Plex')
+    sn = zp.addComponent('SystemNode')
+    #filer = zp.addComponent('Filer')
+    zp.addRelation('SystemNode', 'Aggregate', Type='M-M', Contained=False)
+    zp.addRelation('Plex', 'Aggregate')
+    v = zp.addComponent('Volume')
+    vs = zp.addComponent('VServer')
+    zp.addComponent('Device')
+    zp.addRelation('VServer', 'Volume', Type='1-M', Contained=False)
+    zp.addRelation('Filer', 'VServer')
+    zp.addRelation('Device', 'VServer')
+    sn.write()
+    v.write()
     unittest.main()
