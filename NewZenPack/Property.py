@@ -1,14 +1,28 @@
 #!/usr/bin/env python
+##############################################################################
+#
+# Copyright (C) Zenoss, Inc. 2013, all rights reserved.
+#
+# This content is made available according to terms specified in the LICENSE
+# file at the top-level directory of this package.
+#
+##############################################################################
 
-##LICENSE##
-from memoize import memoize
 import unittest
 import inflect
 
 plural = inflect.engine().plural
 
+
 class Property(object):
-    def __init__(self,id,value = None, Type = None, width=10, detailDisplay=True, gridDisplay=True):
+    def __init__(self,
+                 id,
+                 value=None,
+                 Type=None,
+                 width=10,
+                 detailDisplay=True,
+                 gridDisplay=True):
+
         self.id = id
         self.name = id
         self.names = plural(id)
@@ -16,16 +30,16 @@ class Property(object):
         self.value = value
         self.detailDisplay = detailDisplay
         if Type:
-           self.Type = Type
+            self.Type = Type
         else:
-           self.Type = value
+            self.Type = value
 
         self.value = value
 
     def Schema(self):
         if self.Type in ['int']:
             return 'Int'
-        elif self.Type in ['string','text', 'lines']:
+        elif self.Type in ['string', 'text', 'lines']:
             return 'TextLine'
         elif self.Type in ['bool']:
             return 'Bool'
@@ -37,7 +51,7 @@ class Property(object):
         return self._Type
 
     @Type.setter
-    def Type(self,Type):
+    def Type(self, Type):
         self._Type = None
 
         # Zope Types we are supporting
@@ -52,10 +66,10 @@ class Property(object):
         if Type and Type in ValidTypes:
             self._Type = Type
         else:
-            if isinstance(Type,str):
+            if isinstance(Type, str):
                 self._Type = 'string'
 
-            elif isinstance(Type,bool):
+            elif isinstance(Type, bool):
                 self._Type = 'boolean'
 
             elif isinstance(Type, int):
@@ -67,7 +81,6 @@ class Property(object):
             elif isinstance(Type, list):
                 self._Type = 'lines'
 
-
         # Default return of string
         if not self._Type:
             self._Type = 'string'
@@ -77,9 +90,9 @@ class Property(object):
         return self._value
 
     @value.setter
-    def value(self,value):
+    def value(self, value):
         # Valid values can be implemented later.
-        if value == None:
+        if value is None:
             self._value = 'None'
         else:
             self._value = value
@@ -87,10 +100,12 @@ class Property(object):
     def __call__(self):
         return self.value
 
+
 class SimpleSetup(unittest.TestCase):
     def setUp(self):
         from ZenPack import ZenPack
         self.zp = ZenPack('a.b.c')
+
 
 class TestPropertyCreate(SimpleSetup):
     def test_addProperty(self):
@@ -116,7 +131,7 @@ class TestPropertyCreate(SimpleSetup):
         cp4 = Property('string', value='a')
         cp5 = Property('int', value=1)
         cp6 = Property('float', value=1.0)
-        cp7 = Property('lines', value=['a','b'])
+        cp7 = Property('lines', value=['a', 'b'])
         self.assertEqual(cp1.Type, 'string')
         self.assertEqual(cp2.Type, 'int')
         self.assertEqual(cp3.Type, 'boolean')
@@ -129,11 +144,11 @@ class TestPropertyCreate(SimpleSetup):
         cp1 = Property('blocksize', Type='string', value='3')
         cp2 = Property('raid_size', Type='int', value=2)
         cp3 = Property('checksum_enabled', Type='boolean', value=True)
-        cp4 = Property('checksum_enabled', Type='lines', value=['a','b'])
+        cp4 = Property('checksum_enabled', Type='lines', value=['a', 'b'])
         self.assertEqual(cp1.value, '3')
         self.assertEqual(cp2.value, 2)
         self.assertEqual(cp3.value, True)
-        self.assertEqual(cp4.value, ['a','b'])
+        self.assertEqual(cp4.value, ['a', 'b'])
 
 if __name__ == "__main__":
     unittest.main()

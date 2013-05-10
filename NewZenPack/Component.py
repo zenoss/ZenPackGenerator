@@ -145,7 +145,8 @@ class Component(object):
         self.properties[id] = prop
 
     def relations(self):
-        return self.zenpack.relationshipLookup(self)
+        #return self.zenpack.relationshipLookup(self)
+        return Relationship.find(self)
 
     def custompaths(self):
         custompaths = {}

@@ -1,5 +1,13 @@
 #!/usr/bin/env python
-##LICENSE##
+##############################################################################
+#
+# Copyright (C) Zenoss, Inc. 2013, all rights reserved.
+#
+# This content is made available according to terms specified in the LICENSE
+# file at the top-level directory of this package.
+#
+##############################################################################
+
 
 from Component import Component
 from Relationship import Relationship
@@ -60,13 +68,13 @@ class ZenPack(object):
     def registerRelationship(self, relationship):
         self.relationships[relationship.id] = relationship
 
-    def relationshipLookup(self, component):
-        relationships = []
-        for relationship in self.relationships.values():
-            if relationship.hasComponent(component):
-                relationships.append(relationship)
+    #def relationshipLookup(self, component):
+    #    relationships = []
+    #    for relationship in self.relationships.values():
+    #        if relationship.hasComponent(component):
+    #            relationships.append(relationship)
 
-        return relationships
+    #    return relationships
 
     def __repr__(self):
         return "%s \n\tAUTHOR: %s\n\tVERSION: %s\n\tLICENSE: %s" \
