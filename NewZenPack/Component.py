@@ -1,55 +1,44 @@
 #!/usr/bin/env python
-##LICENSE##
+##############################################################################
+#
+# Copyright (C) Zenoss, Inc. 2013, all rights reserved.
+#
+# This content is made available according to terms specified in the LICENSE
+# file at the top-level directory of this package.
+#
+##############################################################################
 
 import unittest
 import inflect
+from Defaults import Defaults
 from Property import Property
 from Cheetah.Template import Template as cTemplate
 
 plural = inflect.engine().plural
+
 
 class Component(object):
     """Build the component object"""
 
     components = {}
 
-    def __init__(self,name, 
-                      ZenPack, 
-                      Classes = [ 'Products.ZenModel.DeviceComponent.DeviceComponent',
-                                  'Products.ZenModel.ManagedEntity.ManagedEntity' ],
-                      imports = [ 'from zope.component import implements',
-                                  'from Products.ZenModel.ZenossSecurity import ZEN_CHANGE_DEVICE',
-                                  'from Products.Zuul.decorators import info',
-                                  'from Products.Zuul.form import schema',
-                                  'from Products.Zuul.infos import ProxyProperty',
-                                  'from Products.Zuul.utils import ZuulMessageFactory as _t',
-                                ],
-                      names = None, 
-                      meta_type = None,
-                      device = False,
-                      namespace = None
-                ):
-        '''Args:
-                name: The components name is its class name.
-                        By Default the name will also be used for the portal_type and meta_type.
-                names: The plural form of the components name.  If not provided it will
-                       be automatically generated. (Optional)
-                ZenPack:  A ZenPack Object is required to use this class
-                Classes: The base class or classes that the Component inherits from.  (Array)
-                imports: The base set of python imports that this zenpack requires.
-                meta_type: Override the meta_type/portal_type variables provided by the default name.
-                namespace: Expand the name to use this namespace prefix for class loading.
-                           If not provided the namespace will be inherited from the ZenPack object.
+    def __init__(self,
+                 name,
+                 zenpack,
+                 klasses=Defaults().klasses,
+                 imports=Defaults().imports,
+                 names=None,
+                 meta_type=None,
+                 device=False,
+                 namespace=None
+                 ):
 
-        '''
-
-# Display meta_type option
         self.name = name
-        self.Class = name
         self.names = names
+        self.klass = name
         self.relname = self.name.lower()
         self.relnames = self.names.lower()
-        self.ZenPack = ZenPack
+        self.zenpack = zenpack
         self.unique_name = meta_type
         self.device = device
 
@@ -62,13 +51,16 @@ class Component(object):
         if namespace:
             self.namespace = namespace
         else:
-            self.namespace = self.ZenPack.namespace
-        self.id = "%s.%s" % (self.namespace,self.name)
+            self.namespace = self.zenpack.namespace
+        self.id = "%s.%s" % (self.namespace, self.name)
 
         # Copy the input array, don't hang on to a reference.
-        self.Classes = list(Classes)
+        if isinstance(klasses, basestring):
+            self.klasses = [klasses]
+        else:
+            self.klasses = list(klasses)
         self.properties = {}
-        self.ZenPack.registerComponent(self)
+        self.zenpack.registerComponent(self)
         Component.components[self.id] = self
 
     @property
@@ -96,7 +88,7 @@ class Component(object):
         return self.__unique_name
 
     @unique_name.setter
-    def unique_name(self,value):
+    def unique_name(self, value):
         if not value:
             self.__unique_name = self.name
         else:
@@ -115,44 +107,44 @@ class Component(object):
         return self.__names
 
     @names.setter
-    def names(self,value):
+    def names(self, value):
         if value:
-           self.__names = value
+            self.__names = value
         else:
-           self.__names = plural(self.name)
+            self.__names = plural(self.name)
 
     @property
-    def Classes(self):
+    def klasses(self):
         return self._classes
 
-    @Classes.setter
-    def Classes(self,value):
+    @klasses.setter
+    def klasses(self, value):
         classes = []
         if isinstance(value, basestring):
             value = [value]
         for Klass in value:
-            if len(Klass.split('.'))==1:
-                if Klass.split('.')[-1] in self.ZenPack.namespace:
-                    Klass = '{0}.{1}.{1}'.format(self.ZenPack.namespace, Klass)
+            if len(Klass.split('.')) == 1:
+                if Klass.split('.')[-1] in self.zenpack.namespace:
+                    Klass = '{0}.{1}.{1}'.format(self.zenpack.namespace, Klass)
                 else:
                     Klass = 'Products.ZenModel.{0}.{0}'.format(Klass)
             classes.append(Klass)
             Module = ".".join(Klass.split('.')[:-1])
-            Class = Klass.split('.')[-1]
-            istring = "from {0} import {1}".format(Module, Class)
+            klass = Klass.split('.')[-1]
+            istring = "from {0} import {1}".format(Module, klass)
             if istring not in self.imports:
                 self.imports.append(istring)
         self._classes = classes
 
     def ClassNames(self):
-        return [c.split('.')[-1] for c in self.Classes]
+        return [c.split('.')[-1] for c in self.klasses]
 
-    def addProperty(self,id,**kwargs):
-        prop = Property(id,**kwargs)
+    def addProperty(self, id, **kwargs):
+        prop = Property(id, **kwargs)
         self.properties[id] = prop
 
     def relations(self):
-        return self.ZenPack.relationshipLookup(self)
+        return self.zenpack.relationshipLookup(self)
 
     def relationstoArrayofStrings(self):
         rels = []
@@ -171,6 +163,9 @@ class Component(object):
                 return True
         return False
 
+
+
+
     def hasManyChildRelationship(self):
         for rel in self.relations():
             if rel.hasManyChild(self):
@@ -185,36 +180,35 @@ class Component(object):
         return ManyChildren
 
     def customPaths(self):
-        paths = []
         for rel in self.relations():
             if not rel.Contained:
                 path = rel.getParentPath(self)
                 Type = rel.Type
                 for c in rel.components:
                     if not c == self:
-                       if Type == '1-1':
-                           print c.relname, path, Type
-                       if Type == '1-M':
-                           print c.relname, path, Type
-                       if Type == 'M-M':
-                           import pdb; pdb.set_trace()
-                           print c.relnames, path, Type
+                        if Type == '1-1':
+                            print c.relname, path, Type
+                        if Type == '1-M':
+                            print c.relname, path, Type
+                        if Type == 'M-M':
+                            import pdb; pdb.set_trace()
+                            print c.relnames, path, Type
 
     @classmethod
-    def lookup(self,ZenPack, value):
+    def lookup(self, zenpack, value):
 
         if value in Component.components:
             return Component.components[value]
 
-        component = "{0}.{1}".format(ZenPack.namespace,value)
+        component = "{0}.{1}".format(zenpack.namespace, value)
         if component in Component.components:
             return Component.components[component]
 
-        component = "{0}.{1}".format('Products.ZenModel',value)
+        component = "{0}.{1}".format('Products.ZenModel', value)
         if component in Component.components:
             return Component.components[component]
 
-        return Component(value, ZenPack)
+        return Component(value, zenpack)
 
     def write(self):
         t = cTemplate(file='component.tmpl', searchList=[self])
@@ -227,35 +221,39 @@ class Component(object):
 
 #Unit tests Start here
 
+
 class SimpleSetup(unittest.TestCase):
     def setUp(self):
         from ZenPack import ZenPack
         self.zp = ZenPack('a.b.c')
 
+
 class TestComponentCreate(SimpleSetup):
     #@unittest.skip("Skipping")
     def test_ComponentCreate(self):
-        c = Component('Component',self.zp)
+        c = Component('Component', self.zp)
         self.assertIsInstance(c, Component)
+
 
 class TestNames(SimpleSetup):
     def test_name_default(self):
-        c = Component('Component',self.zp)
+        c = Component('Component', self.zp)
         self.assertEqual(c.names, 'Components')
 
     def test_name_overridden(self):
-        c = Component('Component',self.zp, names = 'names')
+        c = Component('Component', self.zp, names='names')
         self.assertEqual(c.names, 'names')
+
 
 class TestComponentUniqueName(SimpleSetup):
     def test_uniquename_default(self):
-        c = Component('Component',self.zp)
+        c = Component('Component', self.zp)
         self.assertEqual(c.portal_type, 'Component')
         self.assertEqual(c.meta_type, 'Component')
         self.assertEqual(c.unique_name, 'Component')
 
     def test_meta_type_Overridden(self):
-        c = Component('Component', self.zp, meta_type = 'unique')
+        c = Component('Component', self.zp, meta_type='unique')
         self.assertNotEqual(c.portal_type, 'Component')
         self.assertNotEqual(c.meta_type, 'Component')
         self.assertNotEqual(c.unique_name, 'Component')
@@ -263,80 +261,84 @@ class TestComponentUniqueName(SimpleSetup):
         self.assertEqual(c.meta_type, 'unique')
         self.assertEqual(c.unique_name, 'unique')
 
+
 class TestComponentClasses(SimpleSetup):
     def test_classes_default(self):
         c = Component('Component', self.zp)
-        self.assertEqual(c.Classes, ['Products.ZenModel.DeviceComponent.DeviceComponent',
+        self.assertEqual(c.klasses, ['Products.ZenModel.DeviceComponent.DeviceComponent',
                                      'Products.ZenModel.ManagedEntity.ManagedEntity'])
 
     def test_classes_shorthand(self):
-        c = Component('Component', self.zp,Classes = ['DeviceComponent',
-                                                      'ManagedEntity'])
-        self.assertEqual(c.Classes, ['Products.ZenModel.DeviceComponent.DeviceComponent',
+        c = Component('Component', self.zp, klasses=['DeviceComponent',
+                                                     'ManagedEntity'])
+        self.assertEqual(c.klasses, ['Products.ZenModel.DeviceComponent.DeviceComponent',
                                      'Products.ZenModel.ManagedEntity.ManagedEntity'])
 
     def test_classes_NonDefault(self):
-        c = Component('Component', self.zp,Classes = ['ZenPacks.zenoss.Test.Test'])
-        self.assertEqual(c.Classes, ['ZenPacks.zenoss.Test.Test'])
+        c = Component('Component', self.zp, klasses=['zenpacks.zenoss.Test.Test'])
+        self.assertEqual(c.klasses, ['zenpacks.zenoss.Test.Test'])
 
     def test_classes_NonArray(self):
-        c = Component('Component', self.zp,Classes = 'ZenPacks.zenoss.Test.Test')
-        self.assertEqual(c.Classes, ['ZenPacks.zenoss.Test.Test'])
+        c = Component('Component', self.zp, klasses='zenpacks.zenoss.Test.Test')
+        self.assertEqual(c.klasses, ['zenpacks.zenoss.Test.Test'])
 
-class TestComponentClasses(SimpleSetup):
+
+class TestComponentImports(SimpleSetup):
     def test_imports_default(self):
         c = Component('Component', self.zp)
         self.assertEqual(c.imports, ['from zope.component import implements',
-            'from Products.ZenModel.ZenossSecurity import ZEN_CHANGE_DEVICE',
-            'from Products.Zuul.decorators import info',
-            'from Products.Zuul.form import schema',
-            'from Products.Zuul.infos import ProxyProperty',
-            'from Products.Zuul.utils import ZuulMessageFactory as _t',
-            'from Products.ZenModel.DeviceComponent import DeviceComponent',
-            'from Products.ZenModel.ManagedEntity import ManagedEntity'])
+                                     'from Products.ZenModel.ZenossSecurity import ZEN_CHANGE_DEVICE',
+                                     'from Products.Zuul.decorators import info',
+                                     'from Products.Zuul.form import schema',
+                                     'from Products.Zuul.infos import ProxyProperty',
+                                     'from Products.Zuul.utils import ZuulMessageFactory as _t',
+                                     'from Products.ZenModel.DeviceComponent import DeviceComponent',
+                                     'from Products.ZenModel.ManagedEntity import ManagedEntity'])
 
     def test_imports_overridden(self):
-        c = Component('Component', self.zp, imports = ['from zope.component import implements'])
+        c = Component('Component', self.zp, imports=['from zope.component import implements'])
         self.assertEqual(c.imports, ['from zope.component import implements',
-            'from Products.ZenModel.DeviceComponent import DeviceComponent',
-            'from Products.ZenModel.ManagedEntity import ManagedEntity'])
+                                     'from Products.ZenModel.DeviceComponent import DeviceComponent',
+                                     'from Products.ZenModel.ManagedEntity import ManagedEntity'])
 
     def test_imports_string(self):
-        c = Component('Component', self.zp, imports = 'from zope.component import implements')
+        c = Component('Component', self.zp, imports='from zope.component import implements')
         self.assertEqual(c.imports, ['from zope.component import implements',
-            'from Products.ZenModel.DeviceComponent import DeviceComponent',
-            'from Products.ZenModel.ManagedEntity import ManagedEntity'])
+                                     'from Products.ZenModel.DeviceComponent import DeviceComponent',
+                                     'from Products.ZenModel.ManagedEntity import ManagedEntity'])
 
     def test_imports_with_classes(self):
         c = Component('Component', self.zp,
-                       Classes= ['Products.ZenModel.OSComponent.OSComponent',
-                                 'Products.ZenModel.Linkable.Layer2Linkable'
-                                ]
-                     )
+                      klasses=['Products.ZenModel.OSComponent.OSComponent',
+                               'Products.ZenModel.Linkable.Layer2Linkable'
+                               ]
+                      )
 
         c2 = Component('Component2', self.zp,
-                       Classes= ['Products.ZenModel.Software.Software',
+                       klasses=['Products.ZenModel.Software.Software',
                                 ]
-                      )
+                       )
+
         self.maxDiff = None
         self.assertEqual(c.imports, ['from zope.component import implements',
-            'from Products.ZenModel.ZenossSecurity import ZEN_CHANGE_DEVICE',
-            'from Products.Zuul.decorators import info',
-            'from Products.Zuul.form import schema',
-            'from Products.Zuul.infos import ProxyProperty',
-            'from Products.Zuul.utils import ZuulMessageFactory as _t',
-            'from Products.ZenModel.OSComponent import OSComponent',
-            'from Products.ZenModel.Linkable import Layer2Linkable',
-            ])
+                                     'from Products.ZenModel.ZenossSecurity import ZEN_CHANGE_DEVICE',
+                                     'from Products.Zuul.decorators import info',
+                                     'from Products.Zuul.form import schema',
+                                     'from Products.Zuul.infos import ProxyProperty',
+                                     'from Products.Zuul.utils import ZuulMessageFactory as _t',
+                                     'from Products.ZenModel.OSComponent import OSComponent',
+                                     'from Products.ZenModel.Linkable import Layer2Linkable',
+                                     ])
 
         self.assertEqual(c2.imports, ['from zope.component import implements',
-            'from Products.ZenModel.ZenossSecurity import ZEN_CHANGE_DEVICE',
-            'from Products.Zuul.decorators import info',
-            'from Products.Zuul.form import schema',
-            'from Products.Zuul.infos import ProxyProperty',
-            'from Products.Zuul.utils import ZuulMessageFactory as _t',
-            'from Products.ZenModel.Software import Software',
-            ])
+                                      'from Products.ZenModel.ZenossSecurity import ZEN_CHANGE_DEVICE',
+                                      'from Products.Zuul.decorators import info',
+                                      'from Products.Zuul.form import schema',
+                                      'from Products.Zuul.infos import ProxyProperty',
+                                      'from Products.Zuul.utils import ZuulMessageFactory as _t',
+                                      'from Products.ZenModel.Software import Software',
+                                      ])
+
 
 class TestComponentProperties(SimpleSetup):
     def test_Property_default(self):
@@ -359,7 +361,7 @@ if __name__ == "__main__":
     #d1 = zp.addComponent('Device', namespace='Products.ZenModel')
     #rel = zp.addRelation('Device','Enclosure')
     #rel1 = zp.addRelation('Device','Fan', Type='1-1', Contained=False)
-    rel2 = zp.addRelation('Enclosure','Fan', Type='M-M', Contained=False)
+    rel2 = zp.addRelation('Enclosure', 'Fan', Type='M-M', Contained=False)
     #print 'Enclosure'
     #print c1.relationstoArrayofStrings()
     #print rel.hasManyChild(c1)
@@ -379,7 +381,7 @@ if __name__ == "__main__":
     #print d1.hasManyChildRelationship()
     #print [c.id for c in d1.ManyChildren()]
     #print
-    c1.write()
+    #c1.write()
     #os.write()
     #interface.write()
     unittest.main()
