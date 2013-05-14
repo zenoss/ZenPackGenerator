@@ -33,24 +33,24 @@ class ComponentJS(object):
             cjs = cTemplate(file='component.js.tmpl', searchList=[self])
             print cjs
 
-if __name__ == '__main__':
-    from ZenPack import ZenPack
-    zp = ZenPack('ZenPacks.training.NetBotz')
-    dc = zp.addDeviceClass('Device/Snmp', zPythonClass='NetBotzDevice')
-    e = dc.addComponentType('Enclosure')
-    e.addProperty('enclosure_status')
-    e.addProperty('error_status')
-    e.addProperty('parent_id')
-    e.addProperty('docked_id')
+# if __name__ == '__main__':
+#     from ZenPack import ZenPack
+#     zp = ZenPack('ZenPacks.training.NetBotz')
+#     dc = zp.addDeviceClass('Device/Snmp', zPythonClass='NetBotzDevice')
+#     e = dc.addComponentType('Enclosure')
+#     e.addProperty('enclosure_status')
+#     e.addProperty('error_status')
+#     e.addProperty('parent_id')
+#     e.addProperty('docked_id')
 
-    ts = e.addComponentType('TemperatureSensor')
-    ts.addProperty('port')
+#     ts = e.addComponentType('TemperatureSensor')
+#     ts.addProperty('port')
 
-    dc.deviceType.addProperty('temp_sensor_count', Type='int')
+#     dc.deviceType.addProperty('temp_sensor_count', Type='int')
 
-    v = dc.addComponentType('Volume')
-    l = dc.addComponentType('Lun')
-    vs = dc.addComponentType('VServer')
-    zp.addRelation('VServer', 'Volume', Type='1-M', Contained=False)
-    zp.addRelation('Lun', 'Volume', Type='1-M', Contained=False)
-    ComponentJS(dc).write()
+#     v = dc.addComponentType('Volume')
+#     l = dc.addComponentType('Lun')
+#     vs = dc.addComponentType('VServer')
+#     zp.addRelation('VServer', 'Volume', Type='1-M', Contained=False)
+#     zp.addRelation('Lun', 'Volume', Type='1-M', Contained=False)
+#     ComponentJS(dc).write()
