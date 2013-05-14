@@ -17,6 +17,7 @@ from License import License
 from utils import prepId
 from Configure import Configure
 from ComponentJS import ComponentJS
+from Setup import Setup
 
 #from UI import UI
 from memoize import memoize
@@ -32,7 +33,11 @@ class ZenPack(object):
                  author=defaults.author,
                  version=defaults.version,
                  license=License(defaults.license),
-                 destdir='/foo'):
+                 destdir='/foo',
+                 install_requires=None,
+                 compat_zenoss_vers=">=4.2",
+                 prev_zenpack_name=""
+                 ):
 
         self.id = id
         self.namespace = id
@@ -44,8 +49,26 @@ class ZenPack(object):
         self.version = version
         self.license = license
         self.prepname = prepId(id).replace('.', '_')
+        if install_requires:
+            if isinstance(install_requires, basestring):
+                self.install_requires = [install_requires]
+            else:
+                self.install_requires = list(install_requires)
+        else:
+            self.install_requires = []
+        self.compat_zenoss_vers = compat_zenoss_vers
+        self.prev_zenpack_name = prev_zenpack_name
+
+
+        packages = []
+        parts = self.id.split('.')
+        for i in range(len(parts)):
+            packages.append('.'.join(parts[:i+1]))
+        self.packages = packages
+        self.namespace_packages = packages[:-1]
 
         self.configure_zcml = Configure(self)
+        self.setup = Setup(self)
 
 #        self.addComponent('Device', namespace='Products.ZenModel')
 #        o = self.addComponent('OperatingSystem', id='os',
@@ -88,14 +111,13 @@ class ZenPack(object):
                % (self.id, self.author, self.version, self.license)
 
     def write(self):
+        self.setup.write()
         self.configure_zcml.write()
-        #self.component_js.write()
-
         for component in self.components.values():
             component.write()
-
         for cjs in self.componentJSs.values():
             cjs.write()
+
 
 
 # Unit Tests Start here
