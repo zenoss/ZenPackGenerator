@@ -37,7 +37,7 @@ class Property(object):
         self.panelRenderer = panelRenderer
 
         if Type:
-            self.Type = Type.lower()
+            self.Type = Type
         else:
             self.Type = value
 

@@ -17,6 +17,7 @@ class Configure(Template):
         self.zenpack = zenpack
         self.components = zenpack.components
         self.deviceClasses = zenpack.deviceClasses
+        self.componentJSs = zenpack.componentJSs
 
     def customPathReporters(self):
         for c in self.components.values():
@@ -39,27 +40,24 @@ if __name__ == '__main__':
     from ZenPack import ZenPack
     zp = ZenPack('ZenPacks.zenoss.NetAppMonitor')
     dc = zp.addDeviceClass('Storage/NetApp', zPythonClass='Device')
-    dc.addSubComponent('DiskShelf')
-    dc.addSubComponent('DiskShelves')
-    dc.addSubComponent('ClusterPeer')
-    dc.addSubComponent('SnapMirror')
-    dc.addSubComponent('HardDisk')
-    dc.addSubComponent('Interface')
-    dc.addSubComponent('RAIDGroup')
-    dc.addSubComponent('LUN')
-    dc.addSubComponent('Aggregate')
-    dc.addSubComponent('SystemNode')
-    dc.addSubComponent('Plex')
-
-    dc.addSubComponent('QTree')
-    dc.addSubComponent('NetAppFS')
-    dc.addSubComponent('VolumeSnap')
-    dc.addSubComponent('VServer')
+    dc.addComponentType('DiskShelf')
+    dc.addComponentType('DiskShelves')
+    dc.addComponentType('ClusterPeer')
+    dc.addComponentType('SnapMirror')
+    dc.addComponentType('HardDisk')
+    dc.addComponentType('Interface')
+    dc.addComponentType('RAIDGroup')
+    dc.addComponentType('LUN')
+    dc.addComponentType('Aggregate')
+    dc.addComponentType('SystemNode')
+    dc.addComponentType('Plex')
+    dc.addComponentType('QTree')
+    dc.addComponentType('NetAppFS')
+    dc.addComponentType('VolumeSnap')
+    dc.addComponentType('VServer')
     dc2 = zp.addDeviceClass('/')
-    sc2 = dc2.addSubComponent('RabbitmqQueue')
-
-
-    v = dc.addSubComponent('Volume')
+    sc2 = dc2.addComponentType('RabbitmqQueue')
+    v = dc.addComponentType('Volume')
     v.addProperty('volume_name')
     v.addProperty('size_total', Type='int')
     v.addProperty('dsid', Type='int')
@@ -85,24 +83,4 @@ if __name__ == '__main__':
     v.addProperty('volState', detailDisplay=False)
     v.addProperty('volStatus', detailDisplay=False)
     v.addProperty('options', detailDisplay=False)
-
-    # vs = zp.addComponent('VServer')
-    # filer = zp.addComponent('Filer')
-    # rel1 = zp.addRelation('VServer', 'Volume', Type='1-M', Contained=False)
-    # rel2 = zp.addRelation('Filer', 'VServer')
-    # v.custompaths()
-    # a = zp.addComponent('Aggregate')
-    # p = zp.addComponent('Plex')
-    # sn = zp.addComponent('SystemNode')
-    # #filer = zp.addComponent('Filer')
-    # zp.addRelation('SystemNode', 'Aggregate', Type='M-M', Contained=False)
-    # zp.addRelation('Plex', 'Aggregate')
-    # v = zp.addComponent('Volume')
-    # vs = zp.addComponent('VServer')
-    # zp.addComponent('Device')
-    # zp.addRelation('VServer', 'Volume', Type='1-M', Contained=False)
-    # zp.addRelation('Filer', 'VServer')
-    # zp.addRelation('Device', 'VServer')
-    v.write()
-    c = Configure(zp)
-    c.write()
+    zp.write()

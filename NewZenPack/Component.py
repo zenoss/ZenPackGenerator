@@ -192,7 +192,6 @@ class Component(object):
                         custompaths[rel.Type].append((component, prel.components[0]))
 
         return custompaths
-        #1-M
         """obj = self.context.${first_component}()
            if obj:
               paths.extend(relPath(${first_component, '${prel.components[0]}'))
@@ -428,18 +427,4 @@ class TestComponentProperties(SimpleSetup):
         self.assertEqual(c.properties['oids'].value, 2)
 
 if __name__ == "__main__":
-    from ZenPack import ZenPack
-    zp = ZenPack('ZenPacks.zenoss.NetAppMonitor')
-    v = zp.addComponentType('Volume')
-    l = zp.addComponentType('Lun')
-    vs = zp.addComponentType('VServer')
-    zp.addComponentType('Device')
-    zp.addRelation('VServer', 'Volume', Type='1-M', Contained=False)
-    zp.addRelation('Lun', 'Volume', Type='1-M', Contained = False)
-    zp.addRelation('Device', 'VServer')
-    zp.addRelation('Device', 'Lun')
-    for row in v.custompaths()['1-M']:
-        print row[0].id, row[1].id
-    print v.dropdowncomponents()
-
     unittest.main()

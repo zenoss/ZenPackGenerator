@@ -14,8 +14,7 @@ class ComponentJS(object):
 
     def __init__(self, deviceClass):
         self.deviceClass = deviceClass
-        self.components = deviceClass.componentTypes
-        print self.name
+        self.zPythonClass = self.deviceClass.zPythonClass
 
     @property
     def name(self):
@@ -27,6 +26,8 @@ class ComponentJS(object):
             return "_".join(zpid.split('.')) + "__" + zpc_name
 
     def write(self):
+        # Update the components just before we need them.
+        self.components = self.deviceClass.componentTypes
         if self.components:
             #Todo property sorting options
             cjs = cTemplate(file='component.js.tmpl', searchList=[self])

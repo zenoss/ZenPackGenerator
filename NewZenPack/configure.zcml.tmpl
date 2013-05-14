@@ -50,14 +50,15 @@
         />
 
 #end if
-#if $deviceClasses
+#if $componentJSs
     <!-- JavaScript needed only for NetApp devices. -->
 
-#for $dc in $deviceClasses.values()
+#for $cjs in $componentJSs.values()
+$cjs
     <browser:viewlet
-        name="js-${zenpack.prepname}-${dc.zPythonClass}"
-        paths="/++resource++${zenpack.prepname}-${dc.zPythonClass}/js/${zenpack.prepname}-${dc.zPythonClass}.js"
-        for="${dc.zPythonClass}"
+        name="js-${cjs.name}"
+        paths="/++resource++${cjs.name}/js/${cjs.name}.js"
+        for="${cjs.zPythonClass}"
         weight="20"
         manager="Products.ZenUI3.browser.interfaces.IJavaScriptSrcManager"
         class="Products.ZenUI3.browser.javascript.JavaScriptSrcBundleViewlet"

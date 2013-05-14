@@ -39,6 +39,7 @@ class ZenPack(object):
         self.deviceClasses = {}
         self.components = {}
         self.relationships = {}
+        self.componentJSs = {}
         self.author = author
         self.version = version
         self.license = license
@@ -78,14 +79,9 @@ class ZenPack(object):
 
     def registerDeviceClass(self, deviceClass):
         self.deviceClasses[deviceClass.id] = deviceClass
-
-    #def relationshipLookup(self, component):
-    #    relationships = []
-    #    for relationship in self.relationships.values():
-    #        if relationship.hasComponent(component):
-    #            relationships.append(relationship)
-
-    #    return relationships
+        #Add the ComponentJS pieces when we are at it.
+        cjs = ComponentJS(deviceClass)
+        self.componentJSs[cjs.name] = cjs
 
     def __repr__(self):
         return "%s \n\tAUTHOR: %s\n\tVERSION: %s\n\tLICENSE: %s" \
@@ -98,8 +94,8 @@ class ZenPack(object):
         for component in self.components.values():
             component.write()
 
-        for deviceClass in self.deviceClasses.values():
-            ComponentJS(deviceClass).write()
+        for cjs in self.componentJSs.values():
+            cjs.write()
 
 
 # Unit Tests Start here
