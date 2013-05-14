@@ -15,6 +15,7 @@ from DeviceClass import DeviceClass
 from Defaults import Defaults
 from License import License
 from utils import prepId
+from Configure import Configure
 
 #from UI import UI
 from memoize import memoize
@@ -42,6 +43,7 @@ class ZenPack(object):
         self.license = license
         self.prepname = prepId(id).replace('.', '_')
 
+        self.configure_zcml = Configure(self)
 
 #        self.addComponent('Device', namespace='Products.ZenModel')
 #        o = self.addComponent('OperatingSystem', id='os',
@@ -88,6 +90,12 @@ class ZenPack(object):
         return "%s \n\tAUTHOR: %s\n\tVERSION: %s\n\tLICENSE: %s" \
                % (self.id, self.author, self.version, self.license)
 
+    def write(self):
+        self.configure_zcml.write()
+
+        for component in self.components.values():
+            component.write()
+
 
 # Unit Tests Start here
 class SimpleSetup(unittest.TestCase):
@@ -133,9 +141,7 @@ class TestZenPackRelationships(SimpleSetup):
         self.zp.addRelation('Device', 'ClusterPeers')
 
 if __name__ == "__main__":
-    from Configure import Configure
     zp = ZenPack('ZenPacks.training.NetBotz')
-    c = Configure(zp)
     dc = zp.addDeviceClass('Device/Snmp', zPythonClass='NetBotzDevice')
     e = dc.addSubComponent('Enclosure')
     e.addProperty('enclosure_status')
@@ -146,14 +152,7 @@ if __name__ == "__main__":
     ts = e.addSubComponent('TemperatureSensor')
     ts.addProperty('port')
 
-    deviceComponent = dc.deviceComponent
-    deviceComponent.addProperty('temp_sensor_count', Type='int')
+    dc.deviceComponent.addProperty('temp_sensor_count', Type='int')
 
-    deviceComponent.write()
-    e.write()
-    ts.write()
-
-    # Configure.zcml
-    c.write()
-
+    zp.write()
     unittest.main()
