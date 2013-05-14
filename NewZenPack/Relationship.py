@@ -10,7 +10,6 @@
 
 import unittest
 
-
 class Relationship(object):
     """ZenPack Relationship"""
 
@@ -22,7 +21,7 @@ class Relationship(object):
         from Component import Component
         lookup = Component.lookup
         self.components = lookup(ZenPack, ComponentA), lookup(ZenPack, ComponentB)
-        self.id = (self.components[0].id, self.components[1].id)
+        self.id = '%s %s' % (self.components[0].id, self.components[1].id)
         self.Type = Type
         self.Contained = Contained
 
@@ -42,43 +41,19 @@ class Relationship(object):
         rels = []
         for rel in Relationship.relationships.values():
             if rel.hasComponent(component):
-                if Contained and not rel.Contained == Contained: continue
-                if First and not rel.first(component) == First: continue
+                if not rel.Contained == Contained:
+                    continue
+                if not rel.first(component) == First:
+                    continue
                 if isinstance(Types, basestring):
-                    if rel.Type == Types: continue
+                    if rel.Type == Types:
+                        continue
                 else:
-                    if Types and not rel.Type in Types: continue
+                    if Types and not rel.Type in Types:
+                        continue
+                
                 rels.append(rel)
-        return rels
-
-    '''
-    def hasManyChild(self, component):
-        if self.components[0].id == component.id and '-M' in self.Type:
-            return True
-        if self.components[1].id == component.id and 'M-' in self.Type:
-            return True
-        return False
-
-
-    def ManyChild(self, component):
-        if self.components[0].id == component.id and '-M' in self.Type:
-            return self.components[1]
-        if self.components[1].id == component.id and 'M-' in self.Type:
-            return self.components[0]
-        return None
-
-    def getParentPath(self, component):
-        for c in self.components:
-            if not c == component:
-                relations = [rel for rel in self.ZenPack.relationships.values() if rel.hasComponent(c)]
-                for relation in relations:
-                    print relation.id
-                    print c.id
-                    if relation.Contained and 'M' in relation.Type:
-                        for rc in relation.components:
-                            if not c.id == rc.id:
-                                return rc.relname
-    '''
+        return sorted(rels)
 
     def first(self, component):
         '''Is this the first component in the relationship'''
@@ -155,11 +130,13 @@ class TestRelationshipCreate(SimpleSetup):
 
 class TestRelationship_HasComponent(SimpleSetup):
     def test_HasComponent_True(self):
+        from Component import Component
         c = Component('SampleComponent', self.zp)
         r = Relationship(self.zp, 'SampleDevice', 'SampleComponent')
         self.assertEqual(True, r.hasComponent(c))
 
     def test_HasComponent_False(self):
+        from Component import Component
         c = Component('SampleComponent', self.zp)
         r = Relationship(self.zp, 'SampleDevice', 'SampleComponent2')
         self.assertEqual(False, r.hasComponent(c))
@@ -167,41 +144,51 @@ class TestRelationship_HasComponent(SimpleSetup):
 
 class TestRelationship_FindComponents(SimpleSetup):
     def test_ReturnsCorrectRelationships(self):
+        from Component import Component
         c = Component('SampleComponent', self.zp)
         r = Relationship(self.zp, 'SampleDevice', 'SampleComponent')
         self.assertEqual([r], Relationship.find(c))
 
     def test_ReturnsNoRelationships(self):
+        from Component import Component
         c2 = Component('SampleComponent2', self.zp)
         Relationship(self.zp, 'SampleDevice', 'SampleComponent')
         self.maxDiff = None
         self.assertEqual([], Relationship.find(c2))
 
+
+class TestRelationship_FindComponentsContainment(SimpleSetup):
     def test_ReturnsContainedRelationships(self):
+        from Component import Component
         c = Component('SampleComponent', self.zp)
         c3 = Component('SampleComponent3', self.zp)
         r = Relationship(self.zp, 'SampleDevice', 'SampleComponent')
         r3 = Relationship(self.zp, 'SampleComponent3', 'SampleComponent4', Contained=False)
-        Relationship(self.zp, 'SampleComponent3', 'SampleComponent5')
+        Relationship(self.zp, 'SampleComponent4', 'SampleComponent5')
+        self.maxDiff = None
         self.assertEqual([r], Relationship.find(c, Contained=True))
         self.assertEqual([r3], Relationship.find(c3, Contained=False))
 
+
 class TestRelationship_stringoutput(SimpleSetup):
     def test_returnsOneToManyCont(self):
+        from Component import Component
         d = Component('Device', self.zp)
-        c = Component('Component',self.zp)
+        c = Component('Component', self.zp)
         r = Relationship(self.zp, 'Device', 'Component')
         self.assertEqual("('components', ToManyCont(ToOne, 'a.b.c.Component', 'device',)),", r.toString(d))
         self.assertEqual("('device', ToOne(ToManyCont, 'a.b.c.Device', 'components',)),", r.toString(c))
 
     def test_returnsOneToMany(self):
+        from Component import Component
         d2 = Component('Device2', self.zp)
-        c2 = Component('Component2',self.zp)
+        c2 = Component('Component2', self.zp)
         r2 = Relationship(self.zp, 'Device2', 'Component2', Contained=False)
         self.assertEqual("('component2s', ToMany(ToOne, 'a.b.c.Component2', 'device2',)),", r2.toString(d2))
         self.assertEqual("('device2', ToOne(ToMany, 'a.b.c.Device2', 'component2s',)),", r2.toString(c2))
 
     def test_returnsOneToOne(self):
+        from Component import Component
         d3 = Component('Device3', self.zp)
         c3 = Component('Component3', self.zp)
         r3 = Relationship(self.zp, 'Device3', 'Component3', Contained=False, Type='1-1')
@@ -209,6 +196,7 @@ class TestRelationship_stringoutput(SimpleSetup):
         self.assertEqual("('device3', ToOne(ToOne, 'a.b.c.Device3', 'component3',)),", r3.toString(c3))
 
     def test_returnsManyToManyCont(self):
+        from Component import Component
         d4 = Component('Device4', self.zp)
         c4 = Component('Component4', self.zp)
         r4 = Relationship(self.zp, 'Device4', 'Component4', Type='M-M')
@@ -216,6 +204,7 @@ class TestRelationship_stringoutput(SimpleSetup):
         self.assertEqual("('device4s', ToManyCont(ToMany, 'a.b.c.Device4', 'component4s',)),", r4.toString(c4))
 
     def test_returnsManyToMany(self):
+        from Component import Component
         d5 = Component('Device5', self.zp)
         c5 = Component('Component5', self.zp)
         r5 = Relationship(self.zp, 'Device5', 'Component5', Contained=False, Type='M-M')
@@ -225,3 +214,4 @@ class TestRelationship_stringoutput(SimpleSetup):
 
 if __name__ == "__main__":
     unittest.main()
+

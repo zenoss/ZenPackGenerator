@@ -24,15 +24,23 @@ class Defaults(object):
         self.author = 'ZenossLabs <labs@zenoss.com>'
         self.version = '0.0.1'
         self.license = 'gpl'
-        self.klasses = ['Products.ZenModel.DeviceComponent.DeviceComponent',
-                        'Products.ZenModel.ManagedEntity.ManagedEntity']
+        self.component_classes = ['Products.ZenModel.DeviceComponent.DeviceComponent',
+                                  'Products.ZenModel.ManagedEntity.ManagedEntity']
 
-        self.imports = ['from zope.component import implements',
-                        'from Products.ZenModel.ZenossSecurity import ZEN_CHANGE_DEVICE',
-                        'from Products.Zuul.decorators import info',
-                        'from Products.Zuul.form import schema',
-                        'from Products.Zuul.infos import ProxyProperty',
-                        'from Products.Zuul.utils import ZuulMessageFactory as _t',
-                        ]
+        self.device_classes = ['Products.ZenModel.Device.Device']
 
+        self.component_imports = ['from zope.interface import implements',
+                                  'from Products.ZenModel.ZenossSecurity import ZEN_CHANGE_DEVICE',
+                                  'from Products.Zuul.decorators import info',
+                                  'from Products.Zuul.form import schema',
+                                  'from Products.Zuul.infos import ProxyProperty',
+                                  'from Products.Zuul.utils import ZuulMessageFactory as _t',
+                                  ]
 
+        self.device_imports = ['from zope.interface import implements',
+                               'from Products.Zuul.form import schema',
+                               'from Products.Zuul.infos import ProxyProperty',
+                               'from Products.Zuul.infos.device import DeviceInfo',
+                               'from Products.Zuul.interface.device import IDeviceInfo',
+                               'from Products.Zuul.utils import ZuulMessageFactory as _t',
+                               ]

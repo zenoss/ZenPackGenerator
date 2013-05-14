@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    >
+
+#if $components
+    <!-- API: Info Adapters -->
+
+#for $c in sorted($components.values())
+    <adapter
+        provides=".${c.name}.I${c.name}Info"
+        for=".${c.name}.${c.name}"
+        factory=".${c.name}.${c.name}Info"
+        />
+
+#end for
+#end if
+
+#if $customPathReporters
+    <!-- Custom Path Reporters -->
+
+#for $c in $components.values()
+#if $c.custompaths
+    <adapter
+        provides="Products.Zuul.catalog.interfaces.IPathReporter"
+        for=".${c.name}.${c.name}"
+        factory=".${c.name}.${c.name}PathReporter"
+        />
+
+#end if
+#end for
+#end if
+    <!-- Browser Resources -->
+    <browser:resourceDirectory
+        name="$zenpack.prepname"
+        directory="resources"
+        />
+
+#if $components
+    <!-- JavaScript needed for all Zenoss pages. -->
+    <browser:viewlet
+        name="js-${zenpack.prepname}"
+        paths="/++resource++${zenpack.prepname}/js/${zenpack.prepname}.js"
+        for="*"
+        weight="20"
+        manager="Products.ZenUI3.browser.interfaces.IJavaScriptSrcManager"
+        class="Products.ZenUI3.browser.javascript.JavaScriptSrcBundleViewlet"
+        permission="zope2.Public"
+        />
+
+#end if
+#if $deviceClasses
+    <!-- JavaScript needed only for NetApp devices. -->
+
+#for $dc in $deviceClasses.values()
+    <browser:viewlet
+        name="js-${zenpack.prepname}-${dc.zPythonClass}"
+        paths="/++resource++${zenpack.prepname}-${dc.zPythonClass}/js/${zenpack.prepname}-${dc.zPythonClass}.js"
+        for="${dc.zPythonClass}"
+        weight="20"
+        manager="Products.ZenUI3.browser.interfaces.IJavaScriptSrcManager"
+        class="Products.ZenUI3.browser.javascript.JavaScriptSrcBundleViewlet"
+        permission="zope2.Public"
+        />
+
+#end for
+#end if
+</configure>

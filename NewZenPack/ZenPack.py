@@ -14,6 +14,8 @@ from Relationship import Relationship
 from DeviceClass import DeviceClass
 from Defaults import Defaults
 from License import License
+from utils import prepId
+
 #from UI import UI
 from memoize import memoize
 import unittest
@@ -27,7 +29,8 @@ class ZenPack(object):
                  id,
                  author=defaults.author,
                  version=defaults.version,
-                 license=License(defaults.license)):
+                 license=License(defaults.license),
+                 destdir='/foo'):
 
         self.id = id
         self.namespace = id
@@ -37,6 +40,9 @@ class ZenPack(object):
         self.author = author
         self.version = version
         self.license = license
+        self.prepname = prepId(id).replace('.', '_')
+
+
 #        self.addComponent('Device', namespace='Products.ZenModel')
 #        o = self.addComponent('OperatingSystem', id='os',
 #                              Classes=['Products.ZenModel.Software.Software'],
@@ -47,9 +53,8 @@ class ZenPack(object):
 #        self.addComponent('Hardware', id='hw', namespace='Products.ZenModel')
 
     @memoize
-    def addDeviceClass(self, deviceClass):
-        dc = DeviceClass(deviceClass, self)
-        self.deviceClasses[dc.id] = dc
+    def addDeviceClass(self, deviceClass, *args, **kwargs):
+        dc = DeviceClass(deviceClass, self, *args, **kwargs)
         return dc
 
     @memoize
@@ -67,6 +72,9 @@ class ZenPack(object):
 
     def registerRelationship(self, relationship):
         self.relationships[relationship.id] = relationship
+
+    def registerDeviceClass(self, deviceClass):
+        self.deviceClasses[deviceClass.id] = deviceClass
 
     #def relationshipLookup(self, component):
     #    relationships = []
@@ -125,56 +133,27 @@ class TestZenPackRelationships(SimpleSetup):
         self.zp.addRelation('Device', 'ClusterPeers')
 
 if __name__ == "__main__":
-    zp = ZenPack('ZenPacks.zenoss.NetAppMonitor')
-    v = zp.addComponent('Volume')
-    v.addProperty('volume_name')
-    v.addProperty('size_total', Type='int')
-    v.addProperty('dsid', Type='int')
-    v.addProperty('fsid', Type='int')
-    v.addProperty('msid', Type='int')
-    v.addProperty('state')
-    v.addProperty('volume_type')
-    v.addProperty('volume_style')
-    v.addProperty('cluster_volume', Type=bool)
-    v.addProperty('constituent_volume', Type=bool)
-    v.addProperty('export_policy')
-    v.addProperty('junction_active', Type=bool)
-    v.addProperty('junction_parent_name')
-    v.addProperty('junction_path')
-    v.addProperty('cloneSnap', detailDisplay=False, gridDisplay=False)
-    v.addProperty('cloneOf', detailDisplay=False)
-    v.addProperty('uuid', detailDisplay=False)
-    v.addProperty('volType', detailDisplay=False)
-    v.addProperty('flone', detailDisplay=False)
-    v.addProperty('floneOf', detailDisplay=False)
-    v.addProperty('fsid', detailDisplay=False)
-    v.addProperty('owningHost', detailDisplay=False)
-    v.addProperty('volState', detailDisplay=False)
-    v.addProperty('volStatus', detailDisplay=False)
-    v.addProperty('options', detailDisplay=False)
+    from Configure import Configure
+    zp = ZenPack('ZenPacks.training.NetBotz')
+    c = Configure(zp)
+    dc = zp.addDeviceClass('Device/Snmp', zPythonClass='NetBotzDevice')
+    e = dc.addSubComponent('Enclosure')
+    e.addProperty('enclosure_status')
+    e.addProperty('error_status')
+    e.addProperty('parent_id')
+    e.addProperty('docked_id')
 
-    vs = zp.addComponent('VServer')
-    filer = zp.addComponent('Filer')
-    rel1 = zp.addRelation('VServer', 'Volume', Type='1-M', Contained=False)
-    print rel1.first(v)
-    rel2 = zp.addRelation('Filer', 'VServer')
-    print rel1.toString(v)
-    print rel1.toString(vs)
-    print rel2.toString(vs)
+    ts = e.addSubComponent('TemperatureSensor')
+    ts.addProperty('port')
 
-    v.custompaths()
-    a = zp.addComponent('Aggregate')
-    p = zp.addComponent('Plex')
-    sn = zp.addComponent('SystemNode')
-    #filer = zp.addComponent('Filer')
-    zp.addRelation('SystemNode', 'Aggregate', Type='M-M', Contained=False)
-    zp.addRelation('Plex', 'Aggregate')
-    v = zp.addComponent('Volume')
-    vs = zp.addComponent('VServer')
-    zp.addComponent('Device')
-    zp.addRelation('VServer', 'Volume', Type='1-M', Contained=False)
-    zp.addRelation('Filer', 'VServer')
-    zp.addRelation('Device', 'VServer')
-    sn.write()
-    v.write()
+    deviceComponent = dc.deviceComponent
+    deviceComponent.addProperty('temp_sensor_count', Type='int')
+
+    deviceComponent.write()
+    e.write()
+    ts.write()
+
+    # Configure.zcml
+    c.write()
+
     unittest.main()

@@ -30,7 +30,7 @@ class Property(object):
         self.value = value
         self.detailDisplay = detailDisplay
         if Type:
-            self.Type = Type
+            self.Type = Type.lower()
         else:
             self.Type = value
 

@@ -9,38 +9,51 @@
 ##############################################################################
 
 import unittest
+from utils import KlassExpand
 
 
 class DeviceClass(object):
-    def __init__(self, path, ZenPack, prefix='/zport/dmd'):
-        self.ZenPack = ZenPack
+    deviceClasses = {}
+
+    def __init__(self, path, ZenPack, prefix='/zport/dmd', zPythonClass='Products.ZenModel.Device.Device'):
+        self.zenpack = ZenPack
         self.path = '/'.join([prefix, path.lstrip('/')])
+        self.id = self.path
         self.subClasses = {}
+        self.zPythonClass = KlassExpand(self.zenpack, zPythonClass)
+        self.DeviceComponent()
 
-    @property
-    def id(self):
-        return self.path
+        DeviceClass.deviceClasses[self.id] = self
+        self.zenpack.registerDeviceClass(self)
 
-    @property
-    def portal_type(self):
-        return self.unique_name
+    def DeviceComponent(self):
+        self.deviceComponent = self.zenpack.addComponent(self.zPythonClass, device=True)
 
-    @property
-    def meta_type(self):
-        return self.unique_name
+    def addSubClass(self, deviceClass, *args, **kwargs):
+        if 'prefix' in kwargs:
+            del(kwargs['prefix'])
 
-    def addProperty(self, id, type, default):
-        pass
+        if 'zPythonClass' in kwargs:
+            return DeviceClass(deviceClass,
+                               self.zenpack,
+                               prefix=self.path,
+                               *args,
+                               **kwargs)
+        else:
+            return DeviceClass(deviceClass,
+                               self.zenpack,
+                               prefix=self.path,
+                               zPythonClass=self.zPythonClass,
+                               *args,
+                               **kwargs)
 
-    #memoize
-    def addSubClass(self,path):
-        return DeviceClass(path=path, prefix=self.path)
+    def addSubComponent(self, component, **kwargs):
+        c = self.deviceComponent.addSubComponent(component, **kwargs)
+        return c
 
-    def __repr__(self):
-        return "DeviceClass @ <%s>" % self.path
+#Unit tests Start here
 
 
-# Unit Tests Start here
 class SimpleSetup(unittest.TestCase):
     def setUp(self):
         from ZenPack import ZenPack
@@ -48,9 +61,50 @@ class SimpleSetup(unittest.TestCase):
 
 
 class TestDeviceClassCreate(SimpleSetup):
-    def test_addDeviceClass(self):
-        dc1 = DeviceClass('Devices/Storage/DC1', self.zp)
-        self.assertIsInstance(dc1, DeviceClass)
+    #@unittest.skip("Skipping")
+    def test_DeviceClassCreate(self):
+        dc = DeviceClass('/Storage/Foo', self.zp)
+        self.assertIsInstance(dc, DeviceClass)
+        self.assertEqual(dc.zPythonClass, 'Products.ZenModel.Device.Device')
+
+    def test_SubDeviceClassCreate(self):
+        dc = DeviceClass('Storage/Foo', self.zp)
+        sdc = dc.addSubClass('Bar')
+        self.assertEqual(sdc.path, '/zport/dmd/Storage/Foo/Bar')
+        self.assertEqual(sdc.zPythonClass, 'Products.ZenModel.Device.Device')
+
+    def test_DeviceClassComponentId(self):
+        dc = DeviceClass('Storage/Foo', self.zp)
+        self.assertEqual(dc.deviceComponent.id, 'Products.ZenModel.Device.Device')
+
+    def test_setzPythonClass_on_DeviceClass(self):
+        dc = DeviceClass('Storage/Foo', self.zp, zPythonClass='a.b.c.Device')
+        self.assertEqual(dc.zPythonClass, 'a.b.c.Device')
+        self.assertEqual(dc.deviceComponent.id, 'a.b.c.Device')
+
+    def test_setzPythonClass_shortClass(self):
+        dc = DeviceClass('Storage/Foo', self.zp, zPythonClass='Device')
+        self.assertEqual(dc.zPythonClass, 'a.b.c.Device')
+        self.assertEqual(dc.deviceComponent.id, 'a.b.c.Device')
+
+    def test_addSubComponentToCustomDeviceComponent(self):
+        from Component import Component
+        from Relationship import Relationship
+        dc = DeviceClass('Storage/NetApp', self.zp, zPythonClass='Device')
+        sc = dc.addSubComponent('Fan')
+        self.assertIsInstance(sc, Component)
+        self.assertEqual(Relationship.relationships['a.b.c.Device a.b.c.Fan'].hasComponent(sc), True)
+        self.assertEqual(Relationship.relationships['a.b.c.Device a.b.c.Fan'].hasComponent(dc.deviceComponent), True)
+
+    def test_addSubComponentToDefaultDeviceComponent(self):
+        from Component import Component
+        from Relationship import Relationship
+        dc2 = DeviceClass('Server/Linux', self.zp)
+        sc2 = dc2.addSubComponent('Fan2')
+        self.assertIsInstance(sc2, Component)
+        self.assertEqual(Relationship.relationships['Products.ZenModel.Device.Device a.b.c.Fan2'].hasComponent(sc2), True)
+        self.assertEqual(Relationship.relationships['Products.ZenModel.Device.Device a.b.c.Fan2'].hasComponent(dc2.deviceComponent), True)
+
 
 if __name__ == "__main__":
     unittest.main()

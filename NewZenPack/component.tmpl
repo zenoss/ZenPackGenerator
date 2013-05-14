@@ -1,8 +1,9 @@
+$zenpack.license.header
 #for $i in $imports
 $i
 #end for
 
-class ${klass}(#echo ', '.join($klassNames)#):
+class ${shortklass}(#echo ', '.join($klassNames)#):
     meta_type = portal_type = '$portal_type'
 
 #if $properties or $relations
@@ -67,7 +68,7 @@ class ${klass}(#echo ', '.join($klassNames)#):
                         obj, exc, self))
 
 #if $displayInfo
-class I${name}Info(I${Type}Info):
+class I${shortklass}Info(I${Type}Info):
 #if $ManyRelationships
 #for $rel in $ManyRelationships
     ${rel.components[1].relname}_count = schema.Int(title=_t(u'Number of ${rel.components[1].names}))
@@ -82,8 +83,8 @@ class I${name}Info(I${Type}Info):
 #end if
 #end if
 #if $displayIInfo
-class ${name}Info(${Type}Info):
-    implements(I${name}Info)
+class ${shortklass}Info(${Type}Info):
+    implements(I${shortklass}Info)
 #if $properties.values()
 
 #for $prop in $properties.values()
@@ -111,8 +112,8 @@ class ${name}Info(${Type}Info):
 #end if
 ##CUSTOM PATHS REPORTERS
 #if $custompaths
-class ${name}PathReporter(DefaultPathReporter):
-    paths = super(${name}PathReporter, self).getPaths()
+class ${shortklass}PathReporter(DefaultPathReporter):
+    paths = super(${shortklass}PathReporter, self).getPaths()
 
 #if '1-M' in $custompaths.keys()
 #for $path in $custompaths['1-M']

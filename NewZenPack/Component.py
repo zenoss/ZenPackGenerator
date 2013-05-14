@@ -14,6 +14,7 @@ from Defaults import Defaults
 from Property import Property
 from Relationship import Relationship
 from Cheetah.Template import Template as cTemplate
+from utils import KlassExpand
 
 plural = inflect.engine().plural
 
@@ -26,8 +27,8 @@ class Component(object):
     def __init__(self,
                  name,
                  zenpack,
-                 klasses=Defaults().klasses,
-                 imports=Defaults().imports,
+                 klasses=None,
+                 imports=None,
                  names=None,
                  meta_type=None,
                  device=False,
@@ -37,13 +38,17 @@ class Component(object):
         self.name = name
         self.names = names
         self.klass = name
-        self.relname = self.name.lower()
-        self.relnames = self.names.lower()
+
         self.zenpack = zenpack
-        self.unique_name = meta_type
+
         self.device = device
 
-        if isinstance(imports, basestring):
+        if not imports:
+            if not device:
+                self.imports = Defaults().component_imports
+            else:
+                self.imports = Defaults().device_imports
+        elif isinstance(imports, basestring):
             self.imports = [imports]
         else:
             # Copy the input array, don't hang on to a reference.
@@ -53,30 +58,49 @@ class Component(object):
             self.namespace = namespace
         else:
             self.namespace = self.zenpack.namespace
-        self.id = "%s.%s" % (self.namespace, self.name)
 
+        self.id = KlassExpand(self.zenpack, self.name)
+
+        # ZenPack.example.Foo.Class
+        # return Class
+        self.shortklass = self.id.split('.')[-1]
+        self.relname = self.shortklass.lower()
+        self.relnames = plural(self.relname)
+        self.unique_name = meta_type
+
+        if not klasses:
+            if not device:
+                self.klasses = Defaults().component_classes
+            else:
+                self.klasses = Defaults().device_classes
         # Copy the input array, don't hang on to a reference.
-        if isinstance(klasses, basestring):
+        elif isinstance(klasses, basestring):
             self.klasses = [klasses]
         else:
             self.klasses = list(klasses)
+
         self.properties = {}
+
         self.zenpack.registerComponent(self)
         Component.components[self.id] = self
 
-    @property
-    def id(self):
-        return self.__id
+    def __lt__(self, other):
+        '''Implemented for sort operations'''
+        return self.id < other.id
 
-    @id.setter
-    def id(self, value):
-        if value:
-            self.__id = value
-        else:
-            if "." in self.name:
-                self.__id = self.name
-            else:
-                self.__id = ".".join([self.namespace, self.name])
+    # @property
+    # def id(self):
+    #     return self.__id
+
+    # @id.setter
+    # def id(self, value):
+    #     if value:
+    #         self.__id = value
+    #     else:
+    #         if "." in self.name:
+    #             self.__id = self.name
+    #         else:
+    #             self.__id = ".".join([self.namespace, self.name])
 
     def Type(self):
         if self.device:
@@ -91,7 +115,7 @@ class Component(object):
     @unique_name.setter
     def unique_name(self, value):
         if not value:
-            self.__unique_name = self.name
+            self.__unique_name = self.shortklass
         else:
             self.__unique_name = value
 
@@ -150,7 +174,6 @@ class Component(object):
 
     def custompaths(self):
         custompaths = {}
-
         rels = Relationship.find(self, Contained=False, First=False)
         for rel in rels:
             for component in rel.components:
@@ -215,7 +238,31 @@ class Component(object):
 
         return Component(value, zenpack)
 
+    def addSubComponent(self, component, **kwargs):
+        c = Component(component, self.zenpack, **kwargs)
+        Relationship(self.zenpack, self.id, c.id)
+        return c
+
+    def updateImports(self):
+        Types = {}
+        for relationship in self.zenpack.relationships.values():
+            if relationship.hasComponent(self):
+                if '-M' in relationship.Type:
+                    if relationship.Contained:
+                        Types['ToManyCont'] = 1
+                    else:
+                        Types['ToMany'] = 1
+                if '1' in relationship.Type:
+                    Types['ToOne'] = 1
+                if 'M-' in relationship.Type:
+                    Types['ToMany'] = 1
+
+        imports = "from Products.ZenRelations.RelSchema import %s" % ",".join(sorted(Types.keys()))
+        self.imports.append(imports)
+
+
     def write(self):
+        self.updateImports()
         t = cTemplate(file='component.tmpl', searchList=[self])
         print t
         #f = open('a.out', 'w')
@@ -289,7 +336,7 @@ class TestComponentClasses(SimpleSetup):
 class TestComponentImports(SimpleSetup):
     def test_imports_default(self):
         c = Component('Component', self.zp)
-        self.assertEqual(c.imports, ['from zope.component import implements',
+        self.assertEqual(c.imports, ['from zope.interface import implements',
                                      'from Products.ZenModel.ZenossSecurity import ZEN_CHANGE_DEVICE',
                                      'from Products.Zuul.decorators import info',
                                      'from Products.Zuul.form import schema',
@@ -299,14 +346,14 @@ class TestComponentImports(SimpleSetup):
                                      'from Products.ZenModel.ManagedEntity import ManagedEntity'])
 
     def test_imports_overridden(self):
-        c = Component('Component', self.zp, imports=['from zope.component import implements'])
-        self.assertEqual(c.imports, ['from zope.component import implements',
+        c = Component('Component', self.zp, imports=['from zope.interface import implements'])
+        self.assertEqual(c.imports, ['from zope.interface import implements',
                                      'from Products.ZenModel.DeviceComponent import DeviceComponent',
                                      'from Products.ZenModel.ManagedEntity import ManagedEntity'])
 
     def test_imports_string(self):
-        c = Component('Component', self.zp, imports='from zope.component import implements')
-        self.assertEqual(c.imports, ['from zope.component import implements',
+        c = Component('Component', self.zp, imports='from zope.interface import implements')
+        self.assertEqual(c.imports, ['from zope.interface import implements',
                                      'from Products.ZenModel.DeviceComponent import DeviceComponent',
                                      'from Products.ZenModel.ManagedEntity import ManagedEntity'])
 
@@ -323,7 +370,7 @@ class TestComponentImports(SimpleSetup):
                        )
 
         self.maxDiff = None
-        self.assertEqual(c.imports, ['from zope.component import implements',
+        self.assertEqual(c.imports, ['from zope.interface import implements',
                                      'from Products.ZenModel.ZenossSecurity import ZEN_CHANGE_DEVICE',
                                      'from Products.Zuul.decorators import info',
                                      'from Products.Zuul.form import schema',
@@ -333,7 +380,7 @@ class TestComponentImports(SimpleSetup):
                                      'from Products.ZenModel.Linkable import Layer2Linkable',
                                      ])
 
-        self.assertEqual(c2.imports, ['from zope.component import implements',
+        self.assertEqual(c2.imports, ['from zope.interface import implements',
                                       'from Products.ZenModel.ZenossSecurity import ZEN_CHANGE_DEVICE',
                                       'from Products.Zuul.decorators import info',
                                       'from Products.Zuul.form import schema',
