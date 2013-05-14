@@ -16,6 +16,7 @@ from Defaults import Defaults
 from License import License
 from utils import prepId
 from Configure import Configure
+from ComponentJS import ComponentJS
 
 #from UI import UI
 from memoize import memoize
@@ -60,7 +61,7 @@ class ZenPack(object):
         return dc
 
     @memoize
-    def addComponent(self, component, **kwargs):
+    def addComponentType(self, component, **kwargs):
         c = Component(component, self, **kwargs)
         return c
 
@@ -92,9 +93,13 @@ class ZenPack(object):
 
     def write(self):
         self.configure_zcml.write()
+        #self.component_js.write()
 
         for component in self.components.values():
             component.write()
+
+        for deviceClass in self.deviceClasses.values():
+            ComponentJS(deviceClass).write()
 
 
 # Unit Tests Start here
@@ -121,16 +126,16 @@ class TestZenPackDeviceClass(SimpleSetup):
 
 class TestZenPackComponent(SimpleSetup):
     def test_addComponent(self):
-        c1 = self.zp.addComponent('Foo')
+        c1 = self.zp.addComponentType('Foo')
         self.assertIsInstance(c1, Component)
 
     def test_addMemoizedComponent(self):
-        c1 = self.zp.addComponent('Component')
-        c2 = self.zp.addComponent('Component')
+        c1 = self.zp.addComponentType('Component')
+        c2 = self.zp.addComponentType('Component')
         self.assertIs(c1, c2)
 
     def test_ComponentId(self):
-        c1 = self.zp.addComponent('Component')
+        c1 = self.zp.addComponentType('Component')
         self.assertEqual(c1.id, 'a.b.c.Component')
 
 
@@ -143,16 +148,16 @@ class TestZenPackRelationships(SimpleSetup):
 if __name__ == "__main__":
     zp = ZenPack('ZenPacks.training.NetBotz')
     dc = zp.addDeviceClass('Device/Snmp', zPythonClass='NetBotzDevice')
-    e = dc.addSubComponent('Enclosure')
+    e = dc.addComponentType('Enclosure')
     e.addProperty('enclosure_status')
     e.addProperty('error_status')
     e.addProperty('parent_id')
     e.addProperty('docked_id')
 
-    ts = e.addSubComponent('TemperatureSensor')
+    ts = e.addComponentType('TemperatureSensor')
     ts.addProperty('port')
 
-    dc.deviceComponent.addProperty('temp_sensor_count', Type='int')
+    dc.deviceType.addProperty('temp_sensor_count', Type='int')
 
     zp.write()
     unittest.main()

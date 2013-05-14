@@ -21,7 +21,9 @@ class Property(object):
                  Type=None,
                  width=10,
                  detailDisplay=True,
-                 gridDisplay=True):
+                 gridDisplay=True,
+                 sortable=True,
+                 panelRenderer=None):
 
         self.id = id
         self.name = id
@@ -29,6 +31,11 @@ class Property(object):
         self.mode = 'w'
         self.value = value
         self.detailDisplay = detailDisplay
+        self.gridDisplay = gridDisplay
+        self.sortable = True
+        self.width = width
+        self.panelRenderer = panelRenderer
+
         if Type:
             self.Type = Type.lower()
         else:

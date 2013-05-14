@@ -1,0 +1,138 @@
+(function(){
+
+var ZC = Ext.ns('Zenoss.component');
+
+Ext.apply(Zenoss.render, {
+    ${name}_entityLinkFromGrid: function(obj, col, record) {
+        if (!obj)
+            return;
+
+        if (typeof(obj) == 'string')
+            obj = record.data;
+
+        if (!obj.title && obj.name)
+            obj.title = obj.name;
+
+        var isLink = false;
+
+        if (this.refName == 'componentgrid') {
+            // Zenoss >= 4.2 / ExtJS4
+            if (this.subComponentGridPanel || this.componentType != obj.meta_type)
+                isLink = true;
+        } else {
+            // Zenoss < 4.2 / ExtJS3
+            if (!this.panel || this.panel.subComponentGridPanel)
+                isLink = true;
+        }
+
+        if (isLink) {
+            return '<a href="javascript:Ext.getCmp(\'component_card\').componentgrid.jumpToEntity(\''+obj.uid+'\', \''+obj.meta_type+'\');">'+obj.title+'</a>';
+        } else {
+            return obj.title;
+        }
+    },
+});
+
+#for $c in $components
+ZC.${c.unique_name}Panel = Ext.extend(ZC.${name}ComponentGridPanel, {
+    constructor: function(config) {
+        config = Ext.applyIf(config||{}, {
+            componentType: '${c.unique_name}',
+            autoExpandColumn: 'name',
+#if c.panelSort
+            sortInfo: {
+                field: '${c.panelSort}',
+                direction: '${c.panelSortDirection}',
+            },
+#end if
+            fields: [
+                {name: 'uid'},
+                {name: 'name'},
+                {name: 'meta_type'},
+                {name: 'status'},
+                {name: 'severity'},
+                {name: 'usesMonitorAttribute'},
+                {name: 'monitor'},
+                {name: 'monitored'},
+#for $property in sorted($c.properties.values)
+#if $property.gridDisplay
+                {name: '${property.id}'},
+#end if
+#end for
+                {name: 'locking'}
+            ],
+            columns: [{
+                id: 'severity',
+                dataIndex: 'severity',
+                header: _t('Events'),
+                renderer: Zenoss.render.severity,
+                sortable: true,
+                width: 50
+            },{
+                id: 'name',
+                dataIndex: 'name',
+                header: _t('Name'),
+                renderer: Zenoss.render.NetBotz_entityLinkFromGrid,
+                sortable: true
+#for $property in sorted($c.properties.values)
+#if $property.gridDisplay
+            },{
+                dataIndex: '${property.id}',
+                header: _t('${property.name}'),
+#if $property.sortable
+                sortable: true,
+#end if
+#if $property.panelRenderer
+                renderer: ${property.panelRenderer},
+#end if
+                width: ${property.width},
+                id: '${property.id}'
+#end if
+#end for
+            },{
+                id: 'monitored',
+                dataIndex: 'monitored',
+                header: _t('Monitored'),
+                renderer: Zenoss.render.checkbox,
+                sortable: true,
+                width: 70
+            },{
+                id: 'locking',
+                dataIndex: 'locking',
+                header: _t('Locking'),
+                renderer: Zenoss.render.locking_icons,
+                width: 65
+            }]
+        });
+
+        ZC.${c.unique_name}Panel.superclass.constructor.call(
+            this, config);
+    }
+});
+
+Ext.reg('${c.unique_name}Panel', ZC.${c.unique_name}Panel);
+
+#if $c.dropdowncomponents
+$c.dropdowncomponents
+Zenoss.nav.appendTo('Component', [{
+    id: 'component_${c.relnames}',
+    text: _t('${c.names}'),
+    xtype: '${c.unique_name}Panel',
+    subComponentGridPanel: true,
+    filterNav: function(navpanel) {
+        switch (navpanel.refOwner.componentType) {
+#for $component in $c.dropdowncomponents
+            case '${component.unique_name}': return true;
+#end for
+            default: return false;
+        }
+    },
+    setContext: function(uid) {
+        ZC.${c.unique_name}Panel.superclass.setContext.apply(this, [uid]);
+    }
+}]);
+
+#end if
+#end for
+
+})();

@@ -32,7 +32,9 @@ class Component(object):
                  names=None,
                  meta_type=None,
                  device=False,
-                 namespace=None
+                 namespace=None,
+                 panelSort='name',
+                 panelSortDirection='asc'
                  ):
 
         self.name = name
@@ -42,6 +44,8 @@ class Component(object):
         self.zenpack = zenpack
 
         self.device = device
+        self.panelSort = panelSort
+        self.panelSortDirection = panelSortDirection
 
         if not imports:
             if not device:
@@ -194,6 +198,15 @@ class Component(object):
               paths.extend(relPath(${first_component, '${prel.components[0]}'))
         """
 
+    def dropdowncomponents(self):
+        '''return the component objects that this should contain a dropdown link to this component.'''
+        results = []
+        custompaths = self.custompaths()
+        for values in custompaths.values():
+            for path in values:
+                results.append(path[0])
+        return results
+
     def ManyRelationships(self):
         """return all of the ManyRelationships related to this component."""
         rels = Relationship.find(self, First=True, Types=['1-M', 'M-M'])
@@ -238,7 +251,7 @@ class Component(object):
 
         return Component(value, zenpack)
 
-    def addSubComponent(self, component, **kwargs):
+    def addComponentType(self, component, **kwargs):
         c = Component(component, self.zenpack, **kwargs)
         Relationship(self.zenpack, self.id, c.id)
         return c
@@ -417,18 +430,16 @@ class TestComponentProperties(SimpleSetup):
 if __name__ == "__main__":
     from ZenPack import ZenPack
     zp = ZenPack('ZenPacks.zenoss.NetAppMonitor')
-    a = zp.addComponent('Aggregate')
-    p = zp.addComponent('Plex')
-    sn = zp.addComponent('SystemNode')
-    #filer = zp.addComponent('Filer')
-    zp.addRelation('SystemNode', 'Aggregate', Type='M-M', Contained=False)
-    zp.addRelation('Plex', 'Aggregate')
-    v = zp.addComponent('Volume')
-    vs = zp.addComponent('VServer')
-    zp.addComponent('Device')
+    v = zp.addComponentType('Volume')
+    l = zp.addComponentType('Lun')
+    vs = zp.addComponentType('VServer')
+    zp.addComponentType('Device')
     zp.addRelation('VServer', 'Volume', Type='1-M', Contained=False)
-    zp.addRelation('Filer', 'VServer')
+    zp.addRelation('Lun', 'Volume', Type='1-M', Contained = False)
     zp.addRelation('Device', 'VServer')
-    sn.write()
-    v.write()
+    zp.addRelation('Device', 'Lun')
+    for row in v.custompaths()['1-M']:
+        print row[0].id, row[1].id
+    print v.dropdowncomponents()
+
     unittest.main()

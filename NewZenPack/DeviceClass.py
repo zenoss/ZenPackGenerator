@@ -10,7 +10,8 @@
 
 import unittest
 from utils import KlassExpand
-
+from Relationship import Relationship
+find = Relationship.find
 
 class DeviceClass(object):
     deviceClasses = {}
@@ -21,15 +22,15 @@ class DeviceClass(object):
         self.id = self.path
         self.subClasses = {}
         self.zPythonClass = KlassExpand(self.zenpack, zPythonClass)
-        self.DeviceComponent()
+        self.DeviceType()
 
         DeviceClass.deviceClasses[self.id] = self
         self.zenpack.registerDeviceClass(self)
 
-    def DeviceComponent(self):
-        self.deviceComponent = self.zenpack.addComponent(self.zPythonClass, device=True)
+    def DeviceType(self):
+        self.deviceType = self.zenpack.addComponentType(self.zPythonClass, device=True)
 
-    def addSubClass(self, deviceClass, *args, **kwargs):
+    def addClass(self, deviceClass, *args, **kwargs):
         if 'prefix' in kwargs:
             del(kwargs['prefix'])
 
@@ -47,13 +48,31 @@ class DeviceClass(object):
                                *args,
                                **kwargs)
 
-    def addSubComponent(self, component, **kwargs):
-        c = self.deviceComponent.addSubComponent(component, **kwargs)
+    def addComponentType(self, component, **kwargs):
+        c = self.deviceType.addComponentType(component, **kwargs)
         return c
 
+    @property
+    def componentTypes(self):
+        def ComponentFind(child=None):
+            components = []
+            if child:
+                rels = find(child, First=True)
+                for rel in rels:
+                    newchild = rel.child()
+                    components.append(newchild)
+                    if child == newchild:
+                        rval = ComponentFind(None)
+                    else:
+                        rval = ComponentFind(newchild)
+                    if rval:
+                        components = components + rval
+            return components
+        components = ComponentFind(self.deviceType)
+        return sorted(components)
+
+
 #Unit tests Start here
-
-
 class SimpleSetup(unittest.TestCase):
     def setUp(self):
         from ZenPack import ZenPack
@@ -69,41 +88,51 @@ class TestDeviceClassCreate(SimpleSetup):
 
     def test_SubDeviceClassCreate(self):
         dc = DeviceClass('Storage/Foo', self.zp)
-        sdc = dc.addSubClass('Bar')
+        sdc = dc.addClass('Bar')
         self.assertEqual(sdc.path, '/zport/dmd/Storage/Foo/Bar')
         self.assertEqual(sdc.zPythonClass, 'Products.ZenModel.Device.Device')
 
     def test_DeviceClassComponentId(self):
         dc = DeviceClass('Storage/Foo', self.zp)
-        self.assertEqual(dc.deviceComponent.id, 'Products.ZenModel.Device.Device')
+        self.assertEqual(dc.deviceType.id, 'Products.ZenModel.Device.Device')
 
     def test_setzPythonClass_on_DeviceClass(self):
         dc = DeviceClass('Storage/Foo', self.zp, zPythonClass='a.b.c.Device')
         self.assertEqual(dc.zPythonClass, 'a.b.c.Device')
-        self.assertEqual(dc.deviceComponent.id, 'a.b.c.Device')
+        self.assertEqual(dc.deviceType.id, 'a.b.c.Device')
 
     def test_setzPythonClass_shortClass(self):
         dc = DeviceClass('Storage/Foo', self.zp, zPythonClass='Device')
         self.assertEqual(dc.zPythonClass, 'a.b.c.Device')
-        self.assertEqual(dc.deviceComponent.id, 'a.b.c.Device')
+        self.assertEqual(dc.deviceType.id, 'a.b.c.Device')
 
     def test_addSubComponentToCustomDeviceComponent(self):
         from Component import Component
         from Relationship import Relationship
         dc = DeviceClass('Storage/NetApp', self.zp, zPythonClass='Device')
-        sc = dc.addSubComponent('Fan')
+        sc = dc.addComponentType('Fan')
         self.assertIsInstance(sc, Component)
         self.assertEqual(Relationship.relationships['a.b.c.Device a.b.c.Fan'].hasComponent(sc), True)
-        self.assertEqual(Relationship.relationships['a.b.c.Device a.b.c.Fan'].hasComponent(dc.deviceComponent), True)
+        self.assertEqual(Relationship.relationships['a.b.c.Device a.b.c.Fan'].hasComponent(dc.deviceType), True)
 
     def test_addSubComponentToDefaultDeviceComponent(self):
         from Component import Component
         from Relationship import Relationship
         dc2 = DeviceClass('Server/Linux', self.zp)
-        sc2 = dc2.addSubComponent('Fan2')
+        sc2 = dc2.addComponentType('Fan2')
         self.assertIsInstance(sc2, Component)
         self.assertEqual(Relationship.relationships['Products.ZenModel.Device.Device a.b.c.Fan2'].hasComponent(sc2), True)
-        self.assertEqual(Relationship.relationships['Products.ZenModel.Device.Device a.b.c.Fan2'].hasComponent(dc2.deviceComponent), True)
+        self.assertEqual(Relationship.relationships['Products.ZenModel.Device.Device a.b.c.Fan2'].hasComponent(dc2.deviceType), True)
+
+class TestDeviceClassComponents(SimpleSetup):
+    def test_componentTypes(self):
+        dc = DeviceClass('Storage/Example', self.zp, zPythonClass='Device')
+        fc = dc.addComponentType('Fan')
+        dc.addComponentType('Battery')
+        dc.addComponentType('Cpu')
+        fc.addComponentType('Blade')
+        self.assertEqual(['a.b.c.Battery', 'a.b.c.Blade', 'a.b.c.Cpu', 'a.b.c.Fan'], [c.id for c in dc.componentTypes])
+
 
 
 if __name__ == "__main__":

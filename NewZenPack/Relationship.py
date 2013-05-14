@@ -41,17 +41,20 @@ class Relationship(object):
         rels = []
         for rel in Relationship.relationships.values():
             if rel.hasComponent(component):
-                if not rel.Contained == Contained:
-                    continue
-                if not rel.first(component) == First:
-                    continue
-                if isinstance(Types, basestring):
-                    if rel.Type == Types:
+                if not Contained is None:
+                    if not rel.Contained == Contained:
                         continue
-                else:
-                    if Types and not rel.Type in Types:
+                if not First is None:
+                    if not rel.first(component) == First:
                         continue
-                
+                if not Types is None:
+                    if isinstance(Types, basestring):
+                        if rel.Type == Types:
+                            continue
+                    else:
+                        if not rel.Type in Types:
+                            continue
+
                 rels.append(rel)
         return sorted(rels)
 
@@ -60,6 +63,9 @@ class Relationship(object):
         if component.id == self.components[0].id:
             return True
         return False
+
+    def child(self):
+        return self.components[1]
 
     def toString(self, component):
         if self.first(component):
