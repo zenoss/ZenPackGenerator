@@ -18,6 +18,7 @@ from utils import prepId
 from Configure import Configure
 from ComponentJS import ComponentJS
 from Setup import Setup
+from RootInit import RootInit
 
 #from UI import UI
 from memoize import memoize
@@ -69,6 +70,7 @@ class ZenPack(object):
 
         self.configure_zcml = Configure(self)
         self.setup = Setup(self)
+        self.rootinit = RootInit(self)
 
 #        self.addComponent('Device', namespace='Products.ZenModel')
 #        o = self.addComponent('OperatingSystem', id='os',
@@ -111,13 +113,13 @@ class ZenPack(object):
                % (self.id, self.author, self.version, self.license)
 
     def write(self):
-        self.setup.write()
-        self.configure_zcml.write()
-        for component in self.components.values():
-            component.write()
-        for cjs in self.componentJSs.values():
-            cjs.write()
-
+        # self.setup.write()
+        # self.configure_zcml.write()
+        # for component in self.components.values():
+            # component.write()
+        # for cjs in self.componentJSs.values():
+            # cjs.write()
+        self.rootinit.write()
 
 
 # Unit Tests Start here

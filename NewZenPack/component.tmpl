@@ -49,6 +49,12 @@ class ${shortklass}(#echo ', '.join($klassNames)#):
             },),
         },)
 
+##  # Query for events by id instead of name.
+##    event_key = "ComponentId"
+##
+##    def getIconPath(self):
+##        return '/++resource++cloudstack/img/cloudstack.png'
+##
     def device(self):
         '''
         Return device under which this component/device is contained.
