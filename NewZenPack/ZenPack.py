@@ -113,13 +113,13 @@ class ZenPack(object):
                % (self.id, self.author, self.version, self.license)
 
     def write(self):
-        # self.setup.write()
-        # self.configure_zcml.write()
-        # for component in self.components.values():
-            # component.write()
-        # for cjs in self.componentJSs.values():
-            # cjs.write()
-        self.rootinit.write()
+         self.setup.write()
+         self.configure_zcml.write()
+         for component in self.components.values():
+             component.write()
+         for cjs in self.componentJSs.values():
+             cjs.write()
+         self.rootinit.write()
 
 
 # Unit Tests Start here
