@@ -42,7 +42,7 @@ def main():
     parser = ZpgOptionParser()
     (opts, args) = parser.parse_args()
     import pdb;pdb.set_trace()
-    zp = ZenPack('ZenPacks.training.NetBotz', destdir=opts.dest)
+    zp = ZenPack('ZenPacks.training.NetBotz', destdir=opts.dest, opts=opts)
     zp.addZProperty('zNetBotzExampleProperty', 'boolean', True, 'NetBotz')
     zp.addZProperty('e1')
 
