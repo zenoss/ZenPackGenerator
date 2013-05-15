@@ -60,15 +60,17 @@ for product_name in productNames:
     MODULE_NAME[product_name]='.'.join([ZP_NAME, product_name])
     CLASS_NAME[product_name]='.'.join([ZP_NAME, product_name, product_name])
 
-_PACK_Z_PROPS = [
-##for $zprop in $ZPROPERTIES
-##                $zprop
-##end for
-                ]
-##if len($ZPROPERTIES) > 0 and $ZPROPERTY_CATEGORY
-##for name, default_value, type_ in _PACK_Z_PROPS:
-##    setzPropertyCategory(name, '$ZPROPERTY_CATEGORY')
-##end
+_PACK_Z_PROPS=[
+#for $zprop in $zenpack.zproperties.values
+               (${zprop[0]}, ${zprop[1]}, ${zprop[2]})
+#end for
+               ]
+
+#for $zprop in $zenpack.zproperties.values
+#if $zprop[3]
+setzPropertyCategory(${zprop[0]}, '${zprop[3]}')
+#end if
+#end for
 
 _plugins = (
 ##    'poll_device.py'

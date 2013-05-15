@@ -46,6 +46,7 @@ class ZenPack(object):
         self.components = {}
         self.relationships = {}
         self.componentJSs = {}
+        self.zproperties = {}
         self.author = author
         self.version = version
         self.license = license
@@ -96,6 +97,19 @@ class ZenPack(object):
         r = Relationship(self, *args, **kwargs)
         return r
 
+    def addZProperty(self,name, type='string', default='', Category=None):
+        if type == 'string':
+            if not default.startswith('\''):
+                default = '\'' + default
+                if len(default) == 1:
+                    default = default + '\''
+            if not default.endswith('\''):
+                default = default + '\''
+
+
+
+        self.zproperties[name] = (name, default, type, Category)
+
     def registerComponent(self, component):
         self.components[component.id] = component
 
@@ -113,13 +127,13 @@ class ZenPack(object):
                % (self.id, self.author, self.version, self.license)
 
     def write(self):
-         self.setup.write()
-         self.configure_zcml.write()
-         for component in self.components.values():
-             component.write()
-         for cjs in self.componentJSs.values():
-             cjs.write()
-         self.rootinit.write()
+        self.setup.write()
+        self.configure_zcml.write()
+        for component in self.components.values():
+            component.write()
+        for cjs in self.componentJSs.values():
+            cjs.write()
+        self.rootinit.write()
 
 
 # Unit Tests Start here
@@ -167,6 +181,9 @@ class TestZenPackRelationships(SimpleSetup):
 
 if __name__ == "__main__":
     zp = ZenPack('ZenPacks.training.NetBotz')
+    zp.addZProperty('zNetBotzExampleProperty', 'boolean', True, 'NetBotz')
+    zp.addZProperty('e1')
+
     dc = zp.addDeviceClass('Device/Snmp', zPythonClass='NetBotzDevice')
     e = dc.addComponentType('Enclosure')
     e.addProperty('enclosure_status')
