@@ -1,4 +1,13 @@
 #!/usr/bin/env python
+##############################################################################
+#
+# Copyright (C) Zenoss, Inc. 2013, all rights reserved.
+#
+# This content is made available according to terms specified in the LICENSE
+# file at the top-level directory of this package.
+#
+##############################################################################
+
 import os
 import logging
 logging.basicConfig()
@@ -7,78 +16,48 @@ log = logging.getLogger('Template')
 from Cheetah.Template import Template as cTemplate
 import inspect
 import zpg
-from git import *
-"/".join(inspect.getfile(zpg).split('/')[:-1])
+
 
 class Template(object):
-    def __init__(self,config,opts):
-
-        self.config = config
-        self.basedir = opts.dest
-        self.opts = opts
-        self.name = config['NAME']
-        self.source_template = None
+    def __init__(self, zenpack):
+        self.zenpack = zenpack
+        self.source_template = 'foo.tmpl'
+        self.base_destdir = zenpack.destdir.path
         self.dest_file = None
-        self.dest_tfile = None
-        self.searchList = []
-        self.subdir = "/".join(self.config['NAME'].split('.'))
-        self.create_inits = False
 
-    def run(self):
-        pass
+    def TemplateCacheLocation(self):
+        return os.path.join(self.base_destdir, 'Templates', "%s.tmpl" % os.path.basename(self.dest_file))
 
-    def findTemplate(self):
-        if not self.opts.skip:
-            self.basedir=self.dest_file.split(self.config['NAME'])[0]+'/%s/Templates' % self.config['NAME']
-            self.tfile=self.basedir+self.dest_file.split(self.config['NAME'])[1]+'.tmpl'
-            self.dest_tfile=self.tfile
-            if not os.path.exists(self.tfile):
-                self.tfile = "%s/Templates/%s" % ("/".join(inspect.getfile(zpg).split('/')[:-1]),self.source_template)
-        else:
-            self.tfile = "%s/Templates/%s" % ("/".join(inspect.getfile(zpg).split('/')[:-1]),self.source_template)
-        log.info('Using template %s' % self.tfile)
-       
-    def buildSearch(self):
-        self.searchList = self.config
-
-    def write_tfile(self): 
-        dirpart = os.path.dirname(self.dest_tfile)
-        repo = Repo.init(self.basedir)
-        try:
-            lcommit = repo.commit()
-        except:
-            repo.index.commit('Initial Commit from zpg')
-        
-        if not os.path.exists(dirpart):
-            os.makedirs(dirpart)
-        if not os.path.exists(self.dest_tfile):
+    def cacheTemplate(self):
+        cacheTemplateFile = self.TemplateCacheLocation()
+        cache_directory = os.path.dirname(cacheTemplateFile)
+        if not os.path.exists(cache_directory):
+            os.makedirs(cache_directory)
+        if not os.path.exists(cacheTemplateFile):
             tf = open(os.path.join(self.tfile), 'r')
-            dtf = open(os.path.join(self.dest_tfile), 'w')
+            dtf = open(os.path.join(cacheTemplateFile), 'w')
             dtf.write('## Source Template %s \n' % self.tfile)
             dtf.write(tf.read())
             tf.close()
             dtf.close()
-            repo.index.add([self.dest_tfile.split(self.basedir+'/')[1]])
-            if repo.is_dirty():
-                repo.index.commit('zpg: %s' % self.dest_tfile.split(self.basedir+'/')[1])
 
-    def write(self):
+    def findTemplate(self):
+        cacheTemplateFile = self.TemplateCacheLocation()
+        if os.path.exists(cacheTemplateFile):
+            self.tfile = cacheTemplateFile
+        else:
+            self.tfile = "%s/Templates/%s" % ("/".join(inspect.getfile(zpg).split('/')[:-1]),self.source_template)
+        log.info('Using template %s' % self.tfile)
+
+    def processTemplate(self):
         self.findTemplate()
-        self.buildSearch()
-        dirpart = os.path.dirname(self.dest_file)
-        if not os.path.exists(dirpart):
-            os.makedirs(dirpart)
+        self.cacheTemplate()
+        t = cTemplate(file=self.tfile, searchList=[self])
+        dfile = os.path.join(self.base_destdir, self.dest_file)
 
-        t = cTemplate(file=self.tfile, searchList=self.searchList)
-        f = open(os.path.join(self.dest_file), 'w')
+        dirname = os.path.dirname(dfile)
+        if not os.path.exists(dirname):
+            os.makedirs(dirname)
+        f = open(dfile, 'w')
         f.write(t.respond())
         f.close()
-        if not self.opts.skip:
-            self.write_tfile()
-
-if __name__ == "__main__":
-    #config = pydata.config
-    cf = ComponentFactory(config)
-    for component in cf.create():
-        component.write()
-    

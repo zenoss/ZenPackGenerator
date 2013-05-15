@@ -13,13 +13,14 @@ import inflect
 from Defaults import Defaults
 from Property import Property
 from Relationship import Relationship
-from Cheetah.Template import Template as cTemplate
-from utils import KlassExpand
+# from Cheetah.Template import Template as cTemplate
+from utils import KlassExpand, zpDir
+from Template import Template
 
 plural = inflect.engine().plural
 
 
-class Component(object):
+class Component(Template):
     """Build the component object"""
 
     components = {}
@@ -36,6 +37,9 @@ class Component(object):
                  panelSort='name',
                  panelSortDirection='asc'
                  ):
+
+        super(Component, self).__init__(zenpack)
+        self.source_template = 'component.tmpl'
 
         self.name = name
         self.names = names
@@ -71,6 +75,8 @@ class Component(object):
         self.relname = self.shortklass.lower()
         self.relnames = plural(self.relname)
         self.unique_name = meta_type
+
+        self.dest_file = "%s/%s.py" % (zpDir(zenpack), self.unique_name)
 
         if not klasses:
             if not device:
@@ -275,15 +281,10 @@ class Component(object):
 
     def write(self):
         self.updateImports()
-        t = cTemplate(file='component.tmpl', searchList=[self])
-        print t
-        #f = open('a.out', 'w')
-        #f.write(t.respond())
-        #f.close()
+        self.processTemplate()
+
 
 #Unit tests Start here
-
-
 class SimpleSetup(unittest.TestCase):
     def setUp(self):
         from ZenPack import ZenPack

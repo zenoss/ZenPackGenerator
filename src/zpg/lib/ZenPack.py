@@ -20,6 +20,7 @@ from ComponentJS import ComponentJS
 from Setup import Setup
 from RootInit import RootInit
 from DirLayout import DirLayout
+from git import Repo
 
 #from UI import UI
 from memoize import memoize
@@ -38,10 +39,13 @@ class ZenPack(object):
                  destdir='/foo',
                  install_requires=None,
                  compat_zenoss_vers=">=4.2",
-                 prev_zenpack_name=""
+                 prev_zenpack_name="",
+                 opts=None,
                  ):
 
         self.id = id
+        self.opts = opts
+        self.destdir = DirLayout(self, destdir)
         self.namespace = id
         self.deviceClasses = {}
         self.components = {}
@@ -51,6 +55,7 @@ class ZenPack(object):
         self.author = author
         self.version = version
         self.license = license
+
         self.prepname = prepId(id).replace('.', '_')
         if install_requires:
             if isinstance(install_requires, basestring):
@@ -62,7 +67,6 @@ class ZenPack(object):
         self.compat_zenoss_vers = compat_zenoss_vers
         self.prev_zenpack_name = prev_zenpack_name
 
-
         packages = []
         parts = self.id.split('.')
         for i in range(len(parts)):
@@ -73,16 +77,6 @@ class ZenPack(object):
         self.configure_zcml = Configure(self)
         self.setup = Setup(self)
         self.rootinit = RootInit(self)
-        self.destdir = DirLayout(self, destdir) 
-
-#        self.addComponent('Device', namespace='Products.ZenModel')
-#        o = self.addComponent('OperatingSystem', id='os',
-#                              Classes=['Products.ZenModel.Software.Software'],
-#                              namespace='Products.ZenModel')
-#        self.addComponent('IpInterface', id='interface', namespace='Products.ZenModel')
-#        self.addRelation('os','interface')
-#        o.write()
-#        self.addComponent('Hardware', id='hw', namespace='Products.ZenModel')
 
     @memoize
     def addDeviceClass(self, deviceClass, *args, **kwargs):
@@ -99,7 +93,7 @@ class ZenPack(object):
         r = Relationship(self, *args, **kwargs)
         return r
 
-    def addZProperty(self,name, type='string', default='', Category=None):
+    def addZProperty(self, name, type='string', default='', Category=None):
         if type == 'string':
             if not default.startswith('\''):
                 default = '\'' + default
@@ -107,8 +101,6 @@ class ZenPack(object):
                     default = default + '\''
             if not default.endswith('\''):
                 default = default + '\''
-
-
 
         self.zproperties[name] = (name, default, type, Category)
 
@@ -128,16 +120,41 @@ class ZenPack(object):
         return "%s \n\tAUTHOR: %s\n\tVERSION: %s\n\tLICENSE: %s" \
                % (self.id, self.author, self.version, self.license)
 
+    def updateGitTemplates(self):
+        # Create the git repo
+        repo = Repo.init(self.destdir.path)
+        try:
+            repo.commit()
+        except:
+            repo.index.commit('Initial Commit from zpg')
+
+        #Update the repo
+        repo.index.add([self.destdir.path+'/Templates'])
+
+        if repo.is_dirty():
+            repo.index.commit('zpg: Committed Template changes')
+
     def write(self):
+        # Write the destination folders
         self.destdir.write()
-        #self.setup.write()
-        #self.configure_zcml.write()
-        #for component in self.components.values():
-        #    component.write()
-        #for cjs in self.componentJSs.values():
-        #    cjs.write()
-        #self.rootinit.write()
-        
+
+        # Write the base setup.py
+        self.setup.write()
+
+        # Write configure.zcml
+        self.configure_zcml.write()
+
+        # Create the components
+        for component in self.components.values():
+            component.write()
+
+        for cjs in self.componentJSs.values():
+            cjs.write()
+
+        #Create the root level __init__.py file
+        self.rootinit.write()
+
+        self.updateGitTemplates()
 
 
 # Unit Tests Start here
@@ -184,7 +201,7 @@ class TestZenPackRelationships(SimpleSetup):
         self.zp.addRelation('Device', 'ClusterPeers')
 
 if __name__ == "__main__":
-    zp = ZenPack('ZenPacks.training.NetBotz')
+    zp = ZenPack('ZenPacks.training.NetBotz', destdir='/tmp/zpg', opts={'skip': False})
     zp.addZProperty('zNetBotzExampleProperty', 'boolean', True, 'NetBotz')
     zp.addZProperty('e1')
 
@@ -201,4 +218,4 @@ if __name__ == "__main__":
     dc.deviceType.addProperty('temp_sensor_count', Type='int')
 
     zp.write()
-    unittest.main()
+    #unittest.main()

@@ -8,16 +8,21 @@
 #
 ##############################################################################
 
-from Cheetah.Template import Template as cTemplate
+
+from Template import Template
 from Component import Component
 from Relationship import Relationship
+from utils import zpDir
 find = Relationship.find
 
-class RootInit(object):
+class RootInit(Template):
 
     def __init__(self, zenpack):
         self.zenpack = zenpack
         self.devChildren = None
+        super(RootInit, self).__init__(zenpack)
+        self.source_template = 'root_init.tmpl'
+        self.dest_file = "%s/%s" % (zpDir(zenpack), '__init__.py')
 
     def write(self):
         self.components = self.zenpack.components.values()
@@ -29,8 +34,8 @@ class RootInit(object):
             component = rel.components[1]
             devChildren.append(component)
         self.devChildren = devChildren
-        ri = cTemplate(file='root_init.tmpl', searchList=[self])
-        print ri
+        self.processTemplate()
+
 
 if __name__ == '__main__':
     from ZenPack import ZenPack

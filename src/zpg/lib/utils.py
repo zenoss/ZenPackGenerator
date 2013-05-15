@@ -44,6 +44,11 @@ def KlassExpand(zenpack, value):
     else:
         return "%s.%s" % (zenpack.namespace, value)
 
+def zpDir(zenpack):
+    parts = zenpack.id.split('.')
+    subdirs = "/".join(parts)
+    return subdirs
+
 if __name__ == '__main__':
     from ZenPack import ZenPack
     print prepId('ZenPacks.zenoss.#@Foo').replace('.', '_')
