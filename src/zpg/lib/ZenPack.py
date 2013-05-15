@@ -28,6 +28,9 @@ import unittest
 
 defaults = Defaults()
 
+class Opts(object):
+    def __init__(self):
+        self.skip = False
 
 class ZenPack(object):
 
@@ -40,7 +43,7 @@ class ZenPack(object):
                  install_requires=None,
                  compat_zenoss_vers=">=4.2",
                  prev_zenpack_name="",
-                 opts=None,
+                 opts=Opts(),
                  ):
 
         self.id = id
@@ -201,7 +204,7 @@ class TestZenPackRelationships(SimpleSetup):
         self.zp.addRelation('Device', 'ClusterPeers')
 
 if __name__ == "__main__":
-    zp = ZenPack('ZenPacks.training.NetBotz', destdir='/tmp/zpg', opts={'skip': False})
+    zp = ZenPack('ZenPacks.training.NetBotz', destdir='/tmp/zpg')
     zp.addZProperty('zNetBotzExampleProperty', 'boolean', True, 'NetBotz')
     zp.addZProperty('e1')
 
