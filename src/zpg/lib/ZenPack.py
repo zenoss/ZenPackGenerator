@@ -43,6 +43,8 @@ class ZenPack(object):
                  install_requires=None,
                  compat_zenoss_vers=">=4.2",
                  prev_zenpack_name="",
+                 zProperties=None,
+                 deviceClasses=None,
                  opts=Opts(),
                  ):
 
@@ -81,14 +83,25 @@ class ZenPack(object):
         self.setup = Setup(self)
         self.rootinit = RootInit(self)
 
-    @memoize
-    def addDeviceClass(self, deviceClass, *args, **kwargs):
-        dc = DeviceClass(deviceClass, self, *args, **kwargs)
+        if zProperties:
+            for zp in zProperties:
+                self.addZProperty(*zp)
+
+        if deviceClasses:
+            for dc in deviceClasses:
+                self.addDeviceClass(**dc)
+
+    def addDeviceClass(self, *args, **kwargs):
+        if not 'ZenPack' in kwargs:
+            kwargs['ZenPack'] = self
+        dc = DeviceClass(*args, **kwargs)
         return dc
 
     @memoize
-    def addComponentType(self, component, **kwargs):
-        c = Component(component, self, **kwargs)
+    def addComponentType(self, *args, **kwargs):
+        if not 'zenpack' in kwargs:
+            kwargs['zenpack'] = self
+        c = Component(*args, **kwargs)
         return c
 
     @memoize

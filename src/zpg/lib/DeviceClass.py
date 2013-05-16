@@ -16,7 +16,13 @@ find = Relationship.find
 class DeviceClass(object):
     deviceClasses = {}
 
-    def __init__(self, path, ZenPack, prefix='/zport/dmd', zPythonClass='Products.ZenModel.Device.Device'):
+    def __init__(self,
+                 path,
+                 ZenPack,
+                 prefix='/zport/dmd',
+                 zPythonClass='Products.ZenModel.Device.Device',
+                 componentTypes=None,
+                 deviceType=None):
         self.zenpack = ZenPack
         self.path = '/'.join([prefix, path.lstrip('/')])
         self.id = self.path
@@ -26,6 +32,11 @@ class DeviceClass(object):
 
         DeviceClass.deviceClasses[self.id] = self
         self.zenpack.registerDeviceClass(self)
+
+        #Dict loading
+        if componentTypes:
+            for component in componentTypes:
+                self.addComponentType(**component)
 
     def DeviceType(self):
         self.deviceType = self.zenpack.addComponentType(self.zPythonClass, device=True)
@@ -48,8 +59,10 @@ class DeviceClass(object):
                                *args,
                                **kwargs)
 
-    def addComponentType(self, component, **kwargs):
-        c = self.deviceType.addComponentType(component, **kwargs)
+    def addComponentType(self, *args, **kwargs):
+        if 'zenpack' not in kwargs:
+            kwargs['zenpack'] = self.zenpack
+        c = self.deviceType.addComponentType(*args, **kwargs)
         return c
 
     @property

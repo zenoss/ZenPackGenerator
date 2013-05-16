@@ -16,7 +16,7 @@ plural = inflect.engine().plural
 
 class Property(object):
     def __init__(self,
-                 id,
+                 name,
                  value=None,
                  Type=None,
                  width=10,
@@ -25,9 +25,9 @@ class Property(object):
                  sortable=True,
                  panelRenderer=None):
 
-        self.id = id
-        self.name = id
-        self.names = plural(id)
+        self.id = name
+        self.name = name
+        self.names = plural(name)
         self.mode = 'w'
         self.value = value
         self.detailDisplay = detailDisplay

@@ -35,7 +35,8 @@ class Component(Template):
                  device=False,
                  namespace=None,
                  panelSort='name',
-                 panelSortDirection='asc'
+                 panelSortDirection='asc',
+                 properties=None
                  ):
 
         super(Component, self).__init__(zenpack)
@@ -93,6 +94,11 @@ class Component(Template):
 
         self.zenpack.registerComponent(self)
         Component.components[self.id] = self
+
+        #Dict loading
+        if properties:
+            for p in properties:
+                self.addProperty(**p)
 
     def __lt__(self, other):
         '''Implemented for sort operations'''
@@ -174,9 +180,9 @@ class Component(Template):
     def klassNames(self):
         return [c.split('.')[-1] for c in self.klasses]
 
-    def addProperty(self, id, **kwargs):
-        prop = Property(id, **kwargs)
-        self.properties[id] = prop
+    def addProperty(self, *args, **kwargs):
+        prop = Property(*args, **kwargs)
+        self.properties[prop.id] = prop
 
     def relations(self):
         #return self.zenpack.relationshipLookup(self)
@@ -256,8 +262,10 @@ class Component(Template):
 
         return Component(value, zenpack)
 
-    def addComponentType(self, component, **kwargs):
-        c = Component(component, self.zenpack, **kwargs)
+    def addComponentType(self, *args, **kwargs):
+        if not 'zenpack' in kwargs:
+            kwargs['zenpack'] = self.zenpack
+        c = Component(*args, **kwargs)
         Relationship(self.zenpack, self.id, c.id)
         return c
 
