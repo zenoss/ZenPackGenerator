@@ -36,7 +36,8 @@ class Component(Template):
                  namespace=None,
                  panelSort='name',
                  panelSortDirection='asc',
-                 properties=None
+                 properties=None,
+                 componentTypes=None
                  ):
 
         super(Component, self).__init__(zenpack)
@@ -96,6 +97,11 @@ class Component(Template):
         if properties:
             for p in properties:
                 self.addProperty(**p)
+
+        #Dict loading
+        if componentTypes:
+            for component in componentTypes:
+                self.addComponentType(**component)
 
     def __lt__(self, other):
         '''Implemented for sort operations'''

@@ -2,8 +2,6 @@ import os
 import sys
 import json
 from zpg.options import ZpgOptionParser
-from zpg.pluginmgr import PluginMgr
-import pydata
 import logging
 from lib.ZenPack import ZenPack
 
