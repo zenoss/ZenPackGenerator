@@ -46,6 +46,7 @@ class ZenPack(object):
                  prev_zenpack_name="",
                  zProperties=None,
                  deviceClasses=None,
+                 relationships=None,
                  opts=Opts(),
                  ):
 
@@ -93,6 +94,10 @@ class ZenPack(object):
             for dc in deviceClasses:
                 self.addDeviceClass(**dc)
 
+        if relationships:
+            for rel in relationships:
+                self.addRelation(**rel)
+
     def addDeviceClass(self, *args, **kwargs):
         if not 'ZenPack' in kwargs:
             kwargs['ZenPack'] = self
@@ -108,7 +113,9 @@ class ZenPack(object):
 
     @memoize
     def addRelation(self, *args, **kwargs):
-        r = Relationship(self, *args, **kwargs)
+        if not 'ZenPack' in kwargs:
+            kwargs['ZenPack'] = self
+        r = Relationship(*args, **kwargs)
         return r
 
     def addZProperty(self, name, type='string', default='', Category=None):

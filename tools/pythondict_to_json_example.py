@@ -25,7 +25,8 @@ data = {'id': 'ZenPacks.training.NetBotz',
                            'deviceType': {'name': 'NetBotzDevice',
                                           'properties': [{'name': 'temp_sensor_count',
                                                           'Type': 'int'}]}
-                           }]
+                           }],
+        'relationships': [{"ComponentA": 'A', "ComponentB": 'B', "Contained": False}]
         }
 
 import json
