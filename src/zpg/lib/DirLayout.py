@@ -8,21 +8,23 @@ def initpy(source):
     return "/".join([source,'__init__.py'])
 
 class DirLayout(object):
-    type = 'layout'
-    def __init__(self,config,opts):
-        self.config = config
-        self.basedir = opts.dest
+    def __init__(self, zenpack, destdir):
+        self.base_destdir = destdir
+        self.zenpack = zenpack
 
-    def run(self):
-        destDir = os.path.join(self.basedir, self.config['NAME'])
-        parts = self.config['NAME'].split('.')
-        subdirs = "/".join(parts)
-        workingDir = '/'.join([destDir,subdirs])
-        if not os.path.exists(destDir):
-            os.makedirs(destDir, 0750)
+    @property
+    def path(self):
+        destDir = os.path.join(self.base_destdir, self.zenpack.id)
+        return destDir
+
+    def write(self):
+
+        parts = self.zenpack.id.split('.')
+        if not os.path.exists(self.path):
+            os.makedirs(self.path, 0750)
 
         # Create subdirectories
-        base = destDir
+        base = self.path
         for part in parts[:-1]:
             base = os.path.join(base, part)
             if not os.path.exists(base):
@@ -35,6 +37,6 @@ class DirLayout(object):
             os.mkdir(base)
 
         # Write the manifest ( Not a template because I dont think we have ever modified this file)
-        f = open(os.path.join(destDir, 'MANIFEST.in'), 'w')
+        f = open(os.path.join(self.path, 'MANIFEST.in'), 'w')
         f.write("graft ZenPacks\n")
         f.close()

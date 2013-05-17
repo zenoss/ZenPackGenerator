@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 from lxml import etree
-import lxml.etree
 import sys
+
 def indent(elem, level=0):
     i = "\n" + level*"  "
     if len(elem):
@@ -76,7 +76,7 @@ for obj in root.xpath('//*'):
     #for attrib in ['type', 'mode','module', 'class', 'visible', 'select_variable']:
     #    if attrib in obj.attrib:
     #        del(obj.attrib[attrib])
-        
+
 #for obj in root.xpath('//*[@class="HardwareClass"]'):
 #    print tree.getpath(obj), "HardwareClass",etree.tostring(obj)
 #    obj.getparent().remove(obj)
@@ -95,4 +95,4 @@ for obj in root.xpath('//*'):
 #
 
 indent(tree.getroot())
-print etree.tostring(tree,pretty_print=True)
+print etree.tostring(tree, pretty_print=True)

@@ -4,48 +4,67 @@
     xmlns:browser="http://namespaces.zope.org/browser"
     >
 
+#if $components
     <!-- API: Info Adapters -->
-#if $varExists('component')
-#for $c in $component
+
+#for $c in sorted($components.values())
     <adapter
-        provides=".${c}.I${c}Info"
-        for=".${c}.${c}"
-        factory=".${c}.${c}Info"
+        provides=".${c.shortklass}.I${c.shortklass}Info"
+        for=".${c.shortklass}.${c.shortklass}"
+        factory=".${c.shortklass}.${c.shortklass}Info"
         />
+
 #end for
 #end if
 
-#if $custom_path_reporter
+#if $customPathReporters
     <!-- Custom Path Reporters -->
-#for $c in $component
-#set $comp = $component[$c]
-#if $varExists("$comp['custom_path']")
-#if $component[$c]['custom_path']['M-M'] or $component[$c]['custom_path']['1-M']
+
+#for $c in $components.values()
+#if $c.custompaths
     <adapter
         provides="Products.Zuul.catalog.interfaces.IPathReporter"
-        for=".${c}.${c}"
-        factory=".${c}.${c}PathReporter"
+        for=".${c.shortklass}.${c.shortklass}"
+        factory=".${c.shortklass}.${c.shortklass}PathReporter"
         />
-#end if
+
 #end if
 #end for
 #end if
-#set $name = $NAME.replace('.','_')
     <!-- Browser Resources -->
     <browser:resourceDirectory
-        name="$name"
+        name="$zenpack.prepname"
         directory="resources"
         />
 
-    <!-- JavaScript needed only for NetApp devices. -->
+#if $components
+    <!-- JavaScript needed for all Zenoss pages. -->
     <browser:viewlet
-        name="js-$name"
-        paths="/++resource++$name/js/${name}.js"
-        for=".Device.Device"
+        name="js-${zenpack.prepname}"
+        paths="/++resource++${zenpack.prepname}/js/${zenpack.prepname}.js"
+        for="*"
         weight="20"
         manager="Products.ZenUI3.browser.interfaces.IJavaScriptSrcManager"
         class="Products.ZenUI3.browser.javascript.JavaScriptSrcBundleViewlet"
         permission="zope2.Public"
         />
 
+#end if
+#if $componentJSs
+    <!-- JavaScript needed only for NetApp devices. -->
+
+#for $cjs in $componentJSs.values()
+$cjs
+    <browser:viewlet
+        name="js-${cjs.name}"
+        paths="/++resource++${cjs.name}/js/${cjs.name}.js"
+        for="${cjs.zPythonClass}"
+        weight="20"
+        manager="Products.ZenUI3.browser.interfaces.IJavaScriptSrcManager"
+        class="Products.ZenUI3.browser.javascript.JavaScriptSrcBundleViewlet"
+        permission="zope2.Public"
+        />
+
+#end for
+#end if
 </configure>

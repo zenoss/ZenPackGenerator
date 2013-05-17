@@ -2,15 +2,15 @@
 # These variables are overwritten by Zenoss when the ZenPack is exported
 # or saved.  Do not modify them directly here.
 # NB: PACKAGES is deprecated
-NAME = "${NAME}"
-VERSION = "${VERSION}"
-AUTHOR = "${AUTHOR}"
-LICENSE = "${LICENSE}"
-NAMESPACE_PACKAGES = ${NAMESPACE_PACKAGES}
-PACKAGES = ${PACKAGES}
-INSTALL_REQUIRES = ${INSTALL_REQUIRES}
-COMPAT_ZENOSS_VERS = "${COMPAT_ZENOSS_VERS}"
-PREV_ZENPACK_NAME = "${PREV_ZENPACK_NAME}"
+NAME = "${zenpack.id}"
+VERSION = "${zenpack.version}"
+AUTHOR = "${zenpack.author}"
+LICENSE = "${zenpack.license}"
+NAMESPACE_PACKAGES = ${zenpack.namespace_packages}
+PACKAGES = ${zenpack.packages}
+INSTALL_REQUIRES = ${zenpack.install_requires}
+COMPAT_ZENOSS_VERS = "${zenpack.compat_zenoss_vers}"
+PREV_ZENPACK_NAME = "${zenpack.prev_zenpack_name}"
 # STOP_REPLACEMENTS
 ################################
 # Zenoss will not overwrite any changes you make below here.

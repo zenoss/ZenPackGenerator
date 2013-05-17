@@ -1,0 +1,9 @@
+(function(){
+
+var ZC = Ext.ns('Zenoss.component');
+
+#for $c in $components
+ZC.registerName('${c.unique_name}', _t('${c.name}'), _t('${c.names}'));
+#end for
+
+})();

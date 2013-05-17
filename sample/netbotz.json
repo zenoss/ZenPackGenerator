@@ -1,0 +1,23 @@
+{
+ "deviceClasses": [ {
+   "componentTypes": [ { "name": "Enclosure",
+                         "properties": [ { "name": "enclosure_status" },
+                                         { "name": "error_status" },
+                                         { "name": "parent_id" },
+                                         { "name": "docked_id" } ] },
+                       { "name": "TemperatureSensor",
+                         "properties": [ { "name": "port" } ] } ],
+   "deviceType": { "name": "NetBotzDevice",
+                   "properties": [ { "Type": "int",
+                                     "name": "temp_sensor_count" } ] },
+   "path": "Device/Snmp",
+   "zPythonClass": "NetBotzDevice" }
+ ],
+ "id": "ZenPacks.training.NetBotz",
+ "zProperties": [ { "type": "boolean",
+                    "default": true,
+                    "Category": "NetBotz",
+                    "name": "zNetBotzExample" },
+                  { "name": "e1" }
+                ]
+}
