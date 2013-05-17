@@ -1,3 +1,5 @@
+# THIS CODE IS GPL2.  The appropriate headers and licenses havent been put in place yet.
+
 # As zenoss user in zenoss 2.4+
 # Development install
 python setup.py develop
