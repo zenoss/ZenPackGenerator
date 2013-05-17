@@ -41,9 +41,8 @@ class Component(Template):
 
         super(Component, self).__init__(zenpack)
         self.source_template = 'component.tmpl'
-        self.id = id
 
-        self.name = name
+        self.name = name.split('.')[-1]
         self.names = names
         self.klass = self.name
 
@@ -70,10 +69,6 @@ class Component(Template):
         else:
             self.namespace = self.zenpack.namespace
 
-
-
-        # ZenPack.example.Foo.Class
-        # return Class
         self.shortklass = self.id.split('.')[-1]
         self.relname = self.shortklass.lower()
         self.relnames = plural(self.relname)
@@ -155,6 +150,8 @@ class Component(Template):
             self.__names = value
         else:
             self.__names = plural(self.name)
+
+        self.__names = self.__names.split('.')[-1]
 
     @property
     def klasses(self):

@@ -18,6 +18,7 @@ from utils import prepId
 from Configure import Configure
 from ComponentJS import ComponentJS
 from Setup import Setup
+from ZenPackUI import ZenPackUI
 from RootInit import RootInit
 from DirLayout import DirLayout
 from git import Repo
@@ -82,6 +83,7 @@ class ZenPack(object):
         self.configure_zcml = Configure(self)
         self.setup = Setup(self)
         self.rootinit = RootInit(self)
+        self.zenpackUI = ZenPackUI(self)
 
         if zProperties:
             for zp in zProperties:
@@ -166,6 +168,8 @@ class ZenPack(object):
 
         for cjs in self.componentJSs.values():
             cjs.write()
+
+        self.zenpackUI.write()
 
         #Create the root level __init__.py file
         self.rootinit.write()
