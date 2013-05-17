@@ -87,7 +87,7 @@ class ZenPack(object):
 
         if zProperties:
             for zp in zProperties:
-                self.addZProperty(*zp)
+                self.addZProperty(**zp)
 
         if deviceClasses:
             for dc in deviceClasses:
