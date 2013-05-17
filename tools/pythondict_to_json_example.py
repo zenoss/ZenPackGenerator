@@ -8,27 +8,25 @@
 #
 ##############################################################################
 
-data = {'id':'ZenPacks.training.NetBotz',
-        'zProperties': [{'name':'zNetBotzExample', 'Type': 'boolean', 'default': True, 'group': 'NetBotz'},
+data = {'id': 'ZenPacks.training.NetBotz',
+        'zProperties': [{'name': 'zNetBotzExample', 'Type': 'boolean', 'default': True, 'group': 'NetBotz'},
                         {'name': 'e1'}
                         ],
         'deviceClasses': [{'path': 'Device/Snmp',
-                         'zPythonClass': 'NetBotzDevice',
-                         'componentTypes': [{'name': 'Enclosure',
-                                             'properties': [{'name': 'enclosure_status'},
-                                                       {'name': 'error_status'},
-                                                       {'name': 'parent_id'},
-                                                       {'name': 'docked_id'}]},
-                                            {'name': 'TemperatureSensor',
-                                             'properties': [{'name': 'port'}]},
-                                            ],
-                         'deviceType': {'name': 'NetBotzDevice',
-                                        'properties': [{'name': 'temp_sensor_count',
-                                                        'Type': 'int'}]}
-                            }]
+                           'zPythonClass': 'NetBotzDevice',
+                           'componentTypes': [{'name': 'Enclosure',
+                                               'properties': [{'name': 'enclosure_status'},
+                                                              {'name': 'error_status'},
+                                                              {'name': 'parent_id'},
+                                                              {'name': 'docked_id'}]},
+                                              {'name': 'TemperatureSensor',
+                                               'properties': [{'name': 'port'}]},
+                                              ],
+                           'deviceType': {'name': 'NetBotzDevice',
+                                          'properties': [{'name': 'temp_sensor_count',
+                                                          'Type': 'int'}]}
+                           }]
         }
 
 import json
-from pprint import pprint
-print json.dumps(data,sort_keys=True,indent=1, separators=(',', ': '))
-
+print json.dumps(data, sort_keys=True, indent=1, separators=(',', ': '))
