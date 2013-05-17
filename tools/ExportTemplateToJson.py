@@ -111,7 +111,7 @@ def TemplatesToJSONFile(dmd, templates, filename):
 
 	data[id_]["graphs"] = data_graph
         with open(filename, 'w') as outputfile:
-            json.dump(data, outputfile, indent=4, sort_keys=True, separators=(',', ': '))
+            json.dump(data, outputfile, indent=1, sort_keys=True, separators=(',', ': '))
 
 class ExportTemplate(ZenScriptBase):
 
