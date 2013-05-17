@@ -41,12 +41,14 @@ class Component(Template):
 
         super(Component, self).__init__(zenpack)
         self.source_template = 'component.tmpl'
+        self.id = id
 
         self.name = name
         self.names = names
-        self.klass = name
+        self.klass = self.name
 
         self.zenpack = zenpack
+        self.id = KlassExpand(self.zenpack, self.name)
 
         self.device = device
         self.panelSort = panelSort
@@ -68,7 +70,7 @@ class Component(Template):
         else:
             self.namespace = self.zenpack.namespace
 
-        self.id = KlassExpand(self.zenpack, self.name)
+
 
         # ZenPack.example.Foo.Class
         # return Class

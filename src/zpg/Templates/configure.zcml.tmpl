@@ -9,9 +9,9 @@
 
 #for $c in sorted($components.values())
     <adapter
-        provides=".${c.name}.I${c.name}Info"
-        for=".${c.name}.${c.name}"
-        factory=".${c.name}.${c.name}Info"
+        provides=".${c.shortklass}.I${c.shortklass}Info"
+        for=".${c.shortklass}.${c.shortklass}"
+        factory=".${c.shortklass}.${c.shortklass}Info"
         />
 
 #end for
@@ -24,8 +24,8 @@
 #if $c.custompaths
     <adapter
         provides="Products.Zuul.catalog.interfaces.IPathReporter"
-        for=".${c.name}.${c.name}"
-        factory=".${c.name}.${c.name}PathReporter"
+        for=".${c.shortklass}.${c.shortklass}"
+        factory=".${c.shortklass}.${c.shortklass}PathReporter"
         />
 
 #end if
