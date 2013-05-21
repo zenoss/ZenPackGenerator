@@ -335,7 +335,6 @@ class Component(Template):
         imports = "from Products.ZenRelations.RelSchema import %s" % ",".join(sorted(Types.keys()))
         self.imports.append(imports)
 
-
     def write(self):
         '''Write the component files'''
         self.updateImports()

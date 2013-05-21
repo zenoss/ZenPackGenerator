@@ -7,6 +7,7 @@ from lib.ZenPack import ZenPack
 
 logging.basicConfig()
 log = logging.getLogger('ZenPack Generator')
+log.setLevel(level=logging.INFO)
 
 def main():
     log.info('ZenPack Generator Starting')
@@ -14,18 +15,22 @@ def main():
     (opts, args) = parser.parse_args()
 
     if not opts.json:
-        print "Required json input file missing.  exiting..."
+        log.info("Required json input file missing.  exiting...")
         sys.exit(1)
+
+    if opts.debug:
+        log.setLevel(level=logging.DEBUG)
+        log.debug('Turned on Debug Output')
+
 
     f = open(opts.json, 'r')
     jsi = json.load(f)
     jsi['opts'] = opts
-    jsi['destdir'] = opts.dest
     zp_json=ZenPack(**jsi)
     zp_json.write()
 
     # import pdb;pdb.set_trace()
-    #zp = ZenPack('ZenPacks.training.NetBotz2', destdir=opts.dest, opts=opts)
+    #zp = ZenPack('ZenPacks.training.NetBotz2', opts=opts)
     #zp.addZProperty('zNetBotzExampleProperty', 'boolean', True, 'NetBotz')
     #zp.addZProperty('e1')
     #dc = zp.addDeviceClass('Device/Snmp', zPythonClass='NetBotzDevice')

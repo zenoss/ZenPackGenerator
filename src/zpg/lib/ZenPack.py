@@ -29,9 +29,12 @@ import unittest
 
 defaults = Defaults()
 
+
 class Opts(object):
     def __init__(self):
         self.skip = False
+        self.prefix = '/tmp/zpg'
+
 
 class ZenPack(object):
 
@@ -40,7 +43,6 @@ class ZenPack(object):
                  author=defaults.author,
                  version=defaults.version,
                  license=License(defaults.license),
-                 destdir='/foo',
                  install_requires=None,
                  compat_zenoss_vers=">=4.2",
                  prev_zenpack_name="",
@@ -52,7 +54,7 @@ class ZenPack(object):
 
         self.id = id
         self.opts = opts
-        self.destdir = DirLayout(self, destdir)
+        self.destdir  = DirLayout(self, opts.prefix )
         self.namespace = id
         self.deviceClasses = {}
         self.components = {}
@@ -147,21 +149,21 @@ class ZenPack(object):
 
     def updateGitTemplates(self):
         # Create the git repo
-        repo = Repo.init(self.destdir.path)
+        repo = Repo.init(self.destdir .path)
         try:
             repo.commit()
         except:
             repo.index.commit('Initial Commit from zpg')
 
         #Update the repo
-        repo.index.add([self.destdir.path+'/Templates'])
+        repo.index.add([self.destdir .path+'/Templates'])
 
         if repo.is_dirty():
             repo.index.commit('zpg: Committed Template changes')
 
     def write(self):
         # Write the destination folders
-        self.destdir.write()
+        self.destdir .write()
 
         # Write the base setup.py
         self.setup.write()
@@ -228,7 +230,7 @@ class TestZenPackRelationships(SimpleSetup):
         self.zp.addRelation('Device', 'ClusterPeers')
 
 if __name__ == "__main__":
-    zp = ZenPack('ZenPacks.training.NetBotz', destdir='/tmp/zpg')
+    zp = ZenPack('ZenPacks.training.NetBotz')
     zp.addZProperty('zNetBotzExampleProperty', 'boolean', True, 'NetBotz')
     zp.addZProperty('e1')
 

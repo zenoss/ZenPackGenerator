@@ -23,6 +23,7 @@ class DirLayout(object):
     @property
     def path(self):
         '''Join the prefix and the zenpack id to create the destination path.'''
+
         destDir = os.path.join(self.prefix, self.zenpack.id)
         return destDir
 
