@@ -12,7 +12,8 @@ class ZpgOptionParser(OptionParser):
 
     def __init__(self):
         OptionParser.__init__(self,description=self.description)
-        prefix = "/".join(inspect.getfile(zpg).split('/')[:-1]) + "/build"
+        #prefix = "/".join(inspect.getfile(zpg).split('/')[:-1]) + "/build"
+        prefix = "/tmp/zpg"
         self.add_option('-d', "--debug", action='store_true', dest="debug", default=False, help="Turn on Debugging output")
         self.add_option('-p', "--prefix", dest="prefix", default=prefix, help="Destination prefix for the zenpack. [%default]")
         self.add_option('-v', "--version", dest="version", default="4", help="Zenpack type to build [%default]")
