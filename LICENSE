@@ -1,0 +1,28 @@
+Copyright (C) Zenoss, Inc. 2013, all rights reserved.
+
+This program is licensed to you in one of two ways: 
+
+If you are using this program in connection with the commercial version of any
+Zenoss software, your use is governed by terms of the license agreement you
+agreed to when you purchased your license to the commercial Zenoss software.
+
+If you are using this program in connection with the open source version of
+Zenoss software (sometimes referred to as Zenoss Core) which is licensed under
+the terms of the GNU General Public License version 2 (or later at your option)
+(“GPL”) then this program is licensed to you under the GPL as well, and the
+following applies:
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 2 (or later
+at your option) as published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License v2 along with
+this program; if not, write to the 
+
+    Free Software Foundation, Inc.
+    51 Franklin Street, Fifth Floor
+    Boston, MA  02110-1301, USA
