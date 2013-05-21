@@ -11,8 +11,12 @@ from Template import Template
 from utils import zpDir
 
 class ComponentJS(Template):
+    '''Create a js file per unique deviceClass'''
 
     def __init__(self, deviceClass):
+        '''Args:
+                 deviceClass: a DeviceClass instance that contains components
+        '''
         super(ComponentJS, self).__init__(deviceClass.zenpack)
         self.deviceClass = deviceClass
         self.zenpack = self.deviceClass.zenpack
@@ -23,14 +27,21 @@ class ComponentJS(Template):
 
     @property
     def name(self):
+        '''give a unique name'''
+
+
         zpid = self.deviceClass.zenpack.id
         zpc_name = "_".join(self.deviceClass.zPythonClass.split('.'))
         if self.deviceClass.zPythonClass.startswith(zpid):
             return zpc_name
         else:
+            # if the deviceclass is outside of the context of the zenpack
+            # provide the zenpack id plus the zPythonClass as a name
             return "_".join(zpid.split('.')) + "__" + zpc_name
 
     def write(self):
+        '''Write the component javascript file.'''
+
         # Update the components just before we need them.
         self.components = self.deviceClass.componentTypes
         if self.components:

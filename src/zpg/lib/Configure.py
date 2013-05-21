@@ -12,8 +12,13 @@ from Template import Template
 from utils import zpDir
 
 class Configure(Template):
+    ''' Write the template to a setup.py file
+        eg.  Create ZenPacks.zenoss.Foo/ZenPacks/zenoss/Foo/configure.zcml '''
 
     def __init__(self, zenpack):
+        '''Args:
+                 zenpack: ZenPack Class instance
+        '''
         super(Configure, self).__init__(zenpack)
         self.source_template = 'configure.zcml.tmpl'
         self.dest_file = "%s/%s" % (zpDir(zenpack), 'configure.zcml')
@@ -22,7 +27,9 @@ class Configure(Template):
         self.deviceClasses = zenpack.deviceClasses
         self.componentJSs = zenpack.componentJSs
 
+
     def customPathReporters(self):
+        '''Return true if there are any custompath reporters'''
         for c in self.components.values():
             if c.custompaths():
                 return True
@@ -36,6 +43,7 @@ class Configure(Template):
 # datapoints
 
     def write(self):
+        ''' Write the configure.zcml file '''
         self.processTemplate()
 
 # if __name__ == '__main__':

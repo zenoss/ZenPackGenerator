@@ -19,6 +19,8 @@ import zpg
 
 
 class Template(object):
+    """Base Class for Template operations."""
+
     def __init__(self, zenpack):
         self.zenpack = zenpack
         self.source_template = 'foo.tmpl'
@@ -26,9 +28,12 @@ class Template(object):
         self.dest_file = None
 
     def TemplateCacheLocation(self):
+        """return the cache location inside the zenpack directories."""
         return os.path.join(self.base_destdir, 'Templates', "%s.tmpl" % os.path.basename(self.dest_file))
 
     def cacheTemplate(self):
+        """Store the template into the cache."""
+
         cacheTemplateFile = self.TemplateCacheLocation()
         cache_directory = os.path.dirname(cacheTemplateFile)
         if not os.path.exists(cache_directory):
@@ -42,6 +47,7 @@ class Template(object):
             dtf.close()
 
     def findTemplate(self):
+        """Find the template and save its location."""
         cacheTemplateFile = self.TemplateCacheLocation()
         if os.path.exists(cacheTemplateFile) and not self.zenpack.opts.skip:
             self.tfile = str(cacheTemplateFile)
@@ -51,6 +57,8 @@ class Template(object):
 
 
     def processTemplate(self):
+        """Write the templates."""
+
         self.findTemplate()
         self.cacheTemplate()
         t = cTemplate(file=self.tfile, searchList=[self])

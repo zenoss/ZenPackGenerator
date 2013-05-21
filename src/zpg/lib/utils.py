@@ -37,6 +37,11 @@ def prepId(id, subchar='_'):
     return str(id)
 
 def KlassExpand(zenpack, value):
+    """Expand a component
+       eg:
+          Component expands to ZenPack.example.Com.Component
+    """
+
     if value.startswith(zenpack.namespace):
         return value
     elif '.' in value:
@@ -45,6 +50,7 @@ def KlassExpand(zenpack, value):
         return "%s.%s" % (zenpack.namespace, value)
 
 def zpDir(zenpack):
+    """ZenPack.zenoss.Foo returns ZenPack/zenoss/Foo"""
     parts = zenpack.id.split('.')
     subdirs = "/".join(parts)
     return subdirs

@@ -21,6 +21,7 @@ class Defaults(object):
     """
 
     def __init__(self):
+        '''This is a work in progress and will be extended to allow users to override the defaults.'''
         self.author = 'ZenossLabs <labs@zenoss.com>'
         self.version = '0.0.1'
         self.license = 'gpl'

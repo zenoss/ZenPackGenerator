@@ -14,6 +14,7 @@ class License(object):
         self.id = id
 
     def header(self):
+        # This should be expanded...
         return "#LICENSE HEADER SAMPLE"
 
     def __repr__(self):

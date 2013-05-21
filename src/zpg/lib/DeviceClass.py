@@ -14,6 +14,7 @@ from Relationship import Relationship
 find = Relationship.find
 
 class DeviceClass(object):
+    '''Device Class Container'''
     deviceClasses = {}
 
     def __init__(self,
@@ -23,6 +24,17 @@ class DeviceClass(object):
                  zPythonClass='Products.ZenModel.Device.Device',
                  componentTypes=None,
                  deviceType=None):
+
+        '''Args:
+                 path: Destination device class path (the prefix is automatically prepended)
+                 ZenPack: ZenPack Class Instance
+                 prefix: Destination device class prefix [/zport/dmd]
+                 zPythonClass: The zPythonClass this Device Class references.
+                               [Products.ZenModel.Device.Device]
+                 componentTypes: an array of dictionaries used to create components.
+                 deviceType: a dictionary used to create a device component.
+        '''
+
         self.zenpack = ZenPack
         self.path = '/'.join([prefix, path.lstrip('/')])
         self.id = self.path
@@ -39,9 +51,13 @@ class DeviceClass(object):
                 self.addComponentType(**component)
 
     def DeviceType(self):
+        '''Create a deviceType component from a zPythonClass reference'''
+
         self.deviceType = self.zenpack.addComponentType(self.zPythonClass, device=True)
 
     def addClass(self, deviceClass, *args, **kwargs):
+        '''Create a sub device class'''
+
         if 'prefix' in kwargs:
             del(kwargs['prefix'])
 
@@ -60,6 +76,8 @@ class DeviceClass(object):
                                **kwargs)
 
     def addComponentType(self, *args, **kwargs):
+        '''Add a component to the deviceType component'''
+
         if 'zenpack' not in kwargs:
             kwargs['zenpack'] = self.zenpack
         c = self.deviceType.addComponentType(*args, **kwargs)
@@ -67,6 +85,10 @@ class DeviceClass(object):
 
     @property
     def componentTypes(self):
+        '''Return the component types defined inside this deviceClass.
+           Including child components.
+        '''
+
         def ComponentFind(child=None):
             components = []
             if child:

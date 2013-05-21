@@ -11,6 +11,7 @@ from Template import Template
 from utils import zpDir
 
 class ZenPackUI(Template):
+    """Build the ZenPack global js file to register components."""
 
     def __init__(self, ZenPack):
         super(ZenPackUI, self).__init__(ZenPack)

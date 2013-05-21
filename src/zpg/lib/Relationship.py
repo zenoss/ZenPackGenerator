@@ -11,12 +11,18 @@
 import unittest
 
 class Relationship(object):
-    """ZenPack Relationship"""
+    '''ZenPack Relationship Management'''
 
     relationships = {}
 
     def __init__(self, ZenPack, ComponentA, ComponentB, Type='1-M', Contained=True):
-
+        """Args:
+                ZenPack:  A ZenPack Class instance
+                ComponentA: Parent Component instance
+                ComponentB: Child Component instance
+                Type: Relationship Type.  Valid inputs [1-1,1-M,M-M]
+                Contained: ComponentA contains ComponentB True or False
+        """
         self.ZenPack = ZenPack
         from Component import Component
         lookup = Component.lookup
@@ -31,6 +37,7 @@ class Relationship(object):
         Relationship.relationships[self.id] = self
 
     def hasComponent(self, component):
+        '''Return True if this relationship has this component inside.'''
         for c in self.components:
             if component.id == c.id:
                 return True
@@ -38,6 +45,20 @@ class Relationship(object):
 
     @classmethod
     def find(self, component, Contained=None, First=None, Types=None):
+        '''return all the relationships that match the input request.
+
+           Args:
+              component: A parent or child component in this relationship
+              Contained: True/False containment relationship
+              First: True/False  True if we are searching for the Parent Component
+                                 in the relationship.
+
+              Types: 1-1, 1-M, M-M are valid relationship types.
+                     1-1: One to One
+                     1-M: One to Many
+                     M-M: Many to Many
+        '''
+
         rels = []
         for rel in Relationship.relationships.values():
             if rel.hasComponent(component):
@@ -65,9 +86,13 @@ class Relationship(object):
         return False
 
     def child(self):
+        '''Return the child component.'''
         return self.components[1]
 
     def toString(self, component):
+        '''Write the relationship into a string format based on the component
+           as a frame of reference. This is a 3.X and 4.X string format.'''
+
         if self.first(component):
             compA = self.components[1]
             compB = self.components[0]

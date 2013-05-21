@@ -12,10 +12,14 @@ from Template import Template
 
 
 class Setup(Template):
+    """ Write the template to a setup.py file
+        eg.  Create ZenPacks.zenoss.Foo/setup.py """
+
     def __init__(self, zenpack):
         super(Setup, self).__init__(zenpack)
         self.source_template = 'setup.tmpl'
         self.dest_file = "setup.py"
 
     def write(self):
+        """Write setup.py"""
         self.processTemplate()

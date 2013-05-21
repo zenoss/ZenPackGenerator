@@ -15,7 +15,10 @@ from Relationship import Relationship
 from utils import zpDir
 find = Relationship.find
 
+
 class RootInit(Template):
+    """ Write the template to a __init__.py file
+        eg.  Create ZenPacks.zenoss.Foo/ZenPacks/zenoss/Foo/__init__.py """
 
     def __init__(self, zenpack):
         self.zenpack = zenpack
@@ -25,9 +28,12 @@ class RootInit(Template):
         self.dest_file = "%s/%s" % (zpDir(zenpack), '__init__.py')
 
     def write(self):
+        """Write __init__.py"""
         self.components = self.zenpack.components.values()
 
         devChildren = []
+
+        # Search for any components contained inside the Device Component.
         dc = Component('Products.ZenModel.Device.Device', self.zenpack)
         rels = find(dc)
         for rel in rels:
