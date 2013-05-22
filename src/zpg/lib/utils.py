@@ -10,6 +10,7 @@
 import re
 import string
 
+
 def prepId(id, subchar='_'):
     """
     Make an id with valid url characters. Subs [^a-zA-Z0-9-_,.$\(\) ]
@@ -36,6 +37,7 @@ def prepId(id, subchar='_'):
     id = id.lstrip(string.whitespace + '_').rstrip()
     return str(id)
 
+
 def KlassExpand(zenpack, value):
     """Expand a component
        eg:
@@ -49,16 +51,9 @@ def KlassExpand(zenpack, value):
     else:
         return "%s.%s" % (zenpack.namespace, value)
 
+
 def zpDir(zenpack):
     """ZenPack.zenoss.Foo returns ZenPack/zenoss/Foo"""
     parts = zenpack.id.split('.')
     subdirs = "/".join(parts)
     return subdirs
-
-if __name__ == '__main__':
-    from ZenPack import ZenPack
-    print prepId('ZenPacks.zenoss.#@Foo').replace('.', '_')
-    zp = ZenPack('a.b.c')
-    print KlassExpand(zp, 'Component')
-    print KlassExpand(zp, 'a.b.c.Component')
-    print KlassExpand(zp, 'b.b.C')
