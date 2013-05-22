@@ -245,10 +245,6 @@ class Component(Template):
                     if not rel.Type in custompaths.keys():
                         custompaths[rel.Type] = [(component, prel.components[0])]
 
-                    # I dont think this else is needed.
-                    else:
-                        custompaths[rel.Type].append((component, prel.components[0]))
-
         return custompaths
         """obj = self.context.${first_component}()
            if obj:
@@ -274,7 +270,7 @@ class Component(Template):
         rels = []
         for rel in self.relations():
             rels.append(rel.toString(self))
-        return rels
+        return sorted(rels)
 
     def displayInfo(self):
         '''return True if we should build the Info Class'''
@@ -307,14 +303,11 @@ class Component(Template):
             return Component.components[component]
 
         component = "{0}.{1}".format('Products.ZenModel', component_id)
-        if component in Component.components:
-            return Component.components[component]
 
         if create:
             return Component(zenpack, component_id)
         else:
             return None
-
 
     def addComponentType(self, *args, **kwargs):
         '''add a subcomponent'''

@@ -11,6 +11,7 @@
 from Template import Template
 from utils import zpDir
 
+
 class Configure(Template):
     ''' Write the template to a setup.py file
         eg.  Create ZenPacks.zenoss.Foo/ZenPacks/zenoss/Foo/configure.zcml '''
@@ -26,7 +27,6 @@ class Configure(Template):
         self.components = zenpack.components
         self.deviceClasses = zenpack.deviceClasses
         self.componentJSs = zenpack.componentJSs
-
 
     def customPathReporters(self):
         '''Return true if there are any custompath reporters'''
