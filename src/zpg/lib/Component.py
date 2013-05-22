@@ -26,8 +26,8 @@ class Component(Template):
     components = {}
 
     def __init__(self,
-                 name,
                  zenpack,
+                 name,
                  klasses=None,
                  imports=None,
                  names=None,
@@ -108,6 +108,7 @@ class Component(Template):
 
         self.properties = {}
 
+        self.components = {}
         self.zenpack.registerComponent(self)
         Component.components[self.id] = self
 
@@ -199,14 +200,14 @@ class Component(Template):
         '''
 
         classes = []
-        if isinstance(value, basestring):
-            value = [value]
         for Klass in value:
             if len(Klass.split('.')) == 1:
-                if Klass.split('.')[-1] in self.zenpack.namespace:
-                    Klass = '{0}.{1}.{1}'.format(self.zenpack.namespace, Klass)
+                results = self.lookup(self.zenpack, Klass, create=False)
+                if results:
+                    Klass = results.id
                 else:
                     Klass = 'Products.ZenModel.{0}.{0}'.format(Klass)
+
             classes.append(Klass)
             Module = ".".join(Klass.split('.')[:-1])
             klass = Klass.split('.')[-1]
@@ -243,6 +244,8 @@ class Component(Template):
                     prel = prel[0]
                     if not rel.Type in custompaths.keys():
                         custompaths[rel.Type] = [(component, prel.components[0])]
+
+                    # I dont think this else is needed.
                     else:
                         custompaths[rel.Type].append((component, prel.components[0]))
 
@@ -293,7 +296,7 @@ class Component(Template):
         return False
 
     @classmethod
-    def lookup(self, zenpack, component_id):
+    def lookup(self, zenpack, component_id, create=True):
         '''find a component by its id'''
 
         if component_id in Component.components:
@@ -307,13 +310,19 @@ class Component(Template):
         if component in Component.components:
             return Component.components[component]
 
-        return Component(component_id, zenpack)
+        if create:
+            return Component(zenpack, component_id)
+        else:
+            return None
+
 
     def addComponentType(self, *args, **kwargs):
         '''add a subcomponent'''
-        if not 'zenpack' in kwargs:
-            kwargs['zenpack'] = self.zenpack
-        c = Component(*args, **kwargs)
+        if 'zenpack' in kwargs:
+            del(kwargs['zenpack'])
+        c = Component(self.zenpack, *args, **kwargs)
+        self.components[c.id] = c
+
         Relationship(self.zenpack, self.id, c.id)
         return c
 

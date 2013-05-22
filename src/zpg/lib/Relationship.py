@@ -17,8 +17,8 @@ class Relationship(object):
     def __init__(self, ZenPack, ComponentA, ComponentB, Type='1-M', Contained=True):
         """Args:
                 ZenPack:  A ZenPack Class instance
-                ComponentA: Parent Component instance
-                ComponentB: Child Component instance
+                ComponentA: Parent Component string id
+                ComponentB: Child Component string id
                 Type: Relationship Type.  Valid inputs [1-1,1-M,M-M]
                 Contained: ComponentA contains ComponentB True or False
         """

@@ -7,6 +7,9 @@ class SimpleSetup(unittest.TestCase):
     def setUp(self):
         self.zp = ZenPack('a.b.c')
 
+    def tearDown(self):
+        del(self.zp)
+
 
 class TestPropertyCreate(SimpleSetup):
     def test_addProperty(self):

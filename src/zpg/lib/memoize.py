@@ -34,7 +34,11 @@ class memoize(object):
             cache = obj.__cache = {}
 
         items = [i for i in kw.items() if not isinstance(i[1], (list,tuple))]
-        listitems = [(i[0], " ".join(sorted(i[1]))) for i in kw.items() if isinstance(i[1], (list,tuple))]
+        try:
+            listitems = [(i[0], " ".join(sorted(i[1]))) for i in kw.items() if isinstance(i[1], (list, tuple))]
+
+        except Exception:
+            listitems = [(i[0], str(i[1])) for i in kw.items() if isinstance(i[1], (list, tuple))]
 
         key = (self.func, args[1:], frozenset(items+listitems))
 

@@ -8,18 +8,18 @@
 #
 ##############################################################################
 
-import unittest
 from utils import KlassExpand
 from Relationship import Relationship
 find = Relationship.find
+
 
 class DeviceClass(object):
     '''Device Class Container'''
     deviceClasses = {}
 
     def __init__(self,
-                 path,
                  ZenPack,
+                 path,
                  prefix='/zport/dmd',
                  zPythonClass='Products.ZenModel.Device.Device',
                  componentTypes=None,
@@ -62,14 +62,14 @@ class DeviceClass(object):
             del(kwargs['prefix'])
 
         if 'zPythonClass' in kwargs:
-            return DeviceClass(deviceClass,
-                               self.zenpack,
+            return DeviceClass(self.zenpack,
+                               deviceClass,
                                prefix=self.path,
                                *args,
                                **kwargs)
         else:
-            return DeviceClass(deviceClass,
-                               self.zenpack,
+            return DeviceClass(self.zenpack,
+                               deviceClass,
                                prefix=self.path,
                                zPythonClass=self.zPythonClass,
                                *args,
