@@ -2,6 +2,7 @@
 #http://code.activestate.com/recipes/577452-a-memoize-decorator-for-instance-methods/
 #MIT license
 from functools import partial
+import cPickle
 
 class memoize(object):
     """cache the return value of a method
@@ -22,10 +23,12 @@ class memoize(object):
     """
     def __init__(self, func):
         self.func = func
+
     def __get__(self, obj, objtype=None):
         if obj is None:
             return self.func
         return partial(self, obj)
+
     def __call__(self, *args, **kw):
         obj = args[0]
         try:
@@ -33,14 +36,14 @@ class memoize(object):
         except AttributeError:
             cache = obj.__cache = {}
 
-        items = [i for i in kw.items() if not isinstance(i[1], (list,tuple))]
-        try:
-            listitems = [(i[0], " ".join(sorted(i[1]))) for i in kw.items() if isinstance(i[1], (list, tuple))]
-
-        except Exception:
-            listitems = [(i[0], str(i[1])) for i in kw.items() if isinstance(i[1], (list, tuple))]
-
-        key = (self.func, args[1:], frozenset(items+listitems))
+        #items = [i for i in kw.items() if not isinstance(i[1], (list,tuple))]
+        #try:
+        #    listitems = [(i[0], " ".join(sorted(i[1]))) for i in kw.items() if isinstance(i[1], (list, tuple))]
+#
+#        except Exception:
+#            listitems = [(i[0], str(i[1])) for i in kw.items() if isinstance(i[1], (list, tuple))]
+        #key = (self.func, args[1:], frozenset(items+listitems))
+        key = (self.func, args[1:])
 
         try:
             res = cache[key]
