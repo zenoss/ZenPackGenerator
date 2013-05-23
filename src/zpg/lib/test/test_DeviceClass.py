@@ -26,6 +26,13 @@ class TestDeviceClassCreate(SimpleSetup):
         self.assertEqual(sdc.path, '/zport/dmd/Storage/Foo/Bar')
         self.assertEqual(sdc.zPythonClass, 'Products.ZenModel.Device.Device')
 
+        sdc_zp = dc.addClass('Bar2',zPythonClass='Products.ZenModel.Foo.Foo')
+        self.assertEqual(sdc_zp.path, '/zport/dmd/Storage/Foo/Bar2')
+        self.assertEqual(sdc_zp.zPythonClass, 'Products.ZenModel.Foo.Foo')
+
+        sdc_p = dc.addClass('Bar3',prefix='bah')
+        self.assertEqual(sdc_p.path, '/zport/dmd/Storage/Foo/Bar3')
+
     def test_DeviceClassComponentId(self):
         dc = DeviceClass(self.zp, 'Storage/Foo')
         self.assertEqual(dc.deviceType.id, 'Products.ZenModel.Device.Device')

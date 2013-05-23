@@ -96,10 +96,7 @@ class DeviceClass(object):
                 for rel in rels:
                     newchild = rel.child()
                     components.append(newchild)
-                    if child == newchild:
-                        rval = ComponentFind(None)
-                    else:
-                        rval = ComponentFind(newchild)
+                    rval = ComponentFind(newchild)
                     if rval:
                         components = components + rval
             return components
