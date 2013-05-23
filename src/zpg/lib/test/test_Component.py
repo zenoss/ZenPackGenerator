@@ -1,6 +1,15 @@
+import os
 import unittest
+from mock import mock_open, patch, call, MagicMock
 from zpg.lib.Component import Component
 from zpg.lib.Relationship import Relationship
+import __builtin__
+
+
+class Opts(object):
+    def __init__(self):
+        self.skip = True
+        self.prefix = '/tmp/zpg'
 
 
 class SimpleSetup(unittest.TestCase):
@@ -10,6 +19,32 @@ class SimpleSetup(unittest.TestCase):
 
     def tearDown(self):
         print "Calling teardown"
+        del(self.zp)
+
+
+class WriteTemplatesBase(unittest.TestCase):
+    def setUp(self):
+        from zpg.lib.ZenPack import ZenPack
+        self.zp = ZenPack('a.b.c', opts=Opts())
+        self.makedirs = os.makedirs
+
+        os.makedirs = MagicMock(return_value=True)
+
+    def write(self, Component, template):
+        m = mock_open()
+        with patch('__builtin__.open', mock_open(read_data=template), create=True) as m:
+            Component.dest_file = 'dummy_dest_file.py'
+            Component.tfile = 'dummy_tfile'
+            Component.source_template = 'dummy_source_template.tmpl'
+            Component.write()
+
+            # Write File Handle
+            wfh = m.return_value.__enter__.return_value
+            self.results = wfh.write.call_args_list
+
+    def tearDown(self):
+        print "Calling teardown"
+        os.makedirs = self.makedirs
         del(self.zp)
 
 
@@ -323,6 +358,19 @@ class TestLookups(SimpleSetup):
         Component(self.zp, 'Disk')
 
         self.assertEqual(Component.lookup(self.zp, 'a.b.c.Disk').id, 'a.b.c.Disk')
+
+
+class TestWriteTemplates(WriteTemplatesBase):
+    def test_WriteBasic(self):
+        c = Component(self.zp, 'Component')
+        self.write(c, '${zenpack.id}\n${zenpack.version}\n')
+        self.assertEqual(self.results[-1], call(u'a.b.c\n0.0.1\n'))
+
+class TestWriteTemplatesAgain(WriteTemplatesBase):
+    def test_WriteBasicAgain(self):
+        d = Component(self.zp, 'Component2')
+        self.write(d, '${zenpack.id}\n${zenpack.version}\n${zenpack.version}\n')
+        self.assertEqual(self.results[-1], call(u'a.b.c\n0.0.1\n0.0.1\n'))
 
 if __name__ == '__main__':
     unittest.main()

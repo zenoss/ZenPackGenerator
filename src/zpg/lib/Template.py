@@ -39,12 +39,11 @@ class Template(object):
         if not os.path.exists(cache_directory):
             os.makedirs(cache_directory)
         if not os.path.exists(cacheTemplateFile):
-            tf = open(os.path.join(self.tfile), 'r')
-            dtf = open(os.path.join(cacheTemplateFile), 'w')
-            dtf.write('## Source Template %s \n' % self.tfile)
-            dtf.write(tf.read())
-            tf.close()
-            dtf.close()
+            with open(os.path.join(self.tfile), 'r') as tf:
+                with open(os.path.join(cacheTemplateFile), 'w') as dtf:
+                    dtf.write('## Source Template %s \n' % self.tfile)
+                    dtf.write(tf.read())
+
 
     def findTemplate(self):
         """Find the template and save its location."""
@@ -54,18 +53,21 @@ class Template(object):
         else:
             self.tfile = "%s/Templates/%s" % ("/".join(inspect.getfile(zpg).split('/')[:-1]), self.source_template)
         log.info('Using template %s' % self.tfile)
+        #print 'Using template %s' % self.tfile
 
     def processTemplate(self):
         """Write the templates."""
 
+
         self.findTemplate()
         self.cacheTemplate()
-        t = cTemplate(file=self.tfile, searchList=[self])
+        with open(self.tfile, 'r') as tf:
+            t = cTemplate(file=tf, searchList=[self])
+        #print t.respond()
         dfile = os.path.join(self.base_destdir, self.dest_file)
 
         dirname = os.path.dirname(dfile)
         if not os.path.exists(dirname):
             os.makedirs(dirname)
-        f = open(dfile, 'w')
-        f.write(t.respond())
-        f.close()
+        with open(dfile, 'w') as f:
+            f.write(t.respond())

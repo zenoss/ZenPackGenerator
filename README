@@ -11,6 +11,11 @@ zpg -h
 # Sample json input files can be found in the samples folder
 #
 # the tools folder contain scripts to aid in zenpack development
+#
+#
+#
+# Unit tests with test coverage 
+nosetests --with-coverage --cover-erase
 
 #TODO
 1.) possible source template versioning so future tools can lookup the original templates.
