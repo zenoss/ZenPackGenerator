@@ -41,12 +41,3 @@ class RootInit(Template):
             devChildren.append(component)
         self.devChildren = devChildren
         self.processTemplate()
-
-
-if __name__ == '__main__':
-    from ZenPack import ZenPack
-    zp = ZenPack('a.b.c')
-    dc = zp.addDeviceClass('/')
-    e = dc.addComponentType('Enclosure')
-
-    zp.write()
