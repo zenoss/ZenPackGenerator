@@ -53,7 +53,7 @@ class ZenPack(object):
 
         self.id = id
         self.opts = opts
-        self.destdir  = DirLayout(self, opts.prefix )
+        self.destdir = DirLayout(self, opts.prefix)
         self.namespace = id
         self.deviceClasses = {}
         self.components = {}
@@ -164,7 +164,7 @@ class ZenPack(object):
 
     def write(self):
         # Write the destination folders
-        self.destdir .write()
+        self.destdir.write()
 
         # Write the base setup.py
         self.setup.write()
