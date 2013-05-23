@@ -25,7 +25,6 @@ from git import Repo
 
 #from UI import UI
 from memoize import memoize
-import unittest
 
 defaults = Defaults()
 

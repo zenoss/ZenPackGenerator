@@ -127,6 +127,6 @@ class Property(object):
         else:
             self._value = value
 
-    def __call__(self):
-        '''return the value by default from a property instance.'''
-        return self.value
+    #def __call__(self):
+    #    '''return the value by default from a property instance.'''
+    #    return self.value
