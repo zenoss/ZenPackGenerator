@@ -44,6 +44,9 @@ class TestRelationship_FindComponents(SimpleSetup):
         c = self.zp.addComponentType('SampleComponent')
         r = Relationship(self.zp, 'SampleDevice', 'SampleComponent')
         self.assertEqual([r], Relationship.find(c))
+        self.assertEqual([], Relationship.find(c, Types='1-M'))
+        self.assertEqual([r], Relationship.find(c, Types=['1-M','M-M']))
+        self.assertEqual([], Relationship.find(c, Types=['1-1']))
 
     def test_ReturnsNoRelationships(self):
         c2 = self.zp.addComponentType('SampleComponent2')
