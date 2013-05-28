@@ -10,6 +10,7 @@
 from Template import Template
 from utils import zpDir
 
+
 class ComponentJS(Template):
     '''Create a js file per unique deviceClass'''
 
@@ -28,7 +29,6 @@ class ComponentJS(Template):
     @property
     def name(self):
         '''give a unique name'''
-
 
         zpid = self.deviceClass.zenpack.id
         zpc_name = "_".join(self.deviceClass.zPythonClass.split('.'))

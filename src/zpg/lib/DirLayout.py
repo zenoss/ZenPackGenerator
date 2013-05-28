@@ -30,22 +30,20 @@ class DirLayout(object):
     def write(self):
         '''Create the directories'''
         parts = self.zenpack.id.split('.')
+
         if not os.path.exists(self.path):
             os.makedirs(self.path, 0750)
 
         # Create subdirectories
         base = self.path
-        base = os.path.join(base, parts[-1])
-        if not os.path.exists(base):
-            os.mkdir(base)
-
-        for part in parts[:-1]:
+        for part in parts:
             base = os.path.join(base, part)
             if not os.path.exists(base):
                 os.mkdir(base)
 
             '''Write nested __init__.py files.'''
-            f = open(os.path.join(base, '__init__.py'), 'w')
+            df = os.path.join(base, '__init__.py')
+            f = open(df, 'w')
             f.write("__import__('pkg_resources').declare_namespace(__name__)\n")
             f.close()
 

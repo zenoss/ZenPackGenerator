@@ -34,19 +34,10 @@ class RootInit(Template):
         devChildren = []
 
         # Search for any components contained inside the Device Component.
-        dc = Component('Products.ZenModel.Device.Device', self.zenpack)
+        dc = Component(self.zenpack, 'Products.ZenModel.Device.Device')
         rels = find(dc)
         for rel in rels:
             component = rel.components[1]
             devChildren.append(component)
         self.devChildren = devChildren
         self.processTemplate()
-
-
-if __name__ == '__main__':
-    from ZenPack import ZenPack
-    zp = ZenPack('a.b.c')
-    dc = zp.addDeviceClass('/')
-    e = dc.addComponentType('Enclosure')
-
-    zp.write()

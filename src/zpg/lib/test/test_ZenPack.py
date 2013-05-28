@@ -73,5 +73,16 @@ class TestZenPackRelationships(SimpleSetup):
         self.zp.addRelation('Device', 'SystemNodes')
         self.zp.addRelation('Device', 'ClusterPeers')
 
+class TestzProperties(SimpleSetup):
+    def test_quotes(self):
+        self.zp.addZProperty('foo', default='\'')
+        self.assertEqual(self.zp.zproperties['foo'][1], '\'')
+
+        self.zp.addZProperty('bar', default='\'bar')
+        self.assertEqual(self.zp.zproperties['bar'][1], '\'bar\'')
+
+        self.zp.addZProperty('baz', default='baz')
+        self.assertEqual(self.zp.zproperties['baz'][1],'\'baz\'')
+
 if __name__ == '__main__':
         unittest.main()

@@ -36,6 +36,7 @@ class TestPropertyCreate(SimpleSetup):
         cp5 = Property('int', value=1)
         cp6 = Property('float', value=1.0)
         cp7 = Property('lines', value=['a', 'b'])
+        cp8 = Property('checksum_enabled', value=True)
         self.assertEqual(cp1.Type, 'string')
         self.assertEqual(cp2.Type, 'int')
         self.assertEqual(cp3.Type, 'boolean')
@@ -43,6 +44,7 @@ class TestPropertyCreate(SimpleSetup):
         self.assertEqual(cp5.Type, 'int')
         self.assertEqual(cp6.Type, 'float')
         self.assertEqual(cp7.Type, 'lines')
+        self.assertEqual(cp8.Type, 'boolean')
 
     def test_addPropertyValuesInit(self):
         cp1 = Property('blocksize', Type='string', value='3')
@@ -53,3 +55,27 @@ class TestPropertyCreate(SimpleSetup):
         self.assertEqual(cp2.value, 2)
         self.assertEqual(cp3.value, True)
         self.assertEqual(cp4.value, ['a', 'b'])
+
+class TestPropertySchema(SimpleSetup):
+    def testInt(self):
+        cp1 = Property('Int', Type='int')
+        self.assertEqual(cp1.Schema(), 'Int')
+
+    def testText(self):
+        string1 = Property('String', Type='string')
+        text1 = Property('Text', Type='text')
+        lines1 = Property('Lines', Type='lines')
+        self.assertEqual(string1.Schema(), 'TextLine')
+        self.assertEqual(text1.Schema(), 'TextLine')
+        self.assertEqual(lines1.Schema(), 'TextLine')
+
+    def testBool(self):
+        bool1 = Property('Bool', Type='bool')
+        self.assertEqual(bool1.Schema(), 'Bool')
+
+    def testFallthrough(self):
+        ft = Property('FallThrough', Type='long')
+        self.assertEqual(ft.Schema(), 'TextLine')
+
+if __name__ == '__main__':
+    unittest.main()

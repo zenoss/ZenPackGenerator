@@ -1,14 +1,50 @@
+import os
 import unittest
+from mock import mock_open, patch, call, MagicMock
 from zpg.lib.Component import Component
 from zpg.lib.Relationship import Relationship
+import __builtin__
+
+
+class Opts(object):
+    def __init__(self):
+        self.skip = True
+        self.prefix = '/tmp/zpg'
+
 
 class SimpleSetup(unittest.TestCase):
     def setUp(self):
         from zpg.lib.ZenPack import ZenPack
         self.zp = ZenPack('a.b.c')
 
-    def teardown(self):
+    def tearDown(self):
         print "Calling teardown"
+        del(self.zp)
+
+
+class WriteTemplatesBase(unittest.TestCase):
+    def setUp(self):
+        from zpg.lib.ZenPack import ZenPack
+        self.zp = ZenPack('a.b.c', opts=Opts())
+        self.makedirs = os.makedirs
+
+        os.makedirs = MagicMock(return_value=True)
+
+    def write(self, Component, template):
+        m = mock_open()
+        with patch('__builtin__.open', mock_open(read_data=template), create=True) as m:
+            Component.dest_file = 'dummy_dest_file.py'
+            Component.tfile = 'dummy_tfile'
+            Component.source_template = 'dummy_source_template.tmpl'
+            Component.write()
+
+            # Write File Handle
+            wfh = m.return_value.__enter__.return_value
+            self.results = wfh.write.call_args_list
+
+    def tearDown(self):
+        print "Calling teardown"
+        os.makedirs = self.makedirs
         del(self.zp)
 
 
@@ -132,6 +168,7 @@ class TestComponentImports(SimpleSetup):
                                       'from Products.ZenModel.Software import Software',
                                       ])
 
+
 class TestComponentNameSpace(SimpleSetup):
     def test_namespace_default(self):
         c = Component(self.zp, 'Component')
@@ -158,6 +195,7 @@ class TestComponentProperties(SimpleSetup):
         c = Component(self.zp, 'Component', properties=[{"name": "port"}])
         self.assertEqual(c.properties.keys(), ['port'])
 
+
 class TestSubComponent(SimpleSetup):
     def test_ComponentType_init_dict(self):
         c = Component(self.zp, 'Component', componentTypes=[{"name": "Blade"}])
@@ -168,6 +206,7 @@ class TestSubComponent(SimpleSetup):
         c.addComponentType('SubComponent')
         self.assertEqual(c.components.keys(), ['a.b.c.SubComponent'])
 
+
 class TestComponentType(SimpleSetup):
     def test_ComponentType_Component(self):
         c = Component(self.zp, 'Component')
@@ -176,16 +215,19 @@ class TestComponentType(SimpleSetup):
         d = Component(self.zp, 'Device', device=True)
         self.assertEqual(d.Type(), 'Device')
 
+
 class TestKlassNames(SimpleSetup):
     def test_klassNames_Default(self):
         c = Component(self.zp, 'Component')
         self.assertEqual(c.klassNames(), ['DeviceComponent', 'ManagedEntity'])
+
 
 class TestFindRelationships(SimpleSetup):
     def test_findRelationships(self):
         c = self.zp.addComponentType('Component')
         c.addComponentType('SubComponent')
         self.assertEqual([r.id for r in c.relations()], ['a.b.c.Component a.b.c.SubComponent'])
+
 
 class TestCustomPaths(SimpleSetup):
     def test_findCustomPaths(self):
@@ -200,6 +242,7 @@ class TestCustomPaths(SimpleSetup):
         self.assertEqual([c.id for c in f.custompaths()['1-M'][0]], ['a.b.c.Enclosure', 'a.b.c.d.Device'])
         self.assertEqual([c.id for c in b.custompaths()['1-M'][0]], ['a.b.c.Enclosure', 'a.b.c.d.Device'])
 
+
 class TestDropDownComponents(SimpleSetup):
     def test_findDropDownComponents(self):
         dc = self.zp.addDeviceClass('Device', zPythonClass='a.b.c.d.Device')
@@ -208,19 +251,126 @@ class TestDropDownComponents(SimpleSetup):
         Relationship(self.zp, 'Enclosure', 'Fan', Type='1-M', Contained=False)
         self.assertEqual([c.id for c in f.dropdowncomponents()], ['a.b.c.Enclosure'])
 
+
 class TestManyRelationships(SimpleSetup):
     def test_findManyRelationships(self):
         dc = self.zp.addDeviceClass('Device', zPythonClass='a.b.c.d.Device')
-        e=dc.addComponentType('a.Enclosure')
+        e = dc.addComponentType('a.Enclosure')
         e.addComponentType('Drive')
-        self.assertEqual([r.id for r in e.ManyRelationships()],['a.Enclosure a.b.c.Drive'])
+        self.assertEqual([r.id for r in e.ManyRelationships()], ['a.Enclosure a.b.c.Drive'])
+
+
+class TestDisplayInfo(SimpleSetup):
+    def test_properties(self):
+        dc = self.zp.addDeviceClass('Device', zPythonClass='a.b.c.d.Device')
+        e = dc.addComponentType('a.Enclosure')
+        e.addProperty('foo')
+        self.assertEqual(e.displayInfo(), True)
+
+    def test_trueManyRelationships(self):
+        dc = self.zp.addDeviceClass('Device', zPythonClass='a.b.c.d.Device')
+        e2 = dc.addComponentType('a.Enclosure2')
+        e2.addComponentType('Drive2')
+        self.assertEqual(e2.displayInfo(), True)
+
+    def test_donotdisplayInfo(self):
+        dc = self.zp.addDeviceClass('Device', zPythonClass='a.b.c.d.Device')
+        e = dc.addComponentType('a.Enclosure')
+        self.assertEqual(e.displayInfo(), False)
+
+
+class TestDisplayIInfo(SimpleSetup):
+    def test_properties(self):
+        dc = self.zp.addDeviceClass('Device', zPythonClass='a.b.c.d.Device')
+        e = dc.addComponentType('a.Enclosure')
+        e.addProperty('foo')
+        self.assertEqual(e.displayIInfo(), True)
+
+    def test_trueManyRelationships(self):
+        dc = self.zp.addDeviceClass('Device', zPythonClass='a.b.c.d.Device')
+        e2 = dc.addComponentType('a.Enclosure2')
+        e2.addComponentType('Drive2')
+        self.assertEqual(e2.displayIInfo(), True)
+
+    def test_donotdisplayIInfo(self):
+        dc = self.zp.addDeviceClass('Device', zPythonClass='a.b.c.d.Device')
+        e = dc.addComponentType('a.Enclosure')
+        self.assertEqual(e.displayIInfo(), False)
+
 
 class TestRelationshipsToStrings(SimpleSetup):
     def test_findManyRelationships(self):
         dc = self.zp.addDeviceClass('Device', zPythonClass='a.b.c.d.Device')
-        e=dc.addComponentType('a.Enclosure')
+        e = dc.addComponentType('a.Enclosure')
         e.addComponentType('Drive')
-        self.assertEqual([r.id for r in e.ManyRelationships()],['a.Enclosure a.b.c.Drive'])
+        self.maxDiff = None
+        self.assertEqual(e.relationstoArrayofStrings(), ["('device', ToOne(ToManyCont, 'a.b.c.d.Device', 'enclosures',)),", "('drives', ToManyCont(ToOne, 'a.b.c.Drive', 'enclosure',)),"])
+
+
+class TestUpdatedImports(SimpleSetup):
+    def testOnetoManyCont(self):
+        dc = self.zp.addDeviceClass('Device', zPythonClass='a.b.c.d.Device')
+        e = dc.addComponentType('a.Enclosure')
+        e.addComponentType('a.Disk')
+        e.updateImports()
+        self.assertTrue('from Products.ZenRelations.RelSchema import ToManyCont,ToOne' in e.imports)
+
+    def testOnetoMany(self):
+        dc = self.zp.addDeviceClass('Device', zPythonClass='a.b.c.d.Device')
+        e = dc.addComponentType('a.Enclosure')
+        d = e.addComponentType('a.Disk')
+        Relationship(self.zp, 'a.Enclosure', 'a.Disk', Type='1-M', Contained=False)
+        d.updateImports()
+        e.updateImports()
+        self.assertTrue('from Products.ZenRelations.RelSchema import ToMany,ToOne' in d.imports)
+
+    def testOnetoOne(self):
+        dc = self.zp.addDeviceClass('Device', zPythonClass='a.b.c.d.Device')
+        e = dc.addComponentType('a.Enclosure')
+        Relationship(self.zp, 'a.Enclosure', 'a.Disk', Type='1-1', Contained=False)
+        d = Component(self.zp, 'a.Disk')
+        d.updateImports()
+        e.updateImports()
+        self.assertTrue('from Products.ZenRelations.RelSchema import ToOne' in d.imports)
+
+    #@unittest.skip("Skipping")
+    def testManytoMany(self):
+        dc = self.zp.addDeviceClass('Device', zPythonClass='a.b.c.d.e.Device')
+        e = dc.addComponentType('a.b.Enclosure')
+        Relationship(self.zp, 'a.b.Enclosure', 'a.b.Disk', Type='M-M', Contained=False)
+        d = Component(self.zp, 'a.b.Disk')
+        d.updateImports()
+        e.updateImports()
+        self.assertTrue('from Products.ZenRelations.RelSchema import ToMany' in d.imports)
+
+    def testManytoManyCont(self):
+        dc = self.zp.addDeviceClass('Device', zPythonClass='a.b.c.d.e.Device')
+        e = dc.addComponentType('a.b.Enclosure')
+        Relationship(self.zp, 'a.b.Enclosure', 'a.b.Disk', Type='M-M', Contained=True)
+        d = Component(self.zp, 'a.b.Disk')
+        d.updateImports()
+        e.updateImports()
+        self.assertTrue('from Products.ZenRelations.RelSchema import ToMany,ToManyCont' in d.imports)
+
+
+class TestLookups(SimpleSetup):
+    def testComponentLookup(self):
+        Component(self.zp, 'Disk')
+
+        self.assertEqual(Component.lookup(self.zp, 'a.b.c.Disk').id, 'a.b.c.Disk')
+
+
+class TestWriteTemplates(WriteTemplatesBase):
+    def test_WriteBasic(self):
+        c = Component(self.zp, 'Component')
+        self.write(c, '${zenpack.id}\n${zenpack.version}\n')
+        self.assertEqual(self.results[-1], call(u'a.b.c\n0.0.1\n'))
+
+class TestWriteTemplatesAgain(WriteTemplatesBase):
+    def test_WriteBasicAgain(self):
+        d = Component(self.zp, 'Component2')
+        self.write(d, '${zenpack.id}\n${zenpack.version}\n${zenpack.version}\n')
+        self.assertEqual(self.results[-1], call(u'a.b.c\n0.0.1\n0.0.1\n'))
 
 if __name__ == '__main__':
     unittest.main()

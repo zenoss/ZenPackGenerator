@@ -25,7 +25,6 @@ from git import Repo
 
 #from UI import UI
 from memoize import memoize
-import unittest
 
 defaults = Defaults()
 
@@ -54,7 +53,7 @@ class ZenPack(object):
 
         self.id = id
         self.opts = opts
-        self.destdir  = DirLayout(self, opts.prefix )
+        self.destdir = DirLayout(self, opts.prefix)
         self.namespace = id
         self.deviceClasses = {}
         self.components = {}
@@ -165,7 +164,7 @@ class ZenPack(object):
 
     def write(self):
         # Write the destination folders
-        self.destdir .write()
+        self.destdir.write()
 
         # Write the base setup.py
         self.setup.write()
@@ -186,23 +185,3 @@ class ZenPack(object):
         self.rootinit.write()
 
         self.updateGitTemplates()
-
-
-if __name__ == "__main__":
-    zp = ZenPack('ZenPacks.training.NetBotz')
-    zp.addZProperty('zNetBotzExampleProperty', 'boolean', True, 'NetBotz')
-    zp.addZProperty('e1')
-
-    dc = zp.addDeviceClass('Device/Snmp', zPythonClass='NetBotzDevice')
-    e = dc.addComponentType('Enclosure')
-    e.addProperty('enclosure_status')
-    e.addProperty('error_status')
-    e.addProperty('parent_id')
-    e.addProperty('docked_id')
-
-    ts = e.addComponentType('TemperatureSensor')
-    ts.addProperty('port')
-
-    dc.deviceType.addProperty('temp_sensor_count', Type='int')
-
-    zp.write()
