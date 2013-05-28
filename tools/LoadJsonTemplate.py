@@ -26,18 +26,12 @@ from Products.Zuul.facades import ObjectNotFoundException
 
 log = logging.getLogger("zen.JsonTemplateLoader")
 
-<<<<<<< HEAD
-def JSONFileToTemplates(dmd,jsonFile,ZenPack):
-    tf=getFacade('template',dmd)
-=======
-
 def die(message):
     print message
     sys.exit(1)
 
 
 def JSONFileToTemplates(dmd, jsonFile, ZenPack):
->>>>>>> origin/Redesign
     data = None
     with open(jsonFile, 'r') as jsonFileHandle:
         data = json.load(jsonFileHandle, object_pairs_hook=collections.OrderedDict)
@@ -51,37 +45,22 @@ def JSONFileToTemplates(dmd, jsonFile, ZenPack):
         print "No template found... exiting..."
         sys.exit(0)
 
-<<<<<<< HEAD
-def JSONStringToTemplates(dmd, jsonString, ZenPack):
-    tf=getFacade('template',dmd)
-=======
 
 def JSONStringToTemplates(dmd, jsonString, ZenPack):
->>>>>>> origin/Redesign
     data = None
     data = json.loads(jsonString, object_pairs_hook=collections.OrderedDict)
 
     if data:
         for template_path, template_cfg in data.items():
-<<<<<<< HEAD
-            add_template(dmd,template_path, template_cfg, ZenPack)
-=======
             add_template(dmd, template_path, template_cfg, ZenPack)
->>>>>>> origin/Redesign
         print "Templates loaded successfully."
         commit()
     else:
         print "No template found... exiting..."
         sys.exit(0)
 
-<<<<<<< HEAD
-def add_template(dmd,path, cfg, zenpack):
-    tf=getFacade('template',dmd)
-=======
-
 def add_template(dmd, path, cfg, zenpack):
     tf = getFacade('template', dmd)
->>>>>>> origin/Redesign
     if '/' not in path:
         die("%s is not a path. Include device class and template name", path)
 
@@ -99,15 +78,9 @@ def add_template(dmd, path, cfg, zenpack):
     if existing_template:
         tf.deleteTemplate(existing_template[0].uid)
 
-<<<<<<< HEAD
-    template = tf.addTemplate(id_,device_class.uid)
-
-    print "Loading template %s in %s" % (id_, device_class.uid) 
-=======
     template = tf.addTemplate(id_, device_class.uid)
 
     print "Loading template %s in %s" % (id_, device_class.uid)
->>>>>>> origin/Redesign
     if 'targetPythonClass' in cfg:
         template.targetPythonClass = cfg['targetPythonClass']
 
@@ -125,20 +98,11 @@ def add_template(dmd, path, cfg, zenpack):
 
     if 'graphs' in cfg:
         for graph_id, graph_cfg in cfg['graphs'].items():
-<<<<<<< HEAD
-            add_graph(dmd, device_class,template, graph_id, graph_cfg)
-    
-    if zenpack:
-        print "Adding template %s in %s to ZenPack %s" % (id_, device_class.uid, zenpack.id) 
-        dmd.ZenPackManager.addToZenPack(ids=[template.uid],pack=zenpack.id)
-=======
             add_graph(dmd, device_class, template, graph_id, graph_cfg)
 
     if zenpack:
         print "Adding template %s in %s to ZenPack %s" % (id_, device_class.uid, zenpack.id)
         dmd.ZenPackManager.addToZenPack(ids=[template.uid], pack=zenpack.id)
->>>>>>> origin/Redesign
-
 
 def add_datasource(dmd, template, id_, cfg):
     tf = getFacade('template', dmd)
@@ -299,37 +263,6 @@ def add_threshold(dmd, device_class, template, id_, cfg):
 
 
 class ImportTemplate(ZenScriptBase):
-
-<<<<<<< HEAD
-   def buildOptions(self):
-       ZenScriptBase.buildOptions(self)
-       self.parser.add_option("-z", "--zenpack", dest="zenpack",
-                     help="ZenPack to Add Templates To", metavar="ZenPack")
-
-   def run(self):
-      self.zenpack = None
-      if self.options.zenpack:
-          self.zenpack = self.dmd.ZenPackManager.packs._getOb(self.options.zenpack, None)
-          if self.zenpack:
-              if not self.zenpack.isDevelopment():
-                  print "%s is not a valid Development Mode Zenpack. Exiting...." % self.options.zenpack
-                  sys.exit(1)
-          else:
-              print "%s is not a valid Zenpack. Exiting...." % self.options.zenpack
-              sys.exit(1)
-
-      if self.args:
-          print "Reading Templates from %s" % self.args[0]
-          JSONFileToTemplates(self.dmd,self.args[0],self.zenpack)
-      else:
-          print "Reading Templates from StdIn"
-          JSONStringToTemplates(self.dmd,sys.stdin.read(),self.zenpack)
-
-
-if __name__ == "__main__":
-   it = ImportTemplate(connect=True)
-   it.run()
-=======
     def buildOptions(self):
         ZenScriptBase.buildOptions(self)
         self.parser.add_option("-z", "--zenpack", dest="zenpack",
@@ -357,4 +290,3 @@ if __name__ == "__main__":
 if __name__ == "__main__":
     it = ImportTemplate(connect=True)
     it.run()
->>>>>>> origin/Redesign
