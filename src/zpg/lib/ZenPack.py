@@ -148,7 +148,7 @@ class ZenPack(object):
         return "%s \n\tAUTHOR: %s\n\tVERSION: %s\n\tLICENSE: %s" \
                % (self.id, self.author, self.version, self.license)
 
-    def updateGitTemplates(self):
+    def updateGitTemplates(self): # pragma: no cover
         # Create the git repo
         repo = Repo.init(self.destdir .path)
         try:

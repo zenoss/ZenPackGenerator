@@ -12,3 +12,4 @@ omit =
        *gitdb*
        *git*
        *Cheetah*
+       *memoize*
