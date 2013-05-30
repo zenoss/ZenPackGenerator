@@ -1,0 +1,36 @@
+==============================================================================
+Description
+==============================================================================
+
+This gpl tool is meant to be an aide in the process of developing ZenPacks from scratch.
+The goal of this project is to reduce the amount of time it takes to create a zenpack by taking a json formatted input file and generating a directory structure containing prepopulated files.
+
+This generator will perform many tasks for you but not all of them.  At some point you will need
+to leave the generator and tweak the ZenPack by hand.
+
+
+The ZenPack Generator will perform these operations for you
+
+* Layout the ZenPack directory Structure.
+
+* Pre-populate many sections of boilerplate.
+
+* Create the root __init__.py file.
+
+* Create a Configure.zcml file for UI JavaScript registration.
+
+* Create Components.
+
+* Create Relationships between Components.
+
+* Create most of the JavaScript for the UI.
+
+The ZenPack Generator will NOT perform these operations.
+
+* Create custom modelers.
+
+* Create RRDTemplates.
+
+* Update the objects.xml
+
+ZenPack Generator Source Code: https://github.com/zenoss/ZenPackGenerator

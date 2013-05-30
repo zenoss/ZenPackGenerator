@@ -1,0 +1,19 @@
+==============================================================================
+Installation
+==============================================================================
+
+Current Installation Steps. (Development mode)
+
+* Clone the tool from the git repo.
+
+  * git clone https://github.com/zenoss/ZenPackGenerator.git
+
+* Install the ZenPack Generator Dependancies
+
+  * cd ZenPackGenerator
+
+  * python setup.py develop
+
+* Testing successful installation
+
+  * zpg -h
