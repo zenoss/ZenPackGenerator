@@ -8,7 +8,7 @@
 #
 ##############################################################################
 
-import unittest
+
 import inflect
 
 plural = inflect.engine().plural

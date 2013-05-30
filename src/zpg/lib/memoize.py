@@ -2,7 +2,7 @@
 #http://code.activestate.com/recipes/577452-a-memoize-decorator-for-instance-methods/
 #MIT license
 from functools import partial
-import cPickle
+
 
 class memoize(object):
     """cache the return value of a method
@@ -57,6 +57,7 @@ if __name__ == "__main__":
     # example usage
     class Test(object):
         v = 0
+
         @memoize
         def inc_add(self, arg):
             self.v += 1
