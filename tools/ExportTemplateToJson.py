@@ -77,20 +77,20 @@ def TemplatesToJSONFile(dmd, templates, filename):
             data_ds[ds.name]['datapoints'] = data_dp
         data[id_]["datasources"] = data_ds
 
-    # Find the thresholds
-    data_thresh = {}
-    for threshold in tf.getThresholds(rrdTemplate.uid):
-        data_thresh[threshold.name] = ExportProps(threshold, excludes=['getDescription', 'eventClass', 'dsnames',
-                                                                       'getName', 'getDescription', 'id',
-                                                                       'name', 'newId'])
-        data[id_]["thresholds"] = data_thresh
-
-    # Find the graphs
-    data_graph = {}
-    for graph in tf.getGraphs(rrdTemplate.uid):
-        data_graph[graph.name] = ExportProps(graph, excludes=['getDescription', 'getName', 'id',
-                                                              'name', 'newId', 'graphPoints',
-                                                              'rrdVariables', 'fakeGraphCommands'])
+        # Find the thresholds
+        data_thresh = {}
+        for threshold in tf.getThresholds(rrdTemplate.uid):
+            data_thresh[threshold.name] = ExportProps(threshold, excludes=['getDescription', 'eventClass', 'dsnames',
+                                                                           'getName', 'getDescription', 'id',
+                                                                           'name', 'newId'])
+            data[id_]["thresholds"] = data_thresh
+    
+        # Find the graphs
+        data_graph = {}
+        for graph in tf.getGraphs(rrdTemplate.uid):
+            data_graph[graph.name] = ExportProps(graph, excludes=['getDescription', 'getName', 'id',
+                                                                  'name', 'newId', 'graphPoints',
+                                                                  'rrdVariables', 'fakeGraphCommands'])
 
         # Find the graph points
         data_graph_point = {}
@@ -100,7 +100,8 @@ def TemplatesToJSONFile(dmd, templates, filename):
 
         data_graph[graph.name]["graphpoints"] = data_graph_point
 
-    data[id_]["graphs"] = data_graph
+        data[id_]["graphs"] = data_graph
+
     with open(filename, 'w') as outputfile:
         json.dump(data, outputfile, indent=1, sort_keys=True, separators=(',', ': '))
 
