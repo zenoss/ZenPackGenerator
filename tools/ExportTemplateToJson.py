@@ -92,13 +92,12 @@ def TemplatesToJSONFile(dmd, templates, filename):
                                                                   'name', 'newId', 'graphPoints',
                                                                   'rrdVariables', 'fakeGraphCommands'])
 
-        # Find the graph points
-        data_graph_point = {}
-        for graph_point in tf.getGraphPoints(graph.uid):
-            data_graph_point[graph_point.name] = ExportProps(graph_point, excludes=['getDescription', 'getName',
-                                                                                    'id', 'name', 'newId', 'rrdVariables'])
-
-        data_graph[graph.name]["graphpoints"] = data_graph_point
+            # Find the graph points
+            data_graph_point = {}
+            for graph_point in tf.getGraphPoints(graph.uid):
+                data_graph_point[graph_point.name] = ExportProps(graph_point, excludes=['getDescription', 'getName',
+                                                                                        'id', 'name', 'newId', 'rrdVariables'])
+            data_graph[graph.name]["graphpoints"] = data_graph_point        
 
         data[id_]["graphs"] = data_graph
 
