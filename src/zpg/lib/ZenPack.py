@@ -101,23 +101,15 @@ class ZenPack(object):
 
     @memoize
     def addDeviceClass(self, *args, **kwargs):
-        #if not 'ZenPack' in kwargs:
-        #    kwargs['ZenPack'] = self
         dc = DeviceClass(self, *args, **kwargs)
         return dc
 
     @memoize
     def addComponentType(self, *args, **kwargs):
-        #if not 'zenpack' in kwargs:
-        #    kwargs['zenpack'] = self
         c = Component(self, *args, **kwargs)
         return c
 
-    @memoize
     def addRelation(self, *args, **kwargs):
-        #if not 'ZenPack' in kwargs:
-        #    kwargs['ZenPack'] = self
-
         r = Relationship(self, *args, **kwargs)
         return r
 
