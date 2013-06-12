@@ -278,7 +278,8 @@ class Component(Template):
         if 'M' in results:
             imports.append('updateToMany')
 
-        self.imports.append('from %s.utils import %s' % (self.zenpack.id, ",".join(sorted(imports))))
+        if results: 
+            self.imports.append('from %s.utils import %s' % (self.zenpack.id, ",".join(sorted(imports))))
         self.updateComponents = results
 
 
