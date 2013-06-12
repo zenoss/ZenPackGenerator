@@ -54,7 +54,6 @@
     <!-- JavaScript needed only for NetApp devices. -->
 
 #for $cjs in $componentJSs.values()
-$cjs
     <browser:viewlet
         name="js-${cjs.name}"
         paths="/++resource++${cjs.name}/js/${cjs.name}.js"
