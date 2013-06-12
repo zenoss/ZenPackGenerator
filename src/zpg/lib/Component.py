@@ -121,6 +121,8 @@ class Component(Template):
         if componentTypes:
             for component in componentTypes:
                 self.addComponentType(**component)
+        
+        self.updateComponents = {}
 
     def __lt__(self, other):
         '''Implemented for sort operations'''
@@ -251,6 +253,35 @@ class Component(Template):
               paths.extend(relPath(${first_component, '${prel.components[0]}'))
         """
 
+    def findUpdateComponents(self):
+        '''return a dictionary of components used in the updateToOne or
+        updateToMany Methods.'''
+
+        results = {}
+        rels = Relationship.find(self, Contained=False)
+        for rel in rels:
+            if rel.components[0].id != self.id:
+                component = rel.components[0]
+                Type = rel.Type.split('-')[0]
+            else:
+                component = rel.components[1]
+                Type = rel.Type.split('-')[1]
+
+            if Type in results:
+                results[Type].append(component)
+            else:
+                results[Type] = [component]
+
+        imports = []
+        if '1' in results:
+            imports.append('updateToOne')
+        if 'M' in results:
+            imports.append('updateToMany')
+
+        self.imports.append('from %s.utils import %s' % (self.zenpack.id, ",".join(sorted(imports))))
+        self.updateComponents = results
+
+
     def dropdowncomponents(self):
         '''return the component objects that this should contain a dropdown link to this component.'''
         results = []
@@ -340,4 +371,5 @@ class Component(Template):
     def write(self):
         '''Write the component files'''
         self.updateImports()
+        self.findUpdateComponents()
         self.processTemplate()

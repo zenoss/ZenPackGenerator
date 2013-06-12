@@ -21,6 +21,8 @@ from Setup import Setup
 from ZenPackUI import ZenPackUI
 from RootInit import RootInit
 from DirLayout import DirLayout
+from UtilsTemplate import UtilsTemplate
+
 from git import Repo
 
 #from UI import UI
@@ -83,6 +85,7 @@ class ZenPack(object):
         self.namespace_packages = packages[:-1]
 
         self.configure_zcml = Configure(self)
+        self.utils = UtilsTemplate(self)
         self.setup = Setup(self)
         self.rootinit = RootInit(self)
         self.zenpackUI = ZenPackUI(self)
@@ -175,5 +178,8 @@ class ZenPack(object):
 
         #Create the root level __init__.py file
         self.rootinit.write()
+
+        # Create a utils file.
+        self.utils.write()
 
         self.updateGitTemplates()
