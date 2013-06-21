@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-##############################################################################
+#
 #
 # Copyright (C) Zenoss, Inc. 2013, all rights reserved.
 #
 # This content is made available according to terms specified in the LICENSE
 # file at the top-level directory of this package.
 #
-##############################################################################
+#
 
 
 from Template import Template
@@ -15,7 +15,9 @@ from Relationship import Relationship
 from utils import zpDir
 find = Relationship.find
 
+
 class UtilsTemplate(Template):
+
     """ Write the template to a utils.py file
         eg.  Create ZenPacks.zenoss.Foo/ZenPacks/zenoss/Foo/utils.py """
 

@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-##############################################################################
+#
 #
 # Copyright (C) Zenoss, Inc. 2013, all rights reserved.
 #
 # This content is made available according to terms specified in the LICENSE
 # file at the top-level directory of this package.
 #
-##############################################################################
+#
 
 
 import inflect
@@ -15,7 +15,9 @@ plural = inflect.engine().plural
 
 
 class Property(object):
+
     '''Define a properties capabilities inside a Component.'''
+
     def __init__(self,
                  name,
                  value=None,
@@ -87,8 +89,8 @@ class Property(object):
                       'float', 'password']
 
         # All Zope types
-        #boolean,date,float,int,lines,
-        #long,string,text,tokens,selection,multiple_selection
+        # boolean,date,float,int,lines,
+        # long,string,text,tokens,selection,multiple_selection
 
         if Type and Type in ValidTypes:
             self._Type = Type
@@ -127,6 +129,6 @@ class Property(object):
         else:
             self._value = value
 
-    #def __call__(self):
+    # def __call__(self):
     #    '''return the value by default from a property instance.'''
     #    return self.value

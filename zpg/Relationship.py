@@ -1,15 +1,16 @@
 #!/usr/bin/env python
-##############################################################################
+#
 #
 # Copyright (C) Zenoss, Inc. 2013, all rights reserved.
 #
 # This content is made available according to terms specified in the LICENSE
 # file at the top-level directory of this package.
 #
-##############################################################################
+#
 
 
 class Relationship(object):
+
     '''ZenPack Relationship Management'''
 
     relationships = {}
@@ -25,7 +26,8 @@ class Relationship(object):
         self.ZenPack = ZenPack
         from Component import Component
         lookup = Component.lookup
-        self.components = lookup(ZenPack, ComponentA), lookup(ZenPack, ComponentB)
+        self.components = lookup(
+            ZenPack, ComponentA), lookup(ZenPack, ComponentB)
         self.id = '%s %s' % (self.components[0].id, self.components[1].id)
         self.Type = Type
         self.Contained = Contained

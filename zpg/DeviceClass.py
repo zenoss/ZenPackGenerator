@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-##############################################################################
+#
 #
 # Copyright (C) Zenoss, Inc. 2013, all rights reserved.
 #
 # This content is made available according to terms specified in the LICENSE
 # file at the top-level directory of this package.
 #
-##############################################################################
+#
 
 from utils import KlassExpand
 from Relationship import Relationship
@@ -14,6 +14,7 @@ find = Relationship.find
 
 
 class DeviceClass(object):
+
     '''Device Class Container'''
     deviceClasses = {}
 
@@ -24,7 +25,6 @@ class DeviceClass(object):
                  zPythonClass='Products.ZenModel.Device.Device',
                  componentTypes=None,
                  deviceType=None):
-
         '''Args:
                  path: Destination device class path (the prefix is automatically prepended)
                  ZenPack: ZenPack Class Instance
@@ -45,7 +45,7 @@ class DeviceClass(object):
         DeviceClass.deviceClasses[self.id] = self
         self.zenpack.registerDeviceClass(self)
 
-        #Dict loading
+        # Dict loading
         if componentTypes:
             for component in componentTypes:
                 self.addComponentType(**component)
@@ -53,7 +53,8 @@ class DeviceClass(object):
     def DeviceType(self):
         '''Create a deviceType component from a zPythonClass reference'''
 
-        self.deviceType = self.zenpack.addComponentType(self.zPythonClass, device=True)
+        self.deviceType = self.zenpack.addComponentType(
+            self.zPythonClass, device=True)
 
     def addClass(self, deviceClass, *args, **kwargs):
         '''Create a sub device class'''

@@ -1,10 +1,11 @@
 #!/usr/bin/env python
-#http://code.activestate.com/recipes/577452-a-memoize-decorator-for-instance-methods/
-#MIT license
+# http://code.activestate.com/recipes/577452-a-memoize-decorator-for-instance-methods/
+# MIT license
 from functools import partial
 
 
 class memoize(object):
+
     """cache the return value of a method
 
     This class is meant to be used as a decorator of methods. The return value
@@ -21,6 +22,7 @@ class memoize(object):
     Obj.add_to(1) # not enough arguments
     Obj.add_to(1, 2) # returns 3, result is not cached
     """
+
     def __init__(self, func):
         self.func = func
 
@@ -36,18 +38,18 @@ class memoize(object):
         except AttributeError:
             cache = obj.__cache = {}
 
-        #items = [i for i in kw.items() if not isinstance(i[1], (list,tuple))]
-        #try:
+        # items = [i for i in kw.items() if not isinstance(i[1], (list,tuple))]
+        # try:
         #    listitems = [(i[0], " ".join(sorted(i[1]))) for i in kw.items() if isinstance(i[1], (list, tuple))]
 #
 #        except Exception:
 #            listitems = [(i[0], str(i[1])) for i in kw.items() if isinstance(i[1], (list, tuple))]
-        #key = (self.func, args[1:], frozenset(items+listitems))
+        # key = (self.func, args[1:], frozenset(items+listitems))
         key = (self.func, args[1:])
 
         try:
             res = cache[key]
-            #print "Using Memoized %s = %s" % (key,res)
+            # print "Using Memoized %s = %s" % (key,res)
         except KeyError:
             res = cache[key] = self.func(*args, **kw)
         return res

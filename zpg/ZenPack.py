@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-##############################################################################
+#
 #
 # Copyright (C) Zenoss, Inc. 2013, all rights reserved.
 #
 # This content is made available according to terms specified in the LICENSE
 # file at the top-level directory of this package.
 #
-##############################################################################
+#
 
 
 from Component import Component
@@ -25,13 +25,14 @@ from UtilsTemplate import UtilsTemplate
 
 from git import Repo
 
-#from UI import UI
+# from UI import UI
 from memoize import memoize
 
 defaults = Defaults()
 
 
 class Opts(object):
+
     def __init__(self):
         self.skip = False
         self.prefix = '/tmp/zpg'
@@ -80,7 +81,7 @@ class ZenPack(object):
         packages = []
         parts = self.id.split('.')
         for i in range(len(parts)):
-            packages.append('.'.join(parts[:i+1]))
+            packages.append('.'.join(parts[:i + 1]))
         self.packages = packages
         self.namespace_packages = packages[:-1]
 
@@ -135,7 +136,7 @@ class ZenPack(object):
 
     def registerDeviceClass(self, deviceClass):
         self.deviceClasses[deviceClass.id] = deviceClass
-        #Add the ComponentJS pieces when we are at it.
+        # Add the ComponentJS pieces when we are at it.
         cjs = ComponentJS(deviceClass)
         self.componentJSs[cjs.name] = cjs
 
@@ -143,7 +144,7 @@ class ZenPack(object):
         return "%s \n\tAUTHOR: %s\n\tVERSION: %s\n\tLICENSE: %s" \
                % (self.id, self.author, self.version, self.license)
 
-    def updateGitTemplates(self): # pragma: no cover
+    def updateGitTemplates(self):  # pragma: no cover
         # Create the git repo
         repo = Repo.init(self.destdir .path)
         try:
@@ -151,8 +152,8 @@ class ZenPack(object):
         except:
             repo.index.commit('Initial Commit from zpg')
 
-        #Update the repo
-        repo.index.add([self.destdir .path+'/Templates'])
+        # Update the repo
+        repo.index.add([self.destdir .path + '/Templates'])
 
         if repo.is_dirty():
             repo.index.commit('zpg: Committed Template changes')
@@ -176,7 +177,7 @@ class ZenPack(object):
 
         self.zenpackUI.write()
 
-        #Create the root level __init__.py file
+        # Create the root level __init__.py file
         self.rootinit.write()
 
         # Create a utils file.

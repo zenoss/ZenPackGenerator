@@ -1,4 +1,13 @@
 #!/usr/bin/env python
+#
+#
+# Copyright (C) Zenoss, Inc. 2013, all rights reserved.
+#
+# This content is made available according to terms specified in the LICENSE
+# file at the top-level directory of this package.
+#
+#
+
 import logging
 import os
 logging.basicConfig()
@@ -10,6 +19,7 @@ def initpy(source):
 
 
 class DirLayout(object):
+
     '''Write the ZenPack directory structure.'''
 
     def __init__(self, zenpack, prefix):
@@ -44,10 +54,12 @@ class DirLayout(object):
             '''Write nested __init__.py files.'''
             df = os.path.join(base, '__init__.py')
             f = open(df, 'w')
-            f.write("__import__('pkg_resources').declare_namespace(__name__)\n")
+            f.write(
+                "__import__('pkg_resources').declare_namespace(__name__)\n")
             f.close()
 
-        # Write the manifest ( Not a template because I dont think we have ever modified this file)
+        # Write the manifest ( Not a template because I dont think we have ever
+        # modified this file)
         f = open(os.path.join(self.path, 'MANIFEST.in'), 'w')
         f.write("graft ZenPacks\n")
         f.close()

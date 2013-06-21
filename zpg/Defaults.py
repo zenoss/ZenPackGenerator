@@ -1,15 +1,16 @@
 #!/usr/bin/env python
-##############################################################################
+#
 #
 # Copyright (C) Zenoss, Inc. 2013, all rights reserved.
 #
 # This content is made available according to terms specified in the LICENSE
 # file at the top-level directory of this package.
 #
-##############################################################################
+#
 
 
 class Defaults(object):
+
     """Defaults for Zenoss ZenPack Builder
     Parameters
     ----------
@@ -25,8 +26,9 @@ class Defaults(object):
         self.author = 'ZenossLabs <labs@zenoss.com>'
         self.version = '0.0.1'
         self.license = 'gpl'
-        self.component_classes = ['Products.ZenModel.DeviceComponent.DeviceComponent',
-                                  'Products.ZenModel.ManagedEntity.ManagedEntity']
+        self.component_classes = [
+            'Products.ZenModel.DeviceComponent.DeviceComponent',
+            'Products.ZenModel.ManagedEntity.ManagedEntity']
 
         self.device_classes = ['Products.ZenModel.Device.Device']
 

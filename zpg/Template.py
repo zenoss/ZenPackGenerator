@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-##############################################################################
+#
 #
 # Copyright (C) Zenoss, Inc. 2013, all rights reserved.
 #
 # This content is made available according to terms specified in the LICENSE
 # file at the top-level directory of this package.
 #
-##############################################################################
+#
 
 import os
 import logging
@@ -19,6 +19,7 @@ import zpg
 
 
 class Template(object):
+
     """Base Class for Template operations."""
 
     def __init__(self, zenpack):
@@ -44,26 +45,25 @@ class Template(object):
                     dtf.write('## Source Template %s \n' % self.tfile)
                     dtf.write(tf.read())
 
-
     def findTemplate(self):
         """Find the template and save its location."""
         cacheTemplateFile = self.TemplateCacheLocation()
         if os.path.exists(cacheTemplateFile) and not self.zenpack.opts.skip:
             self.tfile = str(cacheTemplateFile)
         else:
-            self.tfile = "%s/Templates/%s" % ("/".join(inspect.getfile(zpg).split('/')[:-1]), self.source_template)
+            self.tfile = "%s/Templates/%s" % (
+                "/".join(inspect.getfile(zpg).split('/')[:-1]), self.source_template)
         log.info('Using template %s' % self.tfile)
-        #print 'Using template %s' % self.tfile
+        # print 'Using template %s' % self.tfile
 
     def processTemplate(self):
         """Write the templates."""
-
 
         self.findTemplate()
         self.cacheTemplate()
         with open(self.tfile, 'r') as tf:
             t = cTemplate(file=tf, searchList=[self])
-        #print t.respond()
+        # print t.respond()
         dfile = os.path.join(self.base_destdir, self.dest_file)
 
         dirname = os.path.dirname(dfile)

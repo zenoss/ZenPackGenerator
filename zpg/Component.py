@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-##############################################################################
+#
 #
 # Copyright (C) Zenoss, Inc. 2013, all rights reserved.
 #
 # This content is made available according to terms specified in the LICENSE
 # file at the top-level directory of this package.
 #
-##############################################################################
+#
 
 import unittest
 import inflect
@@ -21,6 +21,7 @@ plural = inflect.engine().plural
 
 
 class Component(Template):
+
     """Build the component object"""
 
     components = {}
@@ -112,16 +113,16 @@ class Component(Template):
         self.zenpack.registerComponent(self)
         Component.components[self.id] = self
 
-        #Dict loading
+        # Dict loading
         if properties:
             for p in properties:
                 self.addProperty(**p)
 
-        #Dict loading
+        # Dict loading
         if componentTypes:
             for component in componentTypes:
                 self.addComponentType(**component)
-        
+
         self.updateComponents = {}
 
     def __lt__(self, other):
@@ -228,7 +229,7 @@ class Component(Template):
 
     def relations(self):
         '''Find all the relationships that contain this component'''
-        #return self.zenpack.relationshipLookup(self)
+        # return self.zenpack.relationshipLookup(self)
         return Relationship.find(self)
 
     def custompaths(self):
@@ -241,11 +242,13 @@ class Component(Template):
             for component in rel.components:
                 if component == self:
                     continue
-                prel = Relationship.find(component, Contained=True, First=False)
+                prel = Relationship.find(
+                    component, Contained=True, First=False)
                 if prel:
                     prel = prel[0]
                     if not rel.Type in custompaths.keys():
-                        custompaths[rel.Type] = [(component, prel.components[0])]
+                        custompaths[rel.Type] = [
+                            (component, prel.components[0])]
 
         return custompaths
         """obj = self.context.${first_component}()
@@ -278,10 +281,10 @@ class Component(Template):
         if 'M' in results:
             imports.append('updateToMany')
 
-        if results: 
-            self.imports.append('from %s.utils import %s' % (self.zenpack.id, ",".join(sorted(imports))))
+        if results:
+            self.imports.append('from %s.utils import %s' %
+                                (self.zenpack.id, ",".join(sorted(imports))))
         self.updateComponents = results
-
 
     def dropdowncomponents(self):
         '''return the component objects that this should contain a dropdown link to this component.'''
@@ -366,7 +369,8 @@ class Component(Template):
                 if 'M-' in relationship.Type:
                     Types['ToMany'] = 1
 
-        imports = "from Products.ZenRelations.RelSchema import %s" % ",".join(sorted(Types.keys()))
+        imports = "from Products.ZenRelations.RelSchema import %s" % ",".join(
+            sorted(Types.keys()))
         self.imports.append(imports)
 
     def write(self):
