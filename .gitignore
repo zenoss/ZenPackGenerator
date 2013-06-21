@@ -2,4 +2,4 @@
 *.egg-info
 *.swp
 .coverage
-src/zpg/build
+build
