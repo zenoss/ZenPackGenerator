@@ -8,7 +8,6 @@
 #
 #
 
-import unittest
 import inflect
 from Defaults import Defaults
 from Property import Property

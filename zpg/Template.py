@@ -15,7 +15,6 @@ log = logging.getLogger('Template')
 
 from Cheetah.Template import Template as cTemplate
 import inspect
-import zpg
 
 
 class Template(object):

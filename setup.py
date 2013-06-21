@@ -30,9 +30,10 @@ setup(
     url = "https://github.com/zenoss/ZenPackGenerator",
     package_dir={'': 'zpg'},
     package_data={'': ['Templates/*.tmpl']},
+    packages=[''],
     install_requires=['Cheetah','PyYaml', 'gitpython', 'inflect', 'Mock'],
     requires=['Cheetah','PyYaml', 'gitpython', 'inflect', 'Mock'],
-    entry_points={'console_scripts': ['zpg = zpg.main:main'] },
+    entry_points={'console_scripts': ['zpg = zpg:main'] },
     classifiers=[
         "Development Status :: 1 - Planning",
         "License :: OSI Approved :: GNU General Public License (GPL)",

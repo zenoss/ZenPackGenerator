@@ -13,7 +13,6 @@ import os
 from optparse import OptionParser
 import textwrap
 import inspect
-import zpg
 
 
 class ZpgOptionParser(OptionParser):

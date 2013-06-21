@@ -7,3 +7,5 @@
 # file at the top-level directory of this package.
 #
 #
+
+from zpg import *
