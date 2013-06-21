@@ -21,7 +21,7 @@ from setuptools import setup
 
 setup(
     name = "ZenPack Generator",
-    version = "0.0.1",
+    version = "0.0.2",
     author = "Zenoss Labs",
     author_email = "labs@zenoss.com",
     description = ("A tool to assist building zenpacks."),
@@ -30,7 +30,6 @@ setup(
     url = "https://github.com/zenoss/ZenPackGenerator",
     package_dir={'': 'zpg'},
     package_data={'': ['Templates/*.tmpl']},
-    packages=['', 'lib'],
     install_requires=['Cheetah','PyYaml', 'gitpython', 'inflect', 'Mock'],
     requires=['Cheetah','PyYaml', 'gitpython', 'inflect', 'Mock'],
     entry_points={'console_scripts': ['zpg = zpg.main:main'] },
