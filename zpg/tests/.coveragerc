@@ -1,0 +1,15 @@
+[run]
+omit =
+       *async*
+       *cgi*
+       *inflect*
+       *mimetools*
+       *mimetypes*
+       *mock*
+       *rfc822*
+       *smmap*
+       *subprocess*
+       *gitdb*
+       *git*
+       *Cheetah*
+       *memoize*
