@@ -1,9 +1,20 @@
+#!/usr/bin/env python
+#
+#
+# Copyright (C) Zenoss, Inc. 2013, all rights reserved.
+#
+# This content is made available according to terms specified in the LICENSE
+# file at the top-level directory of this package.
+#
+#
+
 import unittest
-from zpg.lib.ZenPack import ZenPack
-from zpg.lib.Property import Property
+from zpg.ZenPack import ZenPack
+from zpg.Property import Property
 
 
 class SimpleSetup(unittest.TestCase):
+
     def setUp(self):
         self.zp = ZenPack('a.b.c')
 
@@ -12,6 +23,7 @@ class SimpleSetup(unittest.TestCase):
 
 
 class TestPropertyCreate(SimpleSetup):
+
     def test_addProperty(self):
         cp1 = Property('blocksize', Type='string')
         cp2 = Property('raid_size', Type='int')
@@ -56,7 +68,9 @@ class TestPropertyCreate(SimpleSetup):
         self.assertEqual(cp3.value, True)
         self.assertEqual(cp4.value, ['a', 'b'])
 
+
 class TestPropertySchema(SimpleSetup):
+
     def testInt(self):
         cp1 = Property('Int', Type='int')
         self.assertEqual(cp1.Schema(), 'Int')

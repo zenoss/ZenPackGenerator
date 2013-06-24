@@ -9,11 +9,10 @@
 #
 
 
-from Template import Template
-from Component import Component
-from Relationship import Relationship
-from utils import zpDir
-find = Relationship.find
+from ._zenoss_utils import zpDir
+from .Component import Component
+from .Relationship import Relationship
+from .Template import Template
 
 
 class UtilsTemplate(Template):

@@ -1,15 +1,25 @@
 #!/usr/bin/env python
-import unittest
+#
+#
+# Copyright (C) Zenoss, Inc. 2013, all rights reserved.
+#
+# This content is made available according to terms specified in the LICENSE
+# file at the top-level directory of this package.
+#
+#
+
 import os
-from mock import mock_open, patch, call, MagicMock
-from zpg.lib.Template import Template
 import inspect
-import zpg
+import unittest
+
+from mock import mock_open, patch, call, MagicMock
+
+from zpg import Template, ZenPack, defaults
 
 
 class SimpleSetup(unittest.TestCase):
+
     def setUp(self):
-        from zpg.lib.ZenPack import ZenPack
         self.zp = ZenPack('a.a.Template')
 
     def tearDown(self):
@@ -17,8 +27,8 @@ class SimpleSetup(unittest.TestCase):
 
 
 class WriteTemplatesBase(unittest.TestCase):
+
     def setUp(self):
-        from zpg.lib.ZenPack import ZenPack
         self.zp = ZenPack('a.b.c')
         self.makedirs = os.makedirs
 
@@ -41,14 +51,17 @@ class WriteTemplatesBase(unittest.TestCase):
         os.makedirs = self.makedirs
         del(self.zp)
 
+
 class TestWriteTemplate(WriteTemplatesBase):
     #@unittest.skip("Skipping")
+
     def test_processTemplate(self):
         dc = self.zp.addDeviceClass('Devices/Example')
         dc.addComponentType('Component')
         for cjs in self.zp.componentJSs.values():
             self.write(cjs, '${zenpack.id}\n${zenpack.version}\n')
-            self.assertEqual(self.results[-1], call(u'a.b.c\n0.0.1\n'))
+            version = defaults.get('version')
+            self.assertEqual(self.results[-1], call(u'a.b.c\n%s\n' % version))
 
 
 if __name__ == '__main__':

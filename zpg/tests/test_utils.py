@@ -1,8 +1,21 @@
+#!/usr/bin/env python
+#
+#
+# Copyright (C) Zenoss, Inc. 2013, all rights reserved.
+#
+# This content is made available according to terms specified in the LICENSE
+# file at the top-level directory of this package.
+#
+#
+
 import unittest
-from zpg.lib.utils import prepId, KlassExpand, zpDir
-from zpg.lib.ZenPack import ZenPack
+
+from zpg._zenoss_utils import prepId, KlassExpand, zpDir
+from zpg.ZenPack import ZenPack
+
 
 class TestUtils(unittest.TestCase):
+
     def setUp(self):
         self.zp = ZenPack('a.b.c')
 
@@ -29,8 +42,10 @@ class TestUtils(unittest.TestCase):
         self.assertNotEqual(KlassExpand(self.zp, 'Device'), 'Device')
         self.assertEqual(KlassExpand(self.zp, 'a.b.c.Device'), 'a.b.c.Device')
         self.assertNotEqual(KlassExpand(self.zp, 'a.b.c.Device'), 'Device')
-        self.assertEqual(KlassExpand(self.zp, 'Products.ZenModel.Device.Device'), 'Products.ZenModel.Device.Device')
-        self.assertNotEqual(KlassExpand(self.zp, 'Products.ZenModel.Device.Device'), 'a.b.c.Device')
+        self.assertEqual(
+            KlassExpand(self.zp, 'Products.ZenModel.Device.Device'), 'Products.ZenModel.Device.Device')
+        self.assertNotEqual(
+            KlassExpand(self.zp, 'Products.ZenModel.Device.Device'), 'a.b.c.Device')
 
     def test_zpDir(self):
         self.assertEqual(zpDir(self.zp), 'a/b/c')

@@ -8,18 +8,23 @@
 #
 #
 
-import os
+import inspect
 import logging
-logging.basicConfig()
-log = logging.getLogger('Template')
+import os
 
 from Cheetah.Template import Template as cTemplate
-import inspect
+
+import zpg
 
 
 class Template(object):
 
     """Base Class for Template operations."""
+
+    @property
+    def log(self):
+        cls_name = self.__class__.__name__
+        return logging.getLogger(cls_name)
 
     def __init__(self, zenpack):
         self.zenpack = zenpack
@@ -29,11 +34,11 @@ class Template(object):
 
     def TemplateCacheLocation(self):
         """return the cache location inside the zenpack directories."""
-        return os.path.join(self.base_destdir, 'Templates', "%s.tmpl" % os.path.basename(self.dest_file))
+        fpath = "%s.tmpl" % os.path.basename(self.dest_file)
+        return os.path.join(self.base_destdir, 'Templates', fpath)
 
     def cacheTemplate(self):
         """Store the template into the cache."""
-
         cacheTemplateFile = self.TemplateCacheLocation()
         cache_directory = os.path.dirname(cacheTemplateFile)
         if not os.path.exists(cache_directory):
@@ -50,14 +55,13 @@ class Template(object):
         if os.path.exists(cacheTemplateFile) and not self.zenpack.opts.skip:
             self.tfile = str(cacheTemplateFile)
         else:
-            self.tfile = "%s/Templates/%s" % (
-                "/".join(inspect.getfile(zpg).split('/')[:-1]), self.source_template)
-        log.info('Using template %s' % self.tfile)
+            tpath = "/".join(inspect.getfile(zpg).split('/')[:-1])
+            self.tfile = "%s/Templates/%s" % (tpath, self.source_template)
+        self.log.info('Using template %s' % self.tfile)
         # print 'Using template %s' % self.tfile
 
     def processTemplate(self):
         """Write the templates."""
-
         self.findTemplate()
         self.cacheTemplate()
         with open(self.tfile, 'r') as tf:

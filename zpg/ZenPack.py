@@ -8,55 +8,53 @@
 #
 #
 
-
-from Component import Component
-from Relationship import Relationship
-from DeviceClass import DeviceClass
-from Defaults import Defaults
-from License import License
-from utils import prepId
-from Configure import Configure
-from ComponentJS import ComponentJS
-from Setup import Setup
-from ZenPackUI import ZenPackUI
-from RootInit import RootInit
-from DirLayout import DirLayout
-from UtilsTemplate import UtilsTemplate
+import os
 
 from git import Repo
 
-# from UI import UI
-from memoize import memoize
+from .memoize import memoize
 
-defaults = Defaults()
+from ._defaults import defaults
+from ._zenoss_utils import prepId
+from .Component import Component
+from .ComponentJS import ComponentJS
+from .Configure import Configure
+from .DirLayout import DirLayout
+from .DeviceClass import DeviceClass
+from .License import License
+from .Relationship import Relationship
+from .RootInit import RootInit
+from .Setup import Setup
+from .UtilsTemplate import UtilsTemplate
+from .ZenPackUI import ZenPackUI
 
 
 class Opts(object):
 
     def __init__(self):
         self.skip = False
-        self.prefix = '/tmp/zpg'
+        self.prefix = os.getcwd()
 
 
 class ZenPack(object):
 
     def __init__(self,
                  id,
-                 author=defaults.author,
-                 version=defaults.version,
-                 license=License(defaults.license),
+                 author=defaults.get("author"),
+                 version=defaults.get("version"),
+                 license=License(defaults.get("license")),
                  install_requires=None,
                  compat_zenoss_vers=">=4.2",
                  prev_zenpack_name="",
                  zProperties=None,
                  deviceClasses=None,
                  relationships=None,
-                 opts=Opts(),
+                 opts=None,
                  ):
 
         self.id = id
-        self.opts = opts
-        self.destdir = DirLayout(self, opts.prefix)
+        self.opts = Opts() if opts is None else opts
+        self.destdir = DirLayout(self, self.opts.prefix)
         self.namespace = id
         self.deviceClasses = {}
         self.components = {}
@@ -158,7 +156,7 @@ class ZenPack(object):
         if repo.is_dirty():
             repo.index.commit('zpg: Committed Template changes')
 
-    def write(self):
+    def write(self, verbose=False):
         # Write the destination folders
         self.destdir.write()
 

@@ -3,13 +3,14 @@
 from lxml import etree
 import sys
 
+
 def indent(elem, level=0):
-    i = "\n" + level*"  "
+    i = "\n" + level * "  "
     if len(elem):
         if not elem.text or not elem.text.strip():
             elem.text = i + "  "
         for e in elem:
-            indent(e, level+1)
+            indent(e, level + 1)
             if not e.tail or not e.tail.strip():
                 e.tail = i + "  "
         if not e.tail or not e.tail.strip():
@@ -27,7 +28,7 @@ else:
 tree = etree.parse(src)
 root = tree.getroot()
 
-#for obj in root.xpath('//*[@class="DeviceClass"]'):
+# for obj in root.xpath('//*[@class="DeviceClass"]'):
 #    obj.getparent().remove(obj)
 
 for obj in root.xpath('//*[starts-with(@id,"rrdTemplate")]'):
@@ -64,7 +65,7 @@ for obj in root.xpath('//*[@class="SoftwareClass"]'):
     obj.getparent().remove(obj)
 
 for obj in root.xpath('//*[starts-with(@class, "Mib")]'):
-    #print tree.getpath(obj), "Mib"
+    # print tree.getpath(obj), "Mib"
     obj.getparent().remove(obj)
 
 for obj in root.xpath('//comment()'):
@@ -73,23 +74,23 @@ for obj in root.xpath('//comment()'):
 for obj in root.xpath('//*'):
     obj.text = obj.text.strip('\n')
     obj.text = obj.text.strip()
-    #for attrib in ['type', 'mode','module', 'class', 'visible', 'select_variable']:
+    # for attrib in ['type', 'mode','module', 'class', 'visible', 'select_variable']:
     #    if attrib in obj.attrib:
     #        del(obj.attrib[attrib])
 
-#for obj in root.xpath('//*[@class="HardwareClass"]'):
+# for obj in root.xpath('//*[@class="HardwareClass"]'):
 #    print tree.getpath(obj), "HardwareClass",etree.tostring(obj)
 #    obj.getparent().remove(obj)
 #
-##for obj in root.xpath('//*[@class="SoftwareClass"]'):
+# for obj in root.xpath('//*[@class="SoftwareClass"]'):
 #    print tree.getpath(obj), "SoftwareClass",etree.tostring(obj)
 #    obj.getparent().remove(obj)
 #
-#for obj in root.xpath('//*[@class="Manufacturer"]'):
-##    print tree.getpath(obj), "Manufacturer"
+# for obj in root.xpath('//*[@class="Manufacturer"]'):
+# print tree.getpath(obj), "Manufacturer"
 #    obj.getparent().remove(obj)
 #
-#for obj in root.xpath('//*[starts-with(@class, "EventClass")]'):
+# for obj in root.xpath('//*[starts-with(@class, "EventClass")]'):
 #    print tree.getpath(obj), "EventClass"
 #    obj.getparent().remove(obj)
 #

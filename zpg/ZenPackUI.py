@@ -8,8 +8,8 @@
 #
 #
 
-from Template import Template
-from utils import zpDir
+from ._zenoss_utils import zpDir
+from .Template import Template
 
 
 class ZenPackUI(Template):

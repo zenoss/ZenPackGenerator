@@ -8,8 +8,8 @@
 #
 #
 
-from utils import KlassExpand
-from Relationship import Relationship
+from ._zenoss_utils import KlassExpand
+from .Relationship import Relationship
 find = Relationship.find
 
 
@@ -26,12 +26,14 @@ class DeviceClass(object):
                  componentTypes=None,
                  deviceType=None):
         '''Args:
-                 path: Destination device class path (the prefix is automatically prepended)
+                 path: Destination device class path (the prefix is
+                        automatically prepended)
                  ZenPack: ZenPack Class Instance
                  prefix: Destination device class prefix [/zport/dmd]
                  zPythonClass: The zPythonClass this Device Class references.
                                [Products.ZenModel.Device.Device]
-                 componentTypes: an array of dictionaries used to create components.
+                 componentTypes: an array of dictionaries used to create
+                                  components.
                  deviceType: a dictionary used to create a device component.
         '''
 

@@ -33,11 +33,13 @@ class Property(object):
                  Type: type of property [None]
                        valid types: ['string', 'text', 'lines', 'int', 'bool',
                                      'long', 'boolean', 'float', 'password']
-                       If a value is set and no type is set the type will be determined
-                       from the value'
+                       If a value is set and no type is set the type will be
+                       determined from the value'
                  width: pixel width of the column in the ui
-                 detailDisplay: Show this property in the details section of the UI [True/False]
-                 gridDisplay: Show this property in the grid section of the UI [True/False]
+                 detailDisplay: Show this property in the details section of
+                                the UI [True/False]
+                 gridDisplay: Show this property in the grid section of the
+                              UI [True/False]
                  sortable: Sortable Property [True/False]
                  panelRenderer: Define a custom panel renderer
         '''

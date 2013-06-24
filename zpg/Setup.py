@@ -9,13 +9,14 @@
 #
 
 
-from Template import Template
+from .Template import Template
 
 
 class Setup(Template):
 
     """ Write the template to a setup.py file
-        eg.  Create ZenPacks.zenoss.Foo/setup.py """
+    For example: create ZenPacks.zenoss.Foo/setup.py
+    """
 
     def __init__(self, zenpack):
         super(Setup, self).__init__(zenpack)

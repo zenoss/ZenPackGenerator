@@ -1,12 +1,24 @@
-import unittest
-from zpg.lib.Relationship import Relationship
+#!/usr/bin/env python
+#
+#
+# Copyright (C) Zenoss, Inc. 2013, all rights reserved.
+#
+# This content is made available according to terms specified in the LICENSE
+# file at the top-level directory of this package.
+#
+#
+
 import os
+import unittest
+
 from mock import mock_open, patch, call, MagicMock
+
+from zpg import Relationship, ZenPack, defaults
 
 
 class SimpleSetup(unittest.TestCase):
+
     def setUp(self):
-        from zpg.lib.ZenPack import ZenPack
         self.zp = ZenPack('a.a.Configure')
 
     def tearDown(self):
@@ -15,8 +27,8 @@ class SimpleSetup(unittest.TestCase):
 
 
 class WriteTemplatesBase(unittest.TestCase):
+
     def setUp(self):
-        from zpg.lib.ZenPack import ZenPack
         self.zp = ZenPack('a.b.c')
         self.makedirs = os.makedirs
 
@@ -41,6 +53,7 @@ class WriteTemplatesBase(unittest.TestCase):
 
 
 class TestCustomPaths(SimpleSetup):
+
     def test_findCustomPathsTrue(self):
         dc = self.zp.addDeviceClass('Device', zPythonClass='a.b.c.d.Device')
         dc.addComponentType('Enclosure')
@@ -48,7 +61,8 @@ class TestCustomPaths(SimpleSetup):
         dc.addComponentType('Fan')
 
         Relationship(self.zp, 'Enclosure', 'Fan', Type='1-M', Contained=False)
-        Relationship(self.zp, 'Enclosure', 'Blade', Type='1-M', Contained=False)
+        Relationship(self.zp, 'Enclosure',
+                     'Blade', Type='1-M', Contained=False)
         self.assertTrue(self.zp.configure_zcml.customPathReporters())
 
     def test_findCustomPathsFalse(self):
@@ -61,11 +75,14 @@ class TestCustomPaths(SimpleSetup):
 
 class TestWriteTemplate(WriteTemplatesBase):
     #@unittest.skip("Skipping")
+
     def test_processTemplate(self):
         dc = self.zp.addDeviceClass('Devices/Example')
         dc.addComponentType('Component')
-        self.write(self.zp.configure_zcml, '${zenpack.id}\n${zenpack.version}\n')
-        self.assertEqual(self.results[-1], call(u'a.b.c\n0.0.1\n'))
+        self.write(self.zp.configure_zcml,
+                   '${zenpack.id}\n${zenpack.version}\n')
+        version = defaults.get('version')
+        self.assertEqual(self.results[-1], call(u'a.b.c\n%s\n' % version))
 
 
 if __name__ == '__main__':

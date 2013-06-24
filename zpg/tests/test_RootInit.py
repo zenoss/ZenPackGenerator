@@ -1,22 +1,27 @@
 #!/usr/bin/env python
+#
+#
+# Copyright (C) Zenoss, Inc. 2013, all rights reserved.
+#
+# This content is made available according to terms specified in the LICENSE
+# file at the top-level directory of this package.
+#
+#
+
 import unittest
 import os
+
 from mock import mock_open, patch, call, MagicMock
 
+from zpg import ZenPack, defaults
 
-class SimpleSetup(unittest.TestCase):
-    def setUp(self):
-        from zpg.lib.ZenPack import ZenPack
-        self.zp = ZenPack('a.a.Template')
-
-    def tearDown(self):
-        del(self.zp)
+DEFAULT_NAME = 'a.b.c'
 
 
 class WriteTemplatesBase(unittest.TestCase):
+
     def setUp(self):
-        from zpg.lib.ZenPack import ZenPack
-        self.zp = ZenPack('a.b.c')
+        self.zp = ZenPack(DEFAULT_NAME)
         self.makedirs = os.makedirs
 
         os.makedirs = MagicMock(return_value=True)
@@ -38,11 +43,14 @@ class WriteTemplatesBase(unittest.TestCase):
         os.makedirs = self.makedirs
         del(self.zp)
 
+
 class TestWriteTemplate(WriteTemplatesBase):
-    #@unittest.skip("Skipping")
+
     def test_processTemplate(self):
         self.write(self.zp.rootinit, '${zenpack.id}\n${zenpack.version}\n')
-        self.assertEqual(self.results[-1], call(u'a.b.c\n0.0.1\n'))
+        name = DEFAULT_NAME
+        version = defaults.get('version')
+        self.assertEqual(self.results[-1], call(u'%s\n%s\n' % (name, version)))
 
 
 if __name__ == '__main__':

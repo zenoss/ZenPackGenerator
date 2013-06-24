@@ -11,6 +11,11 @@
 
 class License(object):
 
+    """
+    Each ZenPack may be licensed individually.  Generally, the two formats are
+    either GPLv2+ or Commercial.
+    """
+
     def __init__(self, id):
         self.id = id
 

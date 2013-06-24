@@ -10,37 +10,60 @@
 
 
 import os
-from setuptools import setup
+import sys
 
-# Utility function to read the README file.
-# Used for the long_description.  It's nice, because now 1) we have a top level
-# README file and 2) it's easier to type in the README file than to put a raw
-# string in below ...
-#def read(fname):
-#    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
+
+if sys.argv[-1] == 'publish':
+    os.system('python setup.py sdist upload')
+    sys.exit()
+
+import zpg
+
+packages = [
+    'zpg',
+]
+
+
+requires = [
+    'Cheetah',
+    'PyYaml',
+    'gitpython',
+    'colorama',
+    'inflect',
+    'Mock',
+]
+
 
 setup(
-    name = "ZenPack Generator",
-    version = "0.0.2",
-    author = "Zenoss Labs",
-    author_email = "labs@zenoss.com",
-    description = ("A tool to assist building zenpacks."),
-    license = "GPL",
-    keywords = "zenpack",
-    url = "https://github.com/zenoss/ZenPackGenerator",
-    package_dir={'': 'zpg'},
-    package_data={'': ['Templates/*.tmpl']},
-    packages=[''],
-    install_requires=['Cheetah','PyYaml', 'gitpython', 'inflect', 'Mock'],
-    requires=['Cheetah','PyYaml', 'gitpython', 'inflect', 'Mock'],
-    entry_points={'console_scripts': ['zpg = zpg:main'] },
+    name="zpg",
+    version=zpg.__version__,
+    description="ZenPack Generator",
+    long_description=open('README.rst').read() + '\n\n' +
+    open('HISTORY.rst').read(),
+    author="Zenoss Labs",
+    author_email="labs@zenoss.com",
+    url="http://github.com/zenoss/ZenPackGenerator",
+    keywords="zenpack",
+    package_dir={'zpg': 'zpg'},
+    package_data={'': ['LICENSE', 'NOTICE'], 'zpg': ['Templates/*.tmpl']},
+    packages=packages,
+    requires=requires,
+    install_requires=requires,
+    entry_points={'console_scripts': ['zpg = zpg:main']},
+    license=open('LICENSE').read(),
+    zip_safe=False,
     classifiers=[
         "Development Status :: 1 - Planning",
-        "License :: OSI Approved :: GNU General Public License (GPL)",
         "Intended Audience :: Developers",
         "Intended Audience :: System Administrators",
         "Natural Language :: English",
+        "License :: OSI Approved :: GNU General Public License (GPL)",
         "Programming Language :: Python",
+        "Programming Language :: Python :: 2.7",
         "Topic :: Software Development :: Code Generators",
         "Topic :: System :: Monitoring"
     ],

@@ -8,10 +8,8 @@
 #
 #
 
-import logging
 import os
-logging.basicConfig()
-log = logging.getLogger('DirLayout')
+import sys
 
 
 def initpy(source):
@@ -32,7 +30,8 @@ class DirLayout(object):
 
     @property
     def path(self):
-        '''Join the prefix and the zenpack id to create the destination path.'''
+        '''Join the prefix and the zenpack id to create the destination
+           path.'''
 
         destDir = os.path.join(self.prefix, self.zenpack.id)
         return destDir
@@ -49,17 +48,16 @@ class DirLayout(object):
         for part in parts:
             base = os.path.join(base, part)
             if not os.path.exists(base):
-                os.mkdir(base)
+                os.makedirs(base)
 
-            '''Write nested __init__.py files.'''
+            # Write nested __init__.py files.
             df = os.path.join(base, '__init__.py')
-            f = open(df, 'w')
-            f.write(
-                "__import__('pkg_resources').declare_namespace(__name__)\n")
-            f.close()
+            line = "__import__('pkg_resources').declare_namespace(__name__)\n"
+            with open(df, 'w') as f:
+                f.write(line)
 
-        # Write the manifest ( Not a template because I dont think we have ever
-        # modified this file)
-        f = open(os.path.join(self.path, 'MANIFEST.in'), 'w')
-        f.write("graft ZenPacks\n")
-        f.close()
+        # Write the manifest ( Not a template because I dont think we have
+        # ever modified this file)
+        manifest_path = os.path.join(self.path, 'MANIFEST.in')
+        with open(manifest_path, 'w') as f:
+            f.write("graft ZenPacks\n")

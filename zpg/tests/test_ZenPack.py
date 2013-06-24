@@ -1,26 +1,36 @@
+#!/usr/bin/env python
+#
+#
+# Copyright (C) Zenoss, Inc. 2013, all rights reserved.
+#
+# This content is made available according to terms specified in the LICENSE
+# file at the top-level directory of this package.
+#
+#
+
 import unittest
 import os
-from zpg.lib.ZenPack import ZenPack
-from zpg.lib.DeviceClass import DeviceClass
-from zpg.lib.Component import Component
-from zpg.lib.License import License
-from zpg.lib.Defaults import Defaults
+
 from mock import mock_open, patch, MagicMock
-defaults = Defaults()
+
+from zpg import Component, DeviceClass, License, ZenPack, defaults
+
+DEFAULT_NAME = 'a.b.c'
 
 
 class SimpleSetup(unittest.TestCase):
+
     def setUp(self):
-        self.zp = ZenPack('a.b.c')
+        self.zp = ZenPack(DEFAULT_NAME)
 
     def tearDown(self):
         del(self.zp)
 
 
 class WriteBase(unittest.TestCase):
+
     def setUp(self):
-        from zpg.lib.ZenPack import ZenPack
-        self.zp = ZenPack('a.b.c')
+        self.zp = ZenPack(DEFAULT_NAME)
         self.mkdir = os.mkdir
         self.makedirs = os.makedirs
 
@@ -45,33 +55,45 @@ class WriteBase(unittest.TestCase):
 
 class TestZenPackInitialize(unittest.TestCase):
     #@unittest.skip("Skipping")
+
     def test_installRequires(self):
-        self.assertEqual(ZenPack('a.a.a', install_requires='foo').install_requires, ['foo'])
-        self.assertEqual(ZenPack('a.a.b', install_requires=['foo']).install_requires, ['foo'])
+        self.assertEqual(
+            ZenPack('a.a.a', install_requires='foo').install_requires, ['foo'])
+        self.assertEqual(
+            ZenPack('a.a.b', install_requires=['foo']).install_requires, ['foo'])
 
     def test_zProperties(self):
-        zp = ZenPack('a.a.c', zProperties=[ { "type": "boolean", "default": True, "Category": "NetBotz", "name": "zNetBotzExample" }, { "name": "e1" } ])
-        self.assertEqual(zp.zproperties, {'e1': ('e1', "''", 'string', None), 'zNetBotzExample': ('zNetBotzExample', True, 'boolean', 'NetBotz')})
+        zp = ZenPack('a.a.c', zProperties=[
+                     {"type": "boolean", "default": True, "Category": "NetBotz", "name": "zNetBotzExample"}, {"name": "e1"}])
+        self.assertEqual(
+            zp.zproperties, {'e1': ('e1', "''", 'string', None), 'zNetBotzExample': ('zNetBotzExample', True, 'boolean', 'NetBotz')})
 
     def test_deviceClasses(self):
-        zp = ZenPack('a.a.d', deviceClasses=[{"path": "Device/Snmp"} ])
+        zp = ZenPack('a.a.d', deviceClasses=[{"path": "Device/Snmp"}])
         self.assertEqual(zp.deviceClasses.keys(), ['/zport/dmd/Device/Snmp'])
 
     def test_relationships(self):
-        zp = ZenPack('a.a.e', deviceClasses=[{"path": "Device/Snmp", "componentTypes": [ { "name": "Enclosure"}, { "name": "TemperatureSensor"}, { "name": "Fan"}]}],
-                              relationships=[{"ComponentA": "Enclosure", "ComponentB": "Fan", "Contained": False} ])
-        self.assertEqual(zp.relationships.keys(), ['Products.ZenModel.Device.Device a.a.e.TemperatureSensor',
-                                                   'a.a.e.Enclosure a.a.e.Fan',
-                                                   'Products.ZenModel.Device.Device a.a.e.Enclosure',
-                                                   'Products.ZenModel.Device.Device a.a.e.Fan'])
+        zp = ZenPack(
+            'a.a.e', deviceClasses=[{"path": "Device/Snmp", "componentTypes": [{"name": "Enclosure"}, {"name": "TemperatureSensor"}, {"name": "Fan"}]}],
+            relationships=[{"ComponentA": "Enclosure", "ComponentB": "Fan", "Contained": False}])
+        self.assertEqual(
+            zp.relationships.keys(
+            ), ['Products.ZenModel.Device.Device a.a.e.TemperatureSensor',
+                        'a.a.e.Enclosure a.a.e.Fan',
+                        'Products.ZenModel.Device.Device a.a.e.Enclosure',
+                        'Products.ZenModel.Device.Device a.a.e.Fan'])
 
 
 class TestZenPackLicense(SimpleSetup):
+
     def test_default(self):
-        self.assertEqual(str(self.zp.license), str(License(defaults.license)))
+        package_license = str(self.zp.license)
+        defaults_license = str(License(defaults.get("license", '')))
+        self.assertEqual(package_license, defaults_license)
 
 
 class TestZenPackDeviceClass(SimpleSetup):
+
     def test_addDeviceClass(self):
         dc1 = self.zp.addDeviceClass('Devices/Storage/DC1')
         self.assertIsInstance(dc1, DeviceClass)
@@ -83,6 +105,7 @@ class TestZenPackDeviceClass(SimpleSetup):
 
 
 class TestZenPackComponent(SimpleSetup):
+
     def test_addComponent(self):
         c1 = self.zp.addComponentType('Foo')
         self.assertIsInstance(c1, Component)
@@ -98,6 +121,7 @@ class TestZenPackComponent(SimpleSetup):
 
 
 class TestZenPackRelationships(SimpleSetup):
+
     def test_oneToManyCont(self):
         self.zp.addRelation('Device', 'Vservers')
         self.zp.addRelation('Device', 'SystemNodes')
@@ -105,6 +129,7 @@ class TestZenPackRelationships(SimpleSetup):
 
 
 class TestzProperties(SimpleSetup):
+
     def test_quotes(self):
         self.zp.addZProperty('foo', default='\'')
         self.assertEqual(self.zp.zproperties['foo'][1], '\'')
@@ -113,12 +138,19 @@ class TestzProperties(SimpleSetup):
         self.assertEqual(self.zp.zproperties['bar'][1], '\'bar\'')
 
         self.zp.addZProperty('baz', default='baz')
-        self.assertEqual(self.zp.zproperties['baz'][1],'\'baz\'')
+        self.assertEqual(self.zp.zproperties['baz'][1], '\'baz\'')
 
 
 class TestZenPack(SimpleSetup):
+
     def testRepr(self):
-        self.assertEqual(repr(self.zp), 'a.b.c \n\tAUTHOR: ZenossLabs <labs@zenoss.com>\n\tVERSION: 0.0.1\n\tLICENSE: gpl')
+        self.assertEqual(
+            repr(self.zp), "\n".join([
+                '%s ' % DEFAULT_NAME,  # the space is important at the end
+                '\tAUTHOR: %s' % defaults.get('author'),
+                '\tVERSION: %s' % defaults.get('version'),
+                '\tLICENSE: %s' % defaults.get('license', 'GPL')]))
+
 
 class TestWriteZenPack(WriteBase):
 

@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-##############################################################################
+#
 #
 # Copyright (C) Zenoss, Inc. 2013, all rights reserved.
 #
 # This content is made available according to terms specified in
 # License.zenoss under the directory where your Zenoss product is installed.
 #
-##############################################################################
+#
 import Globals
 from Products.ZenUtils.ZenScriptBase import ZenScriptBase
 from transaction import commit
@@ -26,6 +26,7 @@ from Products.Zuul.facades import ObjectNotFoundException
 
 log = logging.getLogger("zen.JsonTemplateLoader")
 
+
 def die(message):
     print message
     sys.exit(1)
@@ -34,7 +35,8 @@ def die(message):
 def JSONFileToTemplates(dmd, jsonFile, ZenPack):
     data = None
     with open(jsonFile, 'r') as jsonFileHandle:
-        data = json.load(jsonFileHandle, object_pairs_hook=collections.OrderedDict)
+        data = json.load(
+            jsonFileHandle, object_pairs_hook=collections.OrderedDict)
 
     if data:
         for template_path, template_cfg in data.items():
@@ -59,6 +61,7 @@ def JSONStringToTemplates(dmd, jsonString, ZenPack):
         print "No template found... exiting..."
         sys.exit(0)
 
+
 def add_template(dmd, path, cfg, zenpack):
     tf = getFacade('template', dmd)
     if '/' not in path:
@@ -73,7 +76,8 @@ def add_template(dmd, path, cfg, zenpack):
     except ObjectNotFoundException:
         die("%s is not a valid deviceClass.", cfg['deviceClass'])
 
-    existing_template = [t for t in tf.getObjTemplates(device_class.uid) if device_class.uid+'/rrdTemplates/'+id_ == t.uid]
+    existing_template = [t for t in tf.getObjTemplates(
+        device_class.uid) if device_class.uid + '/rrdTemplates/' + id_ == t.uid]
 
     if existing_template:
         tf.deleteTemplate(existing_template[0].uid)
@@ -94,7 +98,8 @@ def add_template(dmd, path, cfg, zenpack):
     # Define the thresholds first to be available for the graphs
     if 'thresholds' in cfg:
         for threshold_id, threshold_cfg in cfg['thresholds'].items():
-            add_threshold(dmd, device_class, template, threshold_id, threshold_cfg)
+            add_threshold(
+                dmd, device_class, template, threshold_id, threshold_cfg)
 
     if 'graphs' in cfg:
         for graph_id, graph_cfg in cfg['graphs'].items():
@@ -103,6 +108,7 @@ def add_template(dmd, path, cfg, zenpack):
     if zenpack:
         print "Adding template %s in %s to ZenPack %s" % (id_, device_class.uid, zenpack.id)
         dmd.ZenPackManager.addToZenPack(ids=[template.uid], pack=zenpack.id)
+
 
 def add_datasource(dmd, template, id_, cfg):
     tf = getFacade('template', dmd)
@@ -138,9 +144,9 @@ def add_datasource(dmd, template, id_, cfg):
     # Apply cfg items directly to datasource attributes.
     for k, v in cfg.items():
         if k not in ('type', 'datapoints'):
-            #need to reference the object because 4.2.3
-            #didnt register the commanddatasource properly.
-            #http://jira.zenoss.com/jira/browse/ZEN-5303
+            # need to reference the object because 4.2.3
+            # didnt register the commanddatasource properly.
+            # http://jira.zenoss.com/jira/browse/ZEN-5303
             setattr(datasource._object, k, v)
 
     if 'datapoints' in cfg:
@@ -195,7 +201,7 @@ def add_graph(dmd, device_class, template, id_, cfg):
     tf.addGraphDefinition(template.uid, str(id_))
 
     # http://jira.zenoss.com/jira/browse/ZEN-5019
-    graph = tf.getGraphDefinition(template.uid+'/graphDefs/'+id_)
+    graph = tf.getGraphDefinition(template.uid + '/graphDefs/' + id_)
 
     # Apply cfg items directly to graph attributes.
     for k, v in cfg.items():
@@ -204,19 +210,22 @@ def add_graph(dmd, device_class, template, id_, cfg):
 
     if 'graphpoints' in cfg:
         for graphpoint_id, graphpoint_cfg in cfg['graphpoints'].items():
-            add_graphpoint(dmd, device_class, template, graph, graphpoint_id, graphpoint_cfg)
+            add_graphpoint(
+                dmd, device_class, template, graph, graphpoint_id, graphpoint_cfg)
 
 
 def add_graphpoint(dmd, device_class, template, graph, id_, cfg):
     tf = getFacade('template', dmd)
     if cfg['type'] == 'Threshold':
-        threshold = [t for t in tf.getThresholds(template.uid) if t.name == id_][0]
+        threshold = [t for t in tf.getThresholds(
+            template.uid) if t.name == id_][0]
         tf.addThresholdToGraph(graph.uid, threshold.uid)
     elif cfg['type'] == 'DataPoint':
         # this is all sorts of messed up getDataSources returns datapoints if the context is a device class
         # there isnt a getDataPoints call
         # the name of a datapoint appears to be a datasource.datapoint but the id path appears better
-        # We are just splitting that and probably making some sort of bad assumption here.
+        # We are just splitting that and probably making some sort of bad
+        # assumption here.
         datapoints = [dp for dp in tf.getDataSources(device_class.uid)
                       if dp._object.name() == cfg['dpName'] and
                       template.uid in dp.uid]
@@ -227,9 +236,11 @@ def add_graphpoint(dmd, device_class, template, graph, id_, cfg):
         return
 
     try:
-        graphpoint = [gp for gp in tf.getGraphPoints(graph.uid) if gp.dpName == cfg['dpName']][0]
+        graphpoint = [gp for gp in tf.getGraphPoints(
+            graph.uid) if gp.dpName == cfg['dpName']][0]
     except Exception:
-        graphpoint = [gp for gp in tf.getGraphPoints(graph.uid) if gp.id == id_][0]
+        graphpoint = [
+            gp for gp in tf.getGraphPoints(graph.uid) if gp.id == id_][0]
 
     len(graphpoint)
 
@@ -241,9 +252,11 @@ def add_graphpoint(dmd, device_class, template, graph, id_, cfg):
 
 def add_threshold(dmd, device_class, template, id_, cfg):
     tf = getFacade('template', dmd)
-    # This is weird, the catalog is making us look up the datapoints at the deviceclass level
+    # This is weird, the catalog is making us look up the datapoints at the
+    # deviceclass level
     points = []
-    allpoints = [(ds._object.name(), ds) for ds in tf.getDataSources(device_class.uid)]
+    allpoints = [(ds._object.name(), ds)
+                 for ds in tf.getDataSources(device_class.uid)]
 
     # Handle a single datapoint
     if isinstance(cfg['dataPoints'], str):
@@ -254,7 +267,8 @@ def add_threshold(dmd, device_class, template, id_, cfg):
             if item[0] == dp:
                 points.append(item[1].uid)
     tf.addThreshold(template.uid, cfg['type'], id_, points)
-    threshold = [t for t in tf.getThresholds(template.uid+'/thresholds/'+id_)][0]
+    threshold = [t for t in tf.getThresholds(
+        template.uid + '/thresholds/' + id_)][0]
 
     # Apply cfg items directly to threshold attributes.
     for k, v in cfg.items():
@@ -263,6 +277,7 @@ def add_threshold(dmd, device_class, template, id_, cfg):
 
 
 class ImportTemplate(ZenScriptBase):
+
     def buildOptions(self):
         ZenScriptBase.buildOptions(self)
         self.parser.add_option("-z", "--zenpack", dest="zenpack",
@@ -271,7 +286,8 @@ class ImportTemplate(ZenScriptBase):
     def run(self):
         self.zenpack = None
         if self.options.zenpack:
-            self.zenpack = self.dmd.ZenPackManager.packs._getOb(self.options.zenpack, None)
+            self.zenpack = self.dmd.ZenPackManager.packs._getOb(
+                self.options.zenpack, None)
             if self.zenpack:
                 if not self.zenpack.isDevelopment():
                     print "%s is not a valid Development Mode Zenpack. Exiting...." % self.options.zenpack

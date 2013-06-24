@@ -9,12 +9,12 @@
 #
 
 import inflect
-from Defaults import Defaults
-from Property import Property
-from Relationship import Relationship
-# from Cheetah.Template import Template as cTemplate
-from utils import KlassExpand, zpDir
-from Template import Template
+
+from ._defaults import defaults
+from ._zenoss_utils import KlassExpand, zpDir
+from .Property import Property
+from .Relationship import Relationship
+from .Template import Template
 
 plural = inflect.engine().plural
 
@@ -51,10 +51,11 @@ class Component(Template):
                             This will default to the zenpack id
                  panelSort: the default property to sort by
                  panelSortDirection: Direction to sort either 'asc' or 'dsc'
-                 properties: an array of dictionaries of property information which will
-                             create property objects
-                 componentTypes: an array of dictionaries of component information which will
-                             create componentType objects
+                 properties: an array of dictionaries of property information
+                             which will create property objects
+                 componentTypes: an array of dictionaries of component
+                             information which will create componentType
+                             objects
 
         '''
 
@@ -74,9 +75,9 @@ class Component(Template):
 
         if not imports:
             if not device:
-                self.imports = Defaults().component_imports
+                self.imports = defaults.get("component_imports", "")
             else:
-                self.imports = Defaults().device_imports
+                self.imports = defaults.get("device_imports", "")
         elif isinstance(imports, basestring):
             self.imports = [imports]
         else:
@@ -97,9 +98,9 @@ class Component(Template):
 
         if not klasses:
             if not device:
-                self.klasses = Defaults().component_classes
+                self.klasses = defaults.get("component_classes", "")
             else:
-                self.klasses = Defaults().device_classes
+                self.klasses = defaults.get("device_classes", "")
         # Copy the input array, don't hang on to a reference.
         elif isinstance(klasses, basestring):
             self.klasses = [klasses]
@@ -127,20 +128,6 @@ class Component(Template):
     def __lt__(self, other):
         '''Implemented for sort operations'''
         return self.id < other.id
-
-    # @property
-    # def id(self):
-    #     return self.__id
-
-    # @id.setter
-    # def id(self, value):
-    #     if value:
-    #         self.__id = value
-    #     else:
-    #         if "." in self.name:
-    #             self.__id = self.name
-    #         else:
-    #             self.__id = ".".join([self.namespace, self.name])
 
     def Type(self):
         '''return the type Device/Component'''
@@ -250,10 +237,6 @@ class Component(Template):
                             (component, prel.components[0])]
 
         return custompaths
-        """obj = self.context.${first_component}()
-           if obj:
-              paths.extend(relPath(${first_component, '${prel.components[0]}'))
-        """
 
     def findUpdateComponents(self):
         '''return a dictionary of components used in the updateToOne or
@@ -286,7 +269,8 @@ class Component(Template):
         self.updateComponents = results
 
     def dropdowncomponents(self):
-        '''return the component objects that this should contain a dropdown link to this component.'''
+        '''return the component objects that this should contain a dropdown
+        link to this component.'''
         results = []
         custompaths = self.custompaths()
         for values in custompaths.values():

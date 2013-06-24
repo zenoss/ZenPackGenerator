@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-##############################################################################
+#
 #
 # Copyright (C) Zenoss, Inc. 2013, all rights reserved.
 #
 # This content is made available according to terms specified in the LICENSE
 # file at the top-level directory of this package.
 #
-##############################################################################
+#
 
 data = {'id': 'ZenPacks.training.NetBotz',
         'zProperties': [{'name': 'zNetBotzExample', 'Type': 'boolean', 'default': True, 'group': 'NetBotz'},
@@ -16,8 +16,10 @@ data = {'id': 'ZenPacks.training.NetBotz',
                            'zPythonClass': 'NetBotzDevice',
                            'componentTypes': [{'name': 'Enclosure',
                                                'properties': [{'name': 'enclosure_status'},
-                                                              {'name': 'error_status'},
-                                                              {'name': 'parent_id'},
+                                                              {'name':
+                                                                  'error_status'},
+                                                              {'name':
+                                                                  'parent_id'},
                                                               {'name': 'docked_id'}]},
                                               {'name': 'TemperatureSensor',
                                                'properties': [{'name': 'port'}]},

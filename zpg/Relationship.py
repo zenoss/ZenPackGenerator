@@ -15,7 +15,12 @@ class Relationship(object):
 
     relationships = {}
 
-    def __init__(self, ZenPack, ComponentA, ComponentB, Type='1-M', Contained=True):
+    def __init__(self,
+                 ZenPack,
+                 ComponentA,
+                 ComponentB,
+                 Type='1-M',
+                 Contained=True):
         """Args:
                 ZenPack:  A ZenPack Class instance
                 ComponentA: Parent Component string id
@@ -51,8 +56,8 @@ class Relationship(object):
            Args:
               component: A parent or child component in this relationship
               Contained: True/False containment relationship
-              First: True/False  True if we are searching for the Parent Component
-                                 in the relationship.
+              First: True/False  True if we are searching for the Parent
+                                 Component in the relationship.
 
               Types: 1-1, 1-M, M-M are valid relationship types.
                      1-1: One to One

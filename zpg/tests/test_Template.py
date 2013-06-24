@@ -1,25 +1,40 @@
 #!/usr/bin/env python
+#
+#
+# Copyright (C) Zenoss, Inc. 2013, all rights reserved.
+#
+# This content is made available according to terms specified in the LICENSE
+# file at the top-level directory of this package.
+#
+#
+
 import unittest
 import os
-from mock import mock_open, patch, call, MagicMock
-from zpg.lib.Template import Template
 import inspect
+
+from mock import mock_open, patch, call, MagicMock
+
 import zpg
+from zpg import Template, ZenPack, defaults
+
+DEFAULT_NAME = 'a.b.c'
+DEFAULT_NAME2 = 'a.a.Template'
 
 
 class SimpleSetup(unittest.TestCase):
+
     def setUp(self):
-        from zpg.lib.ZenPack import ZenPack
-        self.zp = ZenPack('a.a.Template')
+        self.zp = ZenPack(DEFAULT_NAME2)
 
     def tearDown(self):
         del(self.zp)
 
 
 class WriteTemplatesBase(unittest.TestCase):
+
     def setUp(self):
-        from zpg.lib.ZenPack import ZenPack
-        self.zp = ZenPack('a.b.c')
+        from zpg.ZenPack import ZenPack
+        self.zp = ZenPack(DEFAULT_NAME)
         self.makedirs = os.makedirs
 
         os.makedirs = MagicMock(return_value=True)
@@ -43,13 +58,17 @@ class WriteTemplatesBase(unittest.TestCase):
 
 
 class TestTemplateCacheLocation(SimpleSetup):
+
     def test_templateCacheLocation(self):
         t = Template(self.zp)
         t.dest_file = 'foo.py'
-        self.assertEqual(t.TemplateCacheLocation(), '/tmp/zpg/a.a.Template/Templates/foo.py.tmpl')
+        top = defaults.get('prefix', os.getcwd())
+        self.assertEqual(t.TemplateCacheLocation(),
+                         '%s/%s/Templates/foo.py.tmpl' % (top, DEFAULT_NAME2))
 
 
 class TestCacheTemplate(SimpleSetup):
+
     def testCaching(self):
         m = mock_open()
         os.makedirs = MagicMock(return_value=True)
@@ -61,17 +80,20 @@ class TestCacheTemplate(SimpleSetup):
 
         # Write File Handle
         wfh = m.return_value.__enter__.return_value
-        self.assertEqual(wfh.write.call_args_list, [call('## Source Template foo.py.tmpl \n'), call('Source Template')])
+        self.assertEqual(wfh.write.call_args_list, [
+                         call('## Source Template foo.py.tmpl \n'), call('Source Template')])
 
 
 class FindTemplate(SimpleSetup):
+
     def test_findingTemplate(self):
         t = Template(self.zp)
         t.dest_file = 'foo.py'
         t.tfile = 'foo.py.tmpl'
         self.source_template = 'foo.tmpl'
         t.findTemplate()
-        self.assertEqual(t.tfile, "%s/Templates/%s" % ("/".join(inspect.getfile(zpg).split('/')[:-1]), t.source_template))
+        self.assertEqual(t.tfile, "%s/Templates/%s" %
+                         ("/".join(inspect.getfile(zpg).split('/')[:-1]), t.source_template))
 
     def test_findCachedLocation(self):
         t = Template(self.zp)
@@ -86,11 +108,13 @@ class FindTemplate(SimpleSetup):
 
 
 class TestWriteTemplate(WriteTemplatesBase):
-    #@unittest.skip("Skipping")
+
     def test_processTemplate(self):
         t = Template(self.zp)
         self.write(t, '${zenpack.id}\n${zenpack.version}\n')
-        self.assertEqual(self.results[-1], call(u'a.b.c\n0.0.1\n'))
+        name = DEFAULT_NAME
+        version = defaults.get('version')
+        self.assertEqual(self.results[-1], call(u'%s\n%s\n' % (name, version)))
 
 
 if __name__ == '__main__':
