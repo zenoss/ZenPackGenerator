@@ -17,7 +17,7 @@ class ${shortklass}(#echo ', '.join($klassNames)#):
     $p.id = $p.value
 #end for
 
-    _properties = None
+    _properties = ()
     for Klass in Klasses:
         _properties = _properties + getattr(Klass,'_properties', None)
 
@@ -31,7 +31,7 @@ class ${shortklass}(#echo ', '.join($klassNames)#):
 #end if
 ## Add _relations
 #if $relations
-    _relations = None
+    _relations = ()
     for Klass in Klasses:
         _relations = _relations + getattr(Klass, '_relations', None)
 
