@@ -249,7 +249,8 @@ class Component(Template):
 
         if custompaths:
             imports = "from Products.Zuul.catalog.paths import DefaultPathReporter, relPath"
-            self.imports(imports)
+            self.imports.append(imports)
+
         return custompaths
         """obj = self.context.${first_component}()
            if obj:
