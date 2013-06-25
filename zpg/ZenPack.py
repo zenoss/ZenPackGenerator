@@ -33,7 +33,7 @@ class Opts(object):
 
     def __init__(self):
         self.skip = False
-        self.prefix = os.getcwd()
+        self.dest = os.getcwd()
 
 
 class ZenPack(object):
@@ -54,7 +54,7 @@ class ZenPack(object):
 
         self.id = id
         self.opts = Opts() if opts is None else opts
-        self.destdir = DirLayout(self, self.opts.prefix)
+        self.destdir = DirLayout(self, self.opts.dest)
         self.namespace = id
         self.deviceClasses = {}
         self.components = {}
