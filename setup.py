@@ -19,7 +19,7 @@ setup(
     url = "https://github.com/zenoss/ZenPackGenerator",
     package_dir={'': 'src'},
     package_data={'zpg': ['Templates/*.tmpl']},
-    packages=['zpg', 'zpg.lib', 'zpg.build'],
+    packages=['zpg', 'zpg.lib'],
     install_requires=['Cheetah','PyYaml', 'gitpython', 'inflect', 'Mock'],
     requires=['Cheetah','PyYaml', 'gitpython', 'inflect', 'Mock'],
     entry_points={'console_scripts': ['zpg = zpg.main:main'] },
