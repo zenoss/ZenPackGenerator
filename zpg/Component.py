@@ -75,9 +75,9 @@ class Component(Template):
 
         if not imports:
             if not device:
-                self.imports = defaults.get("component_imports", "")
+                self.imports = defaults.get('component_imports')
             else:
-                self.imports = defaults.get("device_imports", "")
+                self.imports = defaults.get('device_imports')
         elif isinstance(imports, basestring):
             self.imports = [imports]
         else:
@@ -98,9 +98,9 @@ class Component(Template):
 
         if not klasses:
             if not device:
-                self.klasses = defaults.get("component_classes", "")
+                self.klasses = defaults.get('component_classes')
             else:
-                self.klasses = defaults.get("device_classes", "")
+                self.klasses = defaults.get('device_classes')
         # Copy the input array, don't hang on to a reference.
         elif isinstance(klasses, basestring):
             self.klasses = [klasses]
@@ -236,6 +236,11 @@ class Component(Template):
                         custompaths[rel.Type] = [
                             (component, prel.components[0])]
 
+        if custompaths:
+            imports = "from Products.Zuul.catalog.paths "
+            imports += "import DefaultPathReporter, relPath"
+            self.imports.append(imports)
+
         return custompaths
 
     def findUpdateComponents(self):
@@ -269,8 +274,8 @@ class Component(Template):
         self.updateComponents = results
 
     def dropdowncomponents(self):
-        '''return the component objects that this should contain a dropdown
-        link to this component.'''
+        '''return the component objects that this should contain a
+        dropdown link to this component.'''
         results = []
         custompaths = self.custompaths()
         for values in custompaths.values():
@@ -294,18 +299,33 @@ class Component(Template):
         '''return True if we should build the Info Class'''
         # TODO improve this method to include scenarios when
         # we are adding one to many non-container relationships etc.
+        if self.device:
+            imports = "from Products.Zuul.infos.device import DeviceInfo"
+        else:
+            imports = "from Products.Zuul.infos.component import ComponentInfo"
+
         if self.properties:
+            self.imports.append(imports)
             return True
         if self.ManyRelationships():
+            self.imports.append(imports)
             return True
         return False
 
     def displayIInfo(self):
         '''return True if we should build the IInfo Class'''
+        name = "Products.Zuul.interfaces"
+        if self.device:
+            imports = "from %s import IDeviceInfo" % name
+        else:
+            imports = "from %s.component import IComponentInfo" % name
+
         for p in self.properties.values():
             if p.detailDisplay:
+                self.imports.append(imports)
                 return True
         if self.ManyRelationships():
+            self.imports.append(imports)
             return True
         return False
 
@@ -338,6 +358,11 @@ class Component(Template):
         return c
 
     def updateImports(self):
+        # Call these three functions to update some imports.
+        self.displayInfo()
+        self.displayIInfo()
+        self.custompaths()
+
         '''Append the relationship imports'''
         Types = {}
         for relationship in self.zenpack.relationships.values():
@@ -356,8 +381,17 @@ class Component(Template):
             sorted(Types.keys()))
         self.imports.append(imports)
 
+        def f7(seq):
+            seen = set()
+            seen_add = seen.add
+            return [x for x in seq if x not in seen and not seen_add(x)]
+
+        # Remove duplicates
+        self.imports = f7(self.imports)
+
     def write(self):
         '''Write the component files'''
+
         self.updateImports()
         self.findUpdateComponents()
         self.processTemplate()
