@@ -175,22 +175,23 @@ class ${shortklass}Info(${Type}Info):
 ##CUSTOM PATHS REPORTERS
 #if $custompaths
 class ${shortklass}PathReporter(DefaultPathReporter):
-    paths = super(${shortklass}PathReporter, self).getPaths()
+    def getPaths(self):
+        paths = super(${shortklass}PathReporter, self).getPaths()
 
 #if '1-M' in $custompaths.keys()
 #for $path in $custompaths['1-M']
-    obj = self.context.${path[0].relname}()
-    if obj:
-        paths.extend(relPath(obj,'${path[1].relname}'))
+        obj = self.context.${path[0].relname}()
+        if obj:
+            paths.extend(relPath(obj,'${path[1].relname}'))
 
 #end for
 #end if
 #if 'M-M' in $custompaths.keys()
 #for $path in $custompaths['M-M']
-    for obj in self.context.${path[0].relnames}()
-        paths.extend(relPath(obj,'${path[1].relnames}'))
+        for obj in self.context.${path[0].relnames}()
+            paths.extend(relPath(obj,'${path[1].relnames}'))
 
 #end for
 #end if
-    return paths
+        return paths
 #end if
