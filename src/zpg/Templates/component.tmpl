@@ -188,7 +188,7 @@ class ${shortklass}PathReporter(DefaultPathReporter):
 #end if
 #if 'M-M' in $custompaths.keys()
 #for $path in $custompaths['M-M']
-        for obj in self.context.${path[0].relnames}()
+        for obj in self.context.${path[0].relnames}():
             paths.extend(relPath(obj,'${path[1].relnames}'))
 
 #end for
