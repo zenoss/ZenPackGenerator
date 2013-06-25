@@ -7,7 +7,7 @@ import Globals
 from Products.ZenModel.Device import Device
 from Products.ZenModel.ZenPack import ZenPack as ZenPackBase
 from Products.ZenRelations.RelSchema import ToManyCont, ToOne
-from Products.ZenRelations.zPropertyCategory import setZPropertyCategory
+from Products.ZenRelations.zPropertyCategory import setzPropertyCategory
 from Products.CMFCore.DirectoryView import registerDirectory
 from Products.Zuul.interfaces import ICatalogTool
 from Products.ZenUtils.Utils import unused
@@ -33,7 +33,7 @@ productNames = (
 # Define new device relations.
 NEW_DEVICE_RELATIONS = (
 #for $c in $devChildren
-    ('${c.relnames}', '${c.unique_name}')
+    ('${c.relname}', '${c.unique_name}'),
 #end for
     )
 
@@ -44,12 +44,12 @@ NEW_COMPONENT_TYPES = (
     )
 
 # Add new relationships to Device if they don't already exist.
-for relname, modname, devrel in NEW_DEVICE_RELATIONS:
+for relname, modname in NEW_DEVICE_RELATIONS:
     if relname not in (x[0] for x in Device._relations):
         Device._relations += (
             (relname, ToManyCont(ToOne,
-             '.'.join(ZENPACK_NAME, modname)), devrel)),
-             )
+            '.'.join((ZENPACK_NAME, modname)), '${c.unique_name}_host')),
+            )
 
 # Useful to avoid making literal string references to module and class names
 # throughout the rest of the ZenPack.
@@ -62,13 +62,13 @@ for product_name in productNames:
 
 _PACK_Z_PROPS=[
 #for $zprop in $zenpack.zproperties.values
-               (${zprop[0]}, ${zprop[1]}, ${zprop[2]})
+               ('${zprop[0]}', ${zprop[1]}, '${zprop[2]}'),
 #end for
                ]
 
 #for $zprop in $zenpack.zproperties.values
 #if $zprop[3]
-setzPropertyCategory(${zprop[0]}, '${zprop[3]}')
+setzPropertyCategory('${zprop[0]}', '${zprop[3]}')
 #end if
 #end for
 
@@ -93,7 +93,7 @@ class ZenPack(ZenPackBase):
             # Stack installs might not have a \$ZENHOME/libexec directory.
             os.mkdir(libexec)
 
-        for plugin in self._plugins:
+        for plugin in _plugins:
             LOG.info('Linking %s plugin into \$ZENHOME/libexec/', plugin)
             plugin_path = zenPath('libexec', plugin)
             os.system('ln -sf "%s" "%s"' % (self.path(plugin), plugin_path))
