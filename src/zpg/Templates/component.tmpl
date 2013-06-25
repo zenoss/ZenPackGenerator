@@ -19,7 +19,7 @@ class ${shortklass}(#echo ', '.join($klassNames)#):
 
     _properties = ()
     for Klass in Klasses:
-        _properties = _properties + getattr(Klass,'_properties', None)
+        _properties = _properties + getattr(Klass,'_properties', ())
 
     _properties = _properties + (
 #for $key in $properties
@@ -33,7 +33,7 @@ class ${shortklass}(#echo ', '.join($klassNames)#):
 #if $relations
     _relations = ()
     for Klass in Klasses:
-        _relations = _relations + getattr(Klass, '_relations', None)
+        _relations = _relations + getattr(Klass, '_relations', ())
 
     _relations = _relations + (
 #for $rel in $relationstoArrayofStrings()
