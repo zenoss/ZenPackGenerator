@@ -308,18 +308,32 @@ class Component(Template):
         '''return True if we should build the Info Class'''
         # TODO improve this method to include scenarios when
         # we are adding one to many non-container relationships etc.
+        if self.device:
+            imports = "from Products.Zuul.infos.device import DeviceInfo"
+        else:
+            imports = "from Products.Zuul.infos.component import ComponentInfo"
+
         if self.properties:
+            self.imports.append(imports)
             return True
         if self.ManyRelationships():
+            self.imports.append(imports)
             return True
         return False
 
     def displayIInfo(self):
         '''return True if we should build the IInfo Class'''
+        if self.device:
+            imports = "from Products.Zuul.interfaces import IDeviceInfo"
+        else:
+            imports = "from Products.Zuul.interfaces.component import IComponentInfo"
+
         for p in self.properties.values():
             if p.detailDisplay:
+                self.imports.append(imports)
                 return True
         if self.ManyRelationships():
+            self.imports.append(imports)
             return True
         return False
 
@@ -368,6 +382,14 @@ class Component(Template):
 
         imports = "from Products.ZenRelations.RelSchema import %s" % ",".join(sorted(Types.keys()))
         self.imports.append(imports)
+
+        def f7(seq):
+            seen = set()
+            seen_add = seen.add
+            return [ x for x in seq if x not in seen and not seen_add(x)]
+
+        # Remove duplicates
+        self.imports = f7(self.imports)
 
     def write(self):
         '''Write the component files'''
