@@ -393,6 +393,10 @@ class Component(Template):
 
     def write(self):
         '''Write the component files'''
+
+        # Call these two functions to update some imports.
+        self.displayInfo()
+        self.displayIInfo()
         self.updateImports()
         self.findUpdateComponents()
         self.processTemplate()
