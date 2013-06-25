@@ -247,6 +247,9 @@ class Component(Template):
                     if not rel.Type in custompaths.keys():
                         custompaths[rel.Type] = [(component, prel.components[0])]
 
+        if custompaths:
+            imports = "from Products.Zuul.catalog.paths import DefaultPathReporter, relPath"
+            self.imports(imports)
         return custompaths
         """obj = self.context.${first_component}()
            if obj:
@@ -366,6 +369,11 @@ class Component(Template):
         return c
 
     def updateImports(self):
+        # Call these three functions to update some imports.
+        self.displayInfo()
+        self.displayIInfo()
+        self.custompaths()
+
         '''Append the relationship imports'''
         Types = {}
         for relationship in self.zenpack.relationships.values():
@@ -394,9 +402,6 @@ class Component(Template):
     def write(self):
         '''Write the component files'''
 
-        # Call these two functions to update some imports.
-        self.displayInfo()
-        self.displayIInfo()
         self.updateImports()
         self.findUpdateComponents()
         self.processTemplate()
