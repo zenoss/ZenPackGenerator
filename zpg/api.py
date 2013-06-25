@@ -39,28 +39,43 @@ class ZpgOptionParser(ArgumentParser):
         # description = textwrap.dedent(description)
         super(ZpgOptionParser, self).__init__(description=description)
         prefix = defaults.get("prefix", os.getcwd())
-        self.add_argument("input", type=str,  # FileType('rt'),
-                          default=sys.stdin,
+        group1 = self.add_argument_group('standard')
+        group2 = self.add_argument_group('special')
+        group1.add_argument("input", type=str,  # FileType('rt'),
+                          default=sys.stdin, nargs="?",
                           help="input file")
-        self.add_argument("dest", type=str, nargs="?",
+        group1.add_argument("dest", type=str, nargs="?",
                           default=prefix,
                           help="Output folder for the zenpack. [%(default)s]")
-        self.add_argument('-Z', "--zenpack-version",
+        group1.add_argument('-Z', "--zenpack-version",
                           dest="zenpack_version", default="4",
                           help="Zenpack type to build [%(default)s]")
-        self.add_argument('-s', "--skip", action='store_true',
+        group1.add_argument('-s', "--skip", action='store_true',
                           dest="skip", default=False,
                           help="Do Not use cached Templates.")
-        self.add_argument("-C", "--no-color", action='store_false',
+        group1.add_argument("-C", "--no-color", action='store_false',
                           dest="color", default=True,
                           help="Remove color from standard output")
-        self.add_argument("-q", "--quiet", action="count",
+        group1.add_argument("-q", "--quiet", action="count",
                           dest="quiet", default=0,
                           help="Decrease output verbosity")
-        self.add_argument("-v", "--verbose", action="count",
+        group1.add_argument("-v", "--verbose", action="count",
                           dest="verbose", default=0,
-                          help="Increaes output verbosity")
+                          help="Increase output verbosity")
+        group2.add_argument('-V', "--version", action="store_true",
+                          dest="version", default=False,
+                          help="Display version of %(prog)s")
 
+
+def determine_file_type(filename):
+    filetype = None
+    if filename.endswith('.json'):
+        filetype = 'json'
+    elif filename.endswith('.yaml'):
+        filetype = 'yaml'
+    elif filename.endswith('.xml'):
+        filetype = 'xml'
+    return filetype
 
 def generate(filename=None):
     """Constructs a ZenPack based upon an input file.
@@ -90,9 +105,14 @@ def generate(filename=None):
     opts.verbose = 1 if opts.verbose <= 0 else opts.verbose
     logger.setLevel(level=opts.verbose)
 
+    if opts.version:
+        msg = "%s Version: %s" % ('ZenPackGenerator', defaults.get('version'))
+        info(logger, msg)
+        sys.exit(0)
+
     if not filename or not os.path.exists(filename):
         if not opts.input or not os.path.exists(str(opts.input)):
-            err_msg = "Required input file missing.  exiting...\n"
+            err_msg = "Required input file missing.  Exiting...\n"
             error(logger, err_msg)
             sys.exit(1)
         filename = opts.input
@@ -102,11 +122,18 @@ def generate(filename=None):
         error(logger, err_msg)
         sys.exit(1)
 
+    filetype = determine_file_type(filename)
+    if filetype is None:
+        err_msg = "Could not determine file type: %s" % filename
+        error(logger, err_msg)
+        sys.exit(1)
+
     info(logger, 'ZenPack Generator Starting')
     with open(filename, 'r') as f:
         debug(logger, 'Loading input file: %s...' % filename)
-        jsi = json.load(f)
-        jsi['opts'] = opts
+        if filetype == 'json':
+            jsi = json.load(f)
+            jsi['opts'] = opts
         debug(logger, '  Loaded.')
         debug(logger, 'Populating ZenPack...')
         zp_json = ZenPack(**jsi)
