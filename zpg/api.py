@@ -39,7 +39,7 @@ class ZpgOptionParser(ArgumentParser):
         # description = textwrap.dedent(description)
         super(ZpgOptionParser, self).__init__(description=description)
         prefix = defaults.get("prefix", os.getcwd())
-        self.add_argument("input", type=str, #FileType('rt'),
+        self.add_argument("input", type=str,  # FileType('rt'),
                           default=sys.stdin,
                           help="input file")
         self.add_argument("dest", type=str, nargs="?",

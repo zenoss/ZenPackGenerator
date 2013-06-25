@@ -73,9 +73,12 @@ class TestDirectoryLayouts(DirectoryLayout):
                           if repr(x)[6:].startswith("%s/%s" % (top, name))]
             self.assertEqual(
                 self.results, [
-                    call("__import__('pkg_resources').declare_namespace(__name__)\n"),
-                    call("__import__('pkg_resources').declare_namespace(__name__)\n"),
-                    call("__import__('pkg_resources').declare_namespace(__name__)\n"),
+                    call(
+                        "__import__('pkg_resources').declare_namespace(__name__)\n"),
+                    call(
+                        "__import__('pkg_resources').declare_namespace(__name__)\n"),
+                    call(
+                        "__import__('pkg_resources').declare_namespace(__name__)\n"),
                     call('graft ZenPacks\n')])
             self.assertEqual(
                 file_calls, [

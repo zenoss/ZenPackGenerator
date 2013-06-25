@@ -28,13 +28,13 @@ class WriteTemplatesBase(unittest.TestCase):
         filepaths = []
         for root, folders, files in os.walk(top_folder):
             filepaths.extend(
-                        (os.path.join(root, f)
-                         for f in files
-                         if f[-3:] == ".py"
-                         if f[:5] != "test_"))
+                (os.path.join(root, f)
+                 for f in files
+                 if f[-3:] == ".py"
+                 if f[:5] != "test_"))
         results = pep8style.check_files(filepaths)
         errors = str(results.total_errors)
         msgs = [
             "Found %s code style errors (and warnings)." % errors,
-            ]
+        ]
         self.assertEqual(results.total_errors, 0, "\n".join(msgs))
