@@ -53,7 +53,7 @@ setup(
     packages=packages,
     requires=requires,
     install_requires=requires,
-    entry_points={'console_scripts': ['zpg = zpg:main']},
+    entry_points={'console_scripts': ['zpg = zpg:generate']},
     license=open('LICENSE').read(),
     zip_safe=False,
     classifiers=[
