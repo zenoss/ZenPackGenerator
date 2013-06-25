@@ -33,7 +33,7 @@ productNames = (
 # Define new device relations.
 NEW_DEVICE_RELATIONS = (
 #for $c in $devChildren
-    ('${c.relnames}', '${c.unique_name}'),
+    ('${c.relname}', '${c.unique_name}'),
 #end for
     )
 
@@ -44,11 +44,11 @@ NEW_COMPONENT_TYPES = (
     )
 
 # Add new relationships to Device if they don't already exist.
-for relname, modname, devrel in NEW_DEVICE_RELATIONS:
+for relname, modname in NEW_DEVICE_RELATIONS:
     if relname not in (x[0] for x in Device._relations):
         Device._relations += (
             (relname, ToManyCont(ToOne,
-             '.'.join(ZENPACK_NAME, modname)), devrel)),
+             '.'.join(ZENPACK_NAME, modname)), '${c.unique_name}_host')),
              )
 
 # Useful to avoid making literal string references to module and class names
