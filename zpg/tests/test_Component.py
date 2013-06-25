@@ -124,13 +124,13 @@ class TestComponentImports(SimpleSetup):
     def test_imports_default(self):
         c = Component(self.zp, 'Component')
         expected = ['from zope.interface import implements',
-             'from Products.ZenModel.ZenossSecurity import ZEN_CHANGE_DEVICE',
-             'from Products.Zuul.decorators import info',
-             'from Products.Zuul.form import schema',
-             'from Products.Zuul.infos import ProxyProperty',
-             'from Products.Zuul.utils import ZuulMessageFactory as _t',
-             'from Products.ZenModel.DeviceComponent import DeviceComponent',
-             'from Products.ZenModel.ManagedEntity import ManagedEntity']
+                    'from Products.ZenModel.ZenossSecurity import ZEN_CHANGE_DEVICE',
+                    'from Products.Zuul.decorators import info',
+                    'from Products.Zuul.form import schema',
+                    'from Products.Zuul.infos import ProxyProperty',
+                    'from Products.Zuul.utils import ZuulMessageFactory as _t',
+                    'from Products.ZenModel.DeviceComponent import DeviceComponent',
+                    'from Products.ZenModel.ManagedEntity import ManagedEntity']
         for e in expected:
             self.assertTrue(e in c.imports)
 
@@ -138,8 +138,8 @@ class TestComponentImports(SimpleSetup):
         c = Component(self.zp, 'Component', imports=[
                       'from zope.interface import implements'])
         expected = ['from zope.interface import implements',
-             'from Products.ZenModel.DeviceComponent import DeviceComponent',
-             'from Products.ZenModel.ManagedEntity import ManagedEntity']
+                    'from Products.ZenModel.DeviceComponent import DeviceComponent',
+                    'from Products.ZenModel.ManagedEntity import ManagedEntity']
         for e in expected:
             self.assertTrue(e in c.imports)
 
@@ -147,13 +147,12 @@ class TestComponentImports(SimpleSetup):
         c = Component(self.zp, 'Component',
                       imports='from zope.interface import implements')
         expected = ['from zope.interface import implements',
-             'from Products.ZenModel.DeviceComponent import DeviceComponent',
-             'from Products.ZenModel.ManagedEntity import ManagedEntity']
+                    'from Products.ZenModel.DeviceComponent import DeviceComponent',
+                    'from Products.ZenModel.ManagedEntity import ManagedEntity']
         for e in expected:
             self.assertTrue(e in c.imports)
 
     def test_imports_with_classes(self):
-        import pdb; pdb.set_trace()
         zp = ZenPack('a.b.c')
         c = Component(zp, 'Componentk',
                       klasses=['Products.ZenModel.OSComponent.OSComponent',
@@ -167,27 +166,28 @@ class TestComponentImports(SimpleSetup):
 
         self.maxDiff = None
         expected = ['from zope.interface import implements',
-             'from Products.ZenModel.ZenossSecurity import ZEN_CHANGE_DEVICE',
-             'from Products.Zuul.decorators import info',
-             'from Products.Zuul.form import schema',
-             'from Products.Zuul.infos import ProxyProperty',
-             'from Products.Zuul.utils import ZuulMessageFactory as _t',
-             'from Products.ZenModel.OSComponent import OSComponent',
-             'from Products.ZenModel.Linkable import Layer2Linkable',
-             ]
+                    'from Products.ZenModel.ZenossSecurity import ZEN_CHANGE_DEVICE',
+                    'from Products.Zuul.decorators import info',
+                    'from Products.Zuul.form import schema',
+                    'from Products.Zuul.infos import ProxyProperty',
+                    'from Products.Zuul.utils import ZuulMessageFactory as _t',
+                    'from Products.ZenModel.OSComponent import OSComponent',
+                    'from Products.ZenModel.Linkable import Layer2Linkable',
+                    ]
         for e in expected:
             self.assertTrue(e in c.imports)
 
         expected = ['from zope.interface import implements',
-             'from Products.ZenModel.ZenossSecurity import ZEN_CHANGE_DEVICE',
-             'from Products.Zuul.decorators import info',
-             'from Products.Zuul.form import schema',
-             'from Products.Zuul.infos import ProxyProperty',
-             'from Products.Zuul.utils import ZuulMessageFactory as _t',
-             'from Products.ZenModel.Software import Software',
-             ]
+                    'from Products.ZenModel.ZenossSecurity import ZEN_CHANGE_DEVICE',
+                    'from Products.Zuul.decorators import info',
+                    'from Products.Zuul.form import schema',
+                    'from Products.Zuul.infos import ProxyProperty',
+                    'from Products.Zuul.utils import ZuulMessageFactory as _t',
+                    'from Products.ZenModel.Software import Software',
+                    ]
         for e in expected:
             self.assertTrue(e in c2.imports)
+
 
 class TestComponentNameSpace(SimpleSetup):
 
