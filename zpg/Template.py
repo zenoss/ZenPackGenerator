@@ -55,7 +55,8 @@ class Template(object):
         if os.path.exists(cacheTemplateFile) and not self.zenpack.opts.skip:
             self.tfile = str(cacheTemplateFile)
         else:
-            tpath = "/".join(inspect.getfile(zpg).split('/')[:-1])
+            sep = os.path.sep
+            tpath = sep.join(inspect.getfile(zpg).split(sep)[:-1])
             self.tfile = "%s/Templates/%s" % (tpath, self.source_template)
         self.log.info('Using template %s' % self.tfile)
         # print 'Using template %s' % self.tfile

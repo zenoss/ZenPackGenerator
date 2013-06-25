@@ -21,9 +21,8 @@ import sys
 import inflect
 import textwrap
 
-from . import colors
 from ._defaults import defaults
-from .colors import error, warn, debug, info, green, red
+from .colors import error, warn, debug, info, green, red, OUTPUT_COLORS
 from .ZenPack import ZenPack
 
 __all__ = ['generate']
@@ -83,7 +82,7 @@ def generate(filename=None):
     #  keeping this here until a better spot opens up
     parser = ZpgOptionParser()
     (opts, args) = parser.parse_known_args()
-    colors.OUTPUT_COLORS = opts.color
+    OUTPUT_COLORS = opts.color
     opts.verbose = 20 + opts.quiet * 10 - opts.verbose * 10
     opts.verbose = 1 if opts.verbose <= 0 else opts.verbose
     logger.setLevel(level=opts.verbose)
