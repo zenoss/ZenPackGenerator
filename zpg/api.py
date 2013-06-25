@@ -12,10 +12,10 @@ LICENSE file at the top-level directory of this package.
 
 """
 
+from argparse import ArgumentParser, FileType
 import json
 import logging
 import os
-from argparse import ArgumentParser
 import sys
 
 import inflect
@@ -39,18 +39,18 @@ class ZpgOptionParser(ArgumentParser):
         # description = textwrap.dedent(description)
         super(ZpgOptionParser, self).__init__(description=description)
         prefix = defaults.get("prefix", os.getcwd())
-        self.add_argument('-p', "--prefix",
-                          dest="prefix", default=prefix,
-                          help="Output folder for the zenpack. [%default]")
+        self.add_argument("input", type=FileType('rt'),
+                          default=sys.stdin,
+                          help="input file")
+        self.add_argument("dest", type=str,
+                          default=prefix,
+                          help="Output folder for the zenpack. [%(default)s]")
         self.add_argument('-V', "--version",
                           dest="version", default="4",
-                          help="Zenpack type to build [%default]")
+                          help="Zenpack type to build [%(default)s]")
         self.add_argument('-s', "--skip", action='store_true',
                           dest="skip", default=False,
                           help="Do Not use cached Templates.")
-        self.add_argument('-j', "--json",
-                          dest="json", default=None,
-                          help="json input")
         self.add_argument("-C", "--no-color", action='store_false',
                           dest="color", default=True,
                           help="Remove color from standard output")
@@ -113,7 +113,7 @@ def generate(filename=None):
         debug(logger, '  Done writing.')
 
     debug(logger, 'Created ZenPack: %s' % green(zp_json.id))
-    fpath = os.path.join(opts.prefix, zp_json.id)
+    fpath = os.path.join(opts.dest, zp_json.id)
     debug(logger, 'Files were placed into: %s' % green(fpath))
     info(logger, green('Generation Complete.'))
 
