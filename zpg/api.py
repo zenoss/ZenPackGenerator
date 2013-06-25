@@ -84,13 +84,13 @@ def generate(filename=None):
     #  keeping this here until a better spot opens up
     parser = ZpgOptionParser()
     (opts, args) = parser.parse_known_args()
+    opts.dest = os.path.abspath(opts.dest)
     OUTPUT_COLORS = opts.color
     opts.verbose = 20 + opts.quiet * 10 - opts.verbose * 10
     opts.verbose = 1 if opts.verbose <= 0 else opts.verbose
     logger.setLevel(level=opts.verbose)
 
     if not filename or not os.path.exists(filename):
-        print opts.input
         if not opts.input or not os.path.exists(str(opts.input)):
             err_msg = "Required input file missing.  exiting...\n"
             error(logger, err_msg)
