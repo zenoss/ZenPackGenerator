@@ -39,10 +39,10 @@ class ZpgOptionParser(ArgumentParser):
         # description = textwrap.dedent(description)
         super(ZpgOptionParser, self).__init__(description=description)
         prefix = defaults.get("prefix", os.getcwd())
-        self.add_argument("input", type=FileType('rt'),
+        self.add_argument("input", type=str, #FileType('rt'),
                           default=sys.stdin,
                           help="input file")
-        self.add_argument("dest", type=str,
+        self.add_argument("dest", type=str, nargs="?",
                           default=prefix,
                           help="Output folder for the zenpack. [%(default)s]")
         self.add_argument('-Z', "--zenpack-version",
@@ -63,7 +63,7 @@ class ZpgOptionParser(ArgumentParser):
 
 
 def generate(filename=None):
-    """Constructs a ZenPack based upon a JSON input file.
+    """Constructs a ZenPack based upon an input file.
 
     Usage::
 
@@ -75,6 +75,8 @@ def generate(filename=None):
 
         This function will parse the commandline if the filename
         is not included.
+
+        Currently only parses JSON files.
     """
     logger = logging.getLogger('ZenPack Generator')
 
@@ -88,11 +90,12 @@ def generate(filename=None):
     logger.setLevel(level=opts.verbose)
 
     if not filename or not os.path.exists(filename):
-        if not opts.json or not os.path.exists(opts.json):
-            err_msg = "Required json input file missing.  exiting...\n"
+        print opts.input
+        if not opts.input or not os.path.exists(str(opts.input)):
+            err_msg = "Required input file missing.  exiting...\n"
             error(logger, err_msg)
             sys.exit(1)
-        filename = opts.json
+        filename = opts.input
 
     if not os.path.exists(filename):
         err_msg = "Input file does not exist! %s" % filename
@@ -101,7 +104,7 @@ def generate(filename=None):
 
     info(logger, 'ZenPack Generator Starting')
     with open(filename, 'r') as f:
-        debug(logger, 'Loading JSON file: %s...' % filename)
+        debug(logger, 'Loading input file: %s...' % filename)
         jsi = json.load(f)
         jsi['opts'] = opts
         debug(logger, '  Loaded.')
@@ -114,7 +117,7 @@ def generate(filename=None):
 
     debug(logger, 'Created ZenPack: %s' % green(zp_json.id))
     fpath = os.path.join(opts.dest, zp_json.id)
-    debug(logger, 'Files were placed into: %s' % green(fpath))
+    info(logger, 'Files were placed into: %s' % green(fpath))
     info(logger, green('Generation Complete.'))
 
 if __name__ == "__main__":
