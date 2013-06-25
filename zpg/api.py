@@ -39,17 +39,17 @@ class ZpgOptionParser(ArgumentParser):
         # description = textwrap.dedent(description)
         super(ZpgOptionParser, self).__init__(description=description)
         prefix = defaults.get("prefix", os.getcwd())
-        group1 = self.add_argument_group('standard')
-        group2 = self.add_argument_group('special')
+        group1 = self.add_argument_group('standard arguments')
+        group2 = self.add_argument_group('special arguments')
         group1.add_argument("input", type=str,  # FileType('rt'),
                           default=sys.stdin, nargs="?",
                           help="input file")
         group1.add_argument("dest", type=str, nargs="?",
                           default=prefix,
                           help="Output folder for the zenpack. [%(default)s]")
-        group1.add_argument('-Z', "--zenpack-version",
-                          dest="zenpack_version", default="4",
-                          help="Zenpack type to build [%(default)s]")
+        group1.add_argument('-Z', "--zenoss_version",
+                          dest="zenoss_version", default="4",
+                          help="Zenoss version compatability [%(default)s]")
         group1.add_argument('-s', "--skip", action='store_true',
                           dest="skip", default=False,
                           help="Do Not use cached Templates.")
