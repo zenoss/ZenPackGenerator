@@ -45,8 +45,8 @@ class ZpgOptionParser(ArgumentParser):
         self.add_argument("dest", type=str,
                           default=prefix,
                           help="Output folder for the zenpack. [%(default)s]")
-        self.add_argument('-V', "--version",
-                          dest="version", default="4",
+        self.add_argument('-Z', "--zenpack-version",
+                          dest="zenpack_version", default="4",
                           help="Zenpack type to build [%(default)s]")
         self.add_argument('-s', "--skip", action='store_true',
                           dest="skip", default=False,
@@ -56,10 +56,10 @@ class ZpgOptionParser(ArgumentParser):
                           help="Remove color from standard output")
         self.add_argument("-q", "--quiet", action="count",
                           dest="quiet", default=0,
-                          help="Output verbosity")
+                          help="Decrease output verbosity")
         self.add_argument("-v", "--verbose", action="count",
                           dest="verbose", default=0,
-                          help="Output verbosity")
+                          help="Increaes output verbosity")
 
 
 def generate(filename=None):
