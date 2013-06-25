@@ -131,7 +131,7 @@ class ${shortklass}(#echo ', '.join($klassNames)#):
 class I${shortklass}Info(I${Type}Info):
 #if $ManyRelationships
 #for $rel in $ManyRelationships
-    ${rel.components[1].relname}_count = schema.Int(title=_t(u'Number of ${rel.components[1].names}))
+    ${rel.components[1].relname}_count = schema.Int(title=_t(u'Number of ${rel.components[1].names}'))
 #end for
 #end if
 #if $properties.values()
