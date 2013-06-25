@@ -72,6 +72,60 @@ class ${shortklass}(#echo ', '.join($klassNames)#):
                     'Unable to determine parent at %s (%s) '
                     'while getting device for %s' % (
                         obj, exc, self))
+#for $key in $updateComponents
+#if $key == '1'
+#for $c in $updateComponents['1']
+
+    def get${c.relname}Id(self):
+        '''
+        Return ${c.relname} id or None.
+
+        Used by modeling.
+        '''
+        obj = self.${c.relname}()
+        if obj: 
+            return obj.id
+
+    def set${c.relname}Id(self, id_):
+        '''
+        Set ${c.relname} by id.
+
+        Used by modeling.
+        '''
+        updateToOne(
+            relationship=self.${c.relname},
+            root=self.device(),
+            type_=${c.id},
+            id_=id_)
+#end for
+#end if
+#if $key == 'M'
+#for $c in $updateComponents['M']
+
+    def get${c.name}Ids(self):
+        '''
+        Return a sorted list of each ${c.relname} id related to this
+        Aggregate.
+
+        Used by modeling.
+        '''
+
+        return sorted([${c.relname}.id for ${c.relname} in self.${c.relnames}.objectValuesGen()])
+
+    def set${c.name}Ids(self, ids):
+        '''
+        Update ${c.name} relationship given ids.
+
+        Used by modeling.
+        '''
+        updateToMany(
+            relationship=self.${c.relnames},
+            root=self.device(),
+            type_=${c.id},
+            ids=ids)
+#end for
+#end if
+#end for
 
 #if $displayInfo
 class I${shortklass}Info(I${Type}Info):

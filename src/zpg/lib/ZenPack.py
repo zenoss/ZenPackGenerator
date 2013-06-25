@@ -21,6 +21,8 @@ from Setup import Setup
 from ZenPackUI import ZenPackUI
 from RootInit import RootInit
 from DirLayout import DirLayout
+from UtilsTemplate import UtilsTemplate
+
 from git import Repo
 
 #from UI import UI
@@ -83,6 +85,7 @@ class ZenPack(object):
         self.namespace_packages = packages[:-1]
 
         self.configure_zcml = Configure(self)
+        self.utils = UtilsTemplate(self)
         self.setup = Setup(self)
         self.rootinit = RootInit(self)
         self.zenpackUI = ZenPackUI(self)
@@ -101,23 +104,15 @@ class ZenPack(object):
 
     @memoize
     def addDeviceClass(self, *args, **kwargs):
-        #if not 'ZenPack' in kwargs:
-        #    kwargs['ZenPack'] = self
         dc = DeviceClass(self, *args, **kwargs)
         return dc
 
     @memoize
     def addComponentType(self, *args, **kwargs):
-        #if not 'zenpack' in kwargs:
-        #    kwargs['zenpack'] = self
         c = Component(self, *args, **kwargs)
         return c
 
-    @memoize
     def addRelation(self, *args, **kwargs):
-        #if not 'ZenPack' in kwargs:
-        #    kwargs['ZenPack'] = self
-
         r = Relationship(self, *args, **kwargs)
         return r
 
@@ -183,5 +178,8 @@ class ZenPack(object):
 
         #Create the root level __init__.py file
         self.rootinit.write()
+
+        # Create a utils file.
+        self.utils.write()
 
         self.updateGitTemplates()

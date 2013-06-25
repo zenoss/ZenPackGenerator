@@ -5,8 +5,8 @@ from setuptools import setup
 # Used for the long_description.  It's nice, because now 1) we have a top level
 # README file and 2) it's easier to type in the README file than to put a raw
 # string in below ...
-def read(fname):
-    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+#def read(fname):
+#    return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(
     name = "ZenPack Generator",
@@ -18,11 +18,11 @@ setup(
     keywords = "zenpack",
     url = "https://github.com/zenoss/ZenPackGenerator",
     package_dir={'': 'src'},
-    packages=['zpg'],
+    package_data={'zpg': ['Templates/*.tmpl']},
+    packages=['zpg', 'zpg.lib', 'zpg.build'],
     install_requires=['Cheetah','PyYaml', 'gitpython', 'inflect', 'Mock'],
     requires=['Cheetah','PyYaml', 'gitpython', 'inflect', 'Mock'],
     entry_points={'console_scripts': ['zpg = zpg.main:main'] },
-    long_description=read('README'),
     classifiers=[
         "Development Status :: 1 - Planning",
         "License :: OSI Approved :: GNU General Public License (GPL)",
