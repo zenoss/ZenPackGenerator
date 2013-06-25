@@ -93,7 +93,7 @@ class ZenPack(ZenPackBase):
             # Stack installs might not have a \$ZENHOME/libexec directory.
             os.mkdir(libexec)
 
-        for plugin in self._plugins:
+        for plugin in _plugins:
             LOG.info('Linking %s plugin into \$ZENHOME/libexec/', plugin)
             plugin_path = zenPath('libexec', plugin)
             os.system('ln -sf "%s" "%s"' % (self.path(plugin), plugin_path))

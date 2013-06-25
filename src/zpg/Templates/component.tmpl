@@ -159,7 +159,7 @@ class ${shortklass}Info(${Type}Info):
 
 #for $rel in $ManyRelationships
     @property
-    def ${rel.components[1].relname}_count:
+    def ${rel.components[1].relname}_count():
         # Using countObjects is fast.
         try:
             return self._object.${rel.components[1].relnames}.countObjects()
