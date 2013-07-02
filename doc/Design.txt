@@ -1,5 +1,0 @@
-1. Template based to make changes easier.
-2. Custom Zenpack builder Templates should be stored in the zenpack.
-3. Data driven design
-4. plugin based to handle different zenoss versions.
-

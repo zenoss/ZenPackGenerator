@@ -52,7 +52,7 @@ class Template(object):
             self.tfile = str(cacheTemplateFile)
         else:
             self.tfile = "%s/Templates/%s" % ("/".join(inspect.getfile(zpg).split('/')[:-1]), self.source_template)
-        log.info('Using template %s' % self.tfile)
+        log.debug('Using template %s' % self.tfile)
         #print 'Using template %s' % self.tfile
 
     def processTemplate(self):
