@@ -5,11 +5,12 @@ from zpg.options import ZpgOptionParser
 import logging
 from lib.ZenPack import ZenPack
 
-logging.basicConfig()
-log = logging.getLogger('ZenPack Generator')
-log.setLevel(level=logging.INFO)
+logging.basicConfig(level=logging.INFO)
+root=logging.getLogger()
+root.setLevel(level=logging.INFO)
 
 def main():
+    log = logging.getLogger('Main')
     log.info('ZenPack Generator Starting')
     parser = ZpgOptionParser()
     (opts, args) = parser.parse_args()
@@ -28,6 +29,7 @@ def main():
     jsi['opts'] = opts
     zp_json=ZenPack(**jsi)
     zp_json.write()
+    log.info('ZenPack Generator Finished')
 
     # import pdb;pdb.set_trace()
     #zp = ZenPack('ZenPacks.training.NetBotz2', opts=opts)
