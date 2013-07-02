@@ -21,6 +21,8 @@ from Setup import Setup
 from ZenPackUI import ZenPackUI
 from RootInit import RootInit
 from DirLayout import DirLayout
+from ObjectsXml import ObjectsXml
+from Organizer import Organizer
 from UtilsTemplate import UtilsTemplate
 
 from git import Repo
@@ -47,6 +49,7 @@ class ZenPack(object):
                  install_requires=None,
                  compat_zenoss_vers=">=4.2",
                  prev_zenpack_name="",
+                 organizers=None,
                  zProperties=None,
                  deviceClasses=None,
                  relationships=None,
@@ -60,6 +63,7 @@ class ZenPack(object):
         self.deviceClasses = {}
         self.components = {}
         self.relationships = {}
+        self.organizers = {}
         self.componentJSs = {}
         self.zproperties = {}
         self.author = author
@@ -74,6 +78,7 @@ class ZenPack(object):
                 self.install_requires = list(install_requires)
         else:
             self.install_requires = []
+
         self.compat_zenoss_vers = compat_zenoss_vers
         self.prev_zenpack_name = prev_zenpack_name
 
@@ -89,6 +94,7 @@ class ZenPack(object):
         self.setup = Setup(self)
         self.rootinit = RootInit(self)
         self.zenpackUI = ZenPackUI(self)
+        self.objects_xml = ObjectsXml(self)
 
         if zProperties:
             for zp in zProperties:
@@ -101,6 +107,20 @@ class ZenPack(object):
         if relationships:
             for rel in relationships:
                 self.addRelation(**rel)
+
+        # Make sure we create the organizers after the deviceClasses 
+        # because we look up the zPythonClasses out of the deviceClasses
+        if organizers:
+            if isinstance(organizers, basestring):
+                organizers = [organizers]
+            else:
+                organizers = list(organizers)
+        else:
+            organizers = []
+
+        for organizer in organizers:
+            self.addOrganizer(**organizer)
+
 
     @memoize
     def addDeviceClass(self, *args, **kwargs):
@@ -115,6 +135,10 @@ class ZenPack(object):
     def addRelation(self, *args, **kwargs):
         r = Relationship(self, *args, **kwargs)
         return r
+
+    def addOrganizer(self, *args, **kwargs):
+        o = Organizer(self, *args, **kwargs)
+        return o
 
     def addZProperty(self, name, type='string', default='', Category=None):
         if type == 'string':
@@ -138,6 +162,9 @@ class ZenPack(object):
         #Add the ComponentJS pieces when we are at it.
         cjs = ComponentJS(deviceClass)
         self.componentJSs[cjs.name] = cjs
+
+    def registerOrganizer(self, organizer):
+        self.organizers[organizer.id] = organizer
 
     def __repr__(self):
         return "%s \n\tAUTHOR: %s\n\tVERSION: %s\n\tLICENSE: %s" \
@@ -181,5 +208,8 @@ class ZenPack(object):
 
         # Create a utils file.
         self.utils.write()
+
+        # Create an objects.xml file
+	self.objects_xml.write()
 
         self.updateGitTemplates()

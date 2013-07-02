@@ -47,6 +47,11 @@ class DirLayout(object):
             f.write("__import__('pkg_resources').declare_namespace(__name__)\n")
             f.close()
 
+        # Create objects.xml dir
+        objects_dir = "%s/%s/objects" % (self.path, '/'.join(parts))
+        if not os.path.exists(objects_dir):
+            os.mkdir(objects_dir)
+
         # Write the manifest ( Not a template because I dont think we have ever modified this file)
         f = open(os.path.join(self.path, 'MANIFEST.in'), 'w')
         f.write("graft ZenPacks\n")

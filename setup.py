@@ -20,8 +20,8 @@ setup(
     package_dir={'': 'src'},
     package_data={'zpg': ['Templates/*.tmpl']},
     packages=['zpg', 'zpg.lib'],
-    install_requires=['Cheetah','PyYaml', 'gitpython', 'inflect', 'Mock'],
-    requires=['Cheetah','PyYaml', 'gitpython', 'inflect', 'Mock'],
+    install_requires=['Cheetah','PyYaml', 'gitpython', 'inflect', 'lxml', 'Mock'],
+    requires=['Cheetah','PyYaml', 'gitpython', 'inflect', 'lxml', 'Mock'],
     entry_points={'console_scripts': ['zpg = zpg.main:main'] },
     classifiers=[
         "Development Status :: 1 - Planning",
