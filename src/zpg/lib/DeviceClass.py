@@ -40,7 +40,6 @@ class DeviceClass(object):
         self.id = self.path
         self.subClasses = {}
         self.zPythonClass = KlassExpand(self.zenpack, zPythonClass)
-        self.ConfigureComponent = "%s.%s" % (self.zPythonClass, self.zPythonClass.split('.')[-1])
         self.DeviceType()
 
         DeviceClass.deviceClasses[self.id] = self

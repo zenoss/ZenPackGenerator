@@ -10,6 +10,7 @@
 
 
 import inflect
+from lxml import etree
 
 plural = inflect.engine().plural
 
@@ -127,6 +128,14 @@ class Property(object):
         else:
             self._value = value
 
-    #def __call__(self):
-    #    '''return the value by default from a property instance.'''
-    #    return self.value
+    def to_objects_xml(self):
+        o=etree.Element("property")
+        o.set('id', self.id)
+        o.set('type', self.Type)
+        if self.id not in ['zendoc', 'description']:
+            o.set('visible', 'True')
+        if self.Type == 'lines':
+            o.text="[%s]" % ', '.join(map(lambda x: "'" + x + "'", self.value))
+        else:
+            o.text = self.value
+        return o
