@@ -33,10 +33,7 @@ class Organizer(object):
         self.name = name
         self.id = name
         self.Type = Type
-        if properties:
-            self.properties = properties
-        else:
-            self.properties = {}
+        self.properties={}
 
         #Dict loading
         if properties:
