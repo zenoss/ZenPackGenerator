@@ -120,9 +120,10 @@ class ZenPack(ZenPackBase):
             cat = ICatalogTool(app.zport.dmd)
 
             # Search the catalog for components of this zenpacks type.
-            for brain in cat.search(types=NEW_COMPONENT_TYPES):
-                component = brain.getObject()
-                component.getPrimaryParent()._delObject(component.id)
+            if NEW_COMPONENT_TYPES:
+                for brain in cat.search(types=NEW_COMPONENT_TYPES):
+                    component = brain.getObject()
+                    component.getPrimaryParent()._delObject(component.id)
 
             # Remove our Device relations additions.
             Device._relations = tuple(
