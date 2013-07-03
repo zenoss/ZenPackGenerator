@@ -46,7 +46,7 @@ class ZpgOptionParser(ArgumentParser):
                             help="input file")
         group1.add_argument("dest", type=str, nargs="?",
                             default=prefix,
-                            help="Output folder for the zenpack. [%(default)s]")
+                            help="Output dest for the zenpack. [%(default)s]")
         group1.add_argument('-Z', "--zenoss_version",
                             dest="zenoss_version", default="4",
                             help="Zenoss version compatability [%(default)s]")

@@ -24,12 +24,10 @@ class ObjectsXml(object):
         clsname = self.__class__.__name__
         return logging.getLogger(clsname)
 
-    def __init__(self,
-                 zenpack
-                 ):
-        '''Args:
+    def __init__(self, zenpack):
+        """Args:
                  zenpack: ZenPack class instance
-        '''
+        """
         self.zenpack = zenpack
         destpath = self.zenpack.destdir.path
         zenpath = '/'.join(self.zenpack.id.split('.'))
@@ -45,7 +43,7 @@ class ObjectsXml(object):
         return results
 
     def write(self):
-        '''Write the object.xml file'''
+        """Write the object.xml file"""
         self.to_objects_xml()
         if os.path.exists(self.objects_xml):
             msgs = ['objects.xml already exists.  Skipping....',
