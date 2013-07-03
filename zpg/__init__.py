@@ -49,6 +49,8 @@ from .Configure import Configure
 from .DeviceClass import DeviceClass
 from .DirLayout import DirLayout, initpy
 from .License import License
+from .ObjectsXml import ObjectsXml
+from .Organizer import Organizer
 from .Property import Property
 from .Relationship import Relationship
 from .RootInit import RootInit

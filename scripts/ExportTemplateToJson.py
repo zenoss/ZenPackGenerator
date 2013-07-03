@@ -25,8 +25,12 @@ log = logging.getLogger("zen.JsonTemplateLoader")
 def ExportProps(obj, primaryKey='uid', excludes=[]):
     lcl_data = {}
     for prop in dir(obj):
-        if prop.startswith('_') or prop.startswith('set') or prop in excludes \
-           or prop == primaryKey or prop in ['rename', 'meta_type', 'inspector_type']:
+        ignored_props = ['rename', 'meta_type', 'inspector_type']
+        excludes.extend(ignored_props)
+        if (prop.startswith('_')
+            or prop.startswith('set')
+            or prop in excludes
+            or prop == primaryKey):
             continue
         try:
             value = getattr(obj, prop)
@@ -81,33 +85,33 @@ def TemplatesToJSONFile(dmd, templates, filename):
             data_ds[ds.name]['datapoints'] = data_dp
         data[id_]["datasources"] = data_ds
 
-    # Find the thresholds
-    data_thresh = {}
-    for threshold in tf.getThresholds(rrdTemplate.uid):
-        data_thresh[threshold.name] = ExportProps(
-            threshold, excludes=['getDescription', 'eventClass', 'dsnames',
-                                 'getName', 'getDescription', 'id',
-                                 'name', 'newId'])
-        data[id_]["thresholds"] = data_thresh
+        # Find the thresholds
+        data_thresh = {}
+        for threshold in tf.getThresholds(rrdTemplate.uid):
+            excludes = ['getDescription', 'eventClass', 'dsnames', 'getName',
+                        'getDescription', 'id', 'name', 'newId']
+            data_thresh[threshold.name] = ExportProps(threshold,
+                                                      excludes=excludes)
+            data[id_]["thresholds"] = data_thresh
 
-    # Find the graphs
-    data_graph = {}
-    for graph in tf.getGraphs(rrdTemplate.uid):
-        data_graph[graph.name] = ExportProps(
-            graph, excludes=['getDescription', 'getName', 'id',
-                             'name', 'newId', 'graphPoints',
-                             'rrdVariables', 'fakeGraphCommands'])
+        # Find the graphs
+        data_graph = {}
+        for graph in tf.getGraphs(rrdTemplate.uid):
+            excludes=['getDescription', 'getName', 'id', 'name', 'newId',
+                      'graphPoints', 'rrdVariables', 'fakeGraphCommands']
+            data_graph[graph.name] = ExportProps(graph, excludes=excludes)
 
-        # Find the graph points
-        data_graph_point = {}
-        for graph_point in tf.getGraphPoints(graph.uid):
-            data_graph_point[graph_point.name] = ExportProps(
-                graph_point, excludes=['getDescription', 'getName',
-                                       'id', 'name', 'newId', 'rrdVariables'])
+            # Find the graph points
+            data_graph_point = {}
+            for graph_point in tf.getGraphPoints(graph.uid):
+                excludes=['getDescription', 'getName', 'id', 'name', 'newId',
+                          'rrdVariables']
+                data_graph_point[graph_point.name] = ExportProps(graph_point,
+                                                            excludes=excludes)
+            data_graph[graph.name]["graphpoints"] = data_graph_point
 
-        data_graph[graph.name]["graphpoints"] = data_graph_point
+        data[id_]["graphs"] = data_graph
 
-    data[id_]["graphs"] = data_graph
     with open(filename, 'w') as outputfile:
         json.dump(data, outputfile, indent=1,
                   sort_keys=True, separators=(',', ': '))
@@ -120,7 +124,8 @@ class ExportTemplate(ZenScriptBase):
         self.parser.add_option("-f", "--file", dest="filename",
                                help="write json to FILE", metavar="FILE")
         self.parser.add_option("-z", "--zenpack", dest="zenpack",
-                               help="ZenPack to Dump Templates From", metavar="ZenPack")
+                               help="ZenPack to Dump Templates From",
+                               metavar="ZenPack")
 
     def parseOptions(self):
         ZenScriptBase.parseOptions(self)
@@ -135,7 +140,8 @@ class ExportTemplate(ZenScriptBase):
             self.zenpack = self.dmd.ZenPackManager.packs._getOb(
                 self.options.zenpack, None)
             if not self.zenpack:
-                print "%s is not a valid Zenpack. Exiting...." % self.options.zenpack
+                msg = "%s is not a valid Zenpack. Exiting...."
+                print msg % self.options.zenpack
                 sys.exit(1)
 
         if not self.zenpack:

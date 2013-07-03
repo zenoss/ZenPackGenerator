@@ -34,6 +34,7 @@ requires = [
     'gitpython',
     'colorama',
     'inflect',
+    'lxml',
     'Mock',
 ]
 
@@ -67,6 +68,4 @@ setup(
         "Topic :: Software Development :: Code Generators",
         "Topic :: System :: Monitoring"
     ],
-    # https://pypi.python.org/pypi?%3Aaction=list_classifiers
-
 )

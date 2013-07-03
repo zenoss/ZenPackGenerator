@@ -56,8 +56,8 @@
 #for $cjs in $componentJSs.values()
     <browser:viewlet
         name="js-${cjs.name}"
-        paths="/++resource++${cjs.name}/js/${cjs.name}.js"
-        for="${cjs.zPythonClass}"
+        paths="/++resource++${zenpack.prepname}/js/${cjs.name}.js"
+        for="${cjs.ConfigureComponent}"
         weight="20"
         manager="Products.ZenUI3.browser.interfaces.IJavaScriptSrcManager"
         class="Products.ZenUI3.browser.javascript.JavaScriptSrcBundleViewlet"

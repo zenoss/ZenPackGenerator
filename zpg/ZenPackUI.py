@@ -8,18 +8,15 @@
 #
 #
 
-from ._zenoss_utils import zpDir
 from .Template import Template
+from ._zenoss_utils import zpDir
 
 
 class ZenPackUI(Template):
-
     """Build the ZenPack global js file to register components."""
-
     def __init__(self, ZenPack):
         super(ZenPackUI, self).__init__(ZenPack)
         self.zenpack = ZenPack
-
         self.source_template = 'zenpackjs.tmpl'
         self.dest_file = "%s/resources/js/%s.js" % (
             zpDir(self.zenpack), self.zenpack.id)

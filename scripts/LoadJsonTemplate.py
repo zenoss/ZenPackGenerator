@@ -25,6 +25,7 @@ from Products.Zuul import info as ZuulInfo
 from Products.Zuul.facades import ObjectNotFoundException
 
 log = logging.getLogger("zen.JsonTemplateLoader")
+fix_ids = []
 
 
 def die(message):
@@ -43,24 +44,47 @@ def JSONFileToTemplates(dmd, jsonFile, ZenPack):
             add_template(dmd, template_path, template_cfg, ZenPack)
         print "Templates loaded successfully."
         commit()
+
+        process_fix_ids()
+        commit()
     else:
         print "No template found... exiting..."
         sys.exit(0)
 
 
 def JSONStringToTemplates(dmd, jsonString, ZenPack):
+    global fix_ids
+
     data = None
     data = json.loads(jsonString, object_pairs_hook=collections.OrderedDict)
 
     if data:
+        fix_ids = []
+
         for template_path, template_cfg in data.items():
             add_template(dmd, template_path, template_cfg, ZenPack)
         print "Templates loaded successfully."
+        commit()
+
+        process_fix_ids()
         commit()
     else:
         print "No template found... exiting..."
         sys.exit(0)
 
+def fix_id(object, newId):
+    global fix_ids
+    fix_ids.append((object, newId, ))
+
+def process_fix_ids():
+    # in some cases, the objects get created with default IDs, and we need to fix them
+    # to match the json file.  It seems that we need to wait until the initial version is
+    # commit()ed, then rename them.
+    if fix_ids:
+        print "Renaming objects:"
+        for object, newId in fix_ids:
+            print "  %s => %s" % (object, newId)
+            object.rename(str(newId))
 
 def add_template(dmd, path, cfg, zenpack):
     tf = getFacade('template', dmd)
@@ -235,19 +259,31 @@ def add_graphpoint(dmd, device_class, template, graph, id_, cfg):
         print "GraphPoint of %s is not supported yet." % cfg['type']
         return
 
-    try:
-        graphpoint = [gp for gp in tf.getGraphPoints(
-            graph.uid) if gp.dpName == cfg['dpName']][0]
-    except Exception:
-        graphpoint = [
-            gp for gp in tf.getGraphPoints(graph.uid) if gp.id == id_][0]
+    # Normally we would try to find the created graphpoint by UID, but since we don't know that
+    # we will find all graphpoints with the datapoint name.  If there are more than one,
+    # we're in trouble.
+    graphpoints = [gp for gp in tf.getGraphPoints(graph.uid) if gp.dpName == cfg['dpName']]
+    if len(graphpoints) != 1:
+        # don't really know what to do here.. really, the only option is to delete the
+        # pre-existing ones and hope there's only one in the json, but for now i'm leaving
+        # that as an exercise to the user.
+        print "Error: Expected to find one graphpoint, but found %d instead." % len(graphpoints)
+        return
 
-    len(graphpoint)
+    graphpoint = graphpoints[0]
 
     # Apply cfg items directly to graph attributes.
     for k, v in cfg.items():
         if k not in ('type'):
-            setattr(graph, k, v)
+            if k == 'description':
+                graphpoint.setDescription(v)
+            else:
+                setattr(graphpoint, k, v)
+
+    # Fix the graphpoint name/ID.  addDataPointToGraph sets it to a default value, but the
+    # import file may have a different one specified.
+    if graphpoint.id != id_:
+        fix_id(graphpoint, id_)
 
 
 def add_threshold(dmd, device_class, template, id_, cfg):

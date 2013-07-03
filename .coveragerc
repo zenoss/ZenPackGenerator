@@ -13,3 +13,4 @@ omit =
        *git*
        *Cheetah*
        *memoize*
+       *platform*

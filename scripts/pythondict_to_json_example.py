@@ -9,6 +9,13 @@
 #
 
 data = {'id': 'ZenPacks.training.NetBotz',
+        'organizers': [{"name": "Devices/Server/Dell/Blade",
+                        "Type": "DeviceClass",
+                        "properties": [{"name": "zPingMonitorIgnore", "Type": "boolean", "value": "True"},
+                                       {"name": "zDeviceTemplates",
+                                        "Type": "lines",
+                                        "value": ['example.Template']}]
+                        }],
         'zProperties': [{'name': 'zNetBotzExample', 'Type': 'boolean', 'default': True, 'group': 'NetBotz'},
                         {'name': 'e1'}
                         ],

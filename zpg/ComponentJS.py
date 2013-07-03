@@ -23,6 +23,7 @@ class ComponentJS(Template):
         self.deviceClass = deviceClass
         self.zenpack = self.deviceClass.zenpack
         self.zPythonClass = self.deviceClass.zPythonClass
+        self.ConfigureComponent = "%s.%s" % (self.zPythonClass, self.zPythonClass.split('.')[-1])
 
         self.source_template = 'component.js.tmpl'
         self.dest_file = "%s/resources/js/%s.js" % (

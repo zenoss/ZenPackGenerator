@@ -241,6 +241,10 @@ class Component(Template):
             imports += "import DefaultPathReporter, relPath"
             self.imports.append(imports)
 
+        if custompaths:
+            imports = "from Products.Zuul.catalog.paths import DefaultPathReporter, relPath"
+            self.imports.append(imports)
+
         return custompaths
 
     def findUpdateComponents(self):
@@ -314,11 +318,18 @@ class Component(Template):
 
     def displayIInfo(self):
         '''return True if we should build the IInfo Class'''
+<<<<<<< HEAD:zpg/Component.py
         name = "Products.Zuul.interfaces"
         if self.device:
             imports = "from %s import IDeviceInfo" % name
         else:
             imports = "from %s.component import IComponentInfo" % name
+=======
+        if self.device:
+            imports = "from Products.Zuul.interfaces import IDeviceInfo"
+        else:
+            imports = "from Products.Zuul.interfaces.component import IComponentInfo"
+>>>>>>> zenoss:src/zpg/lib/Component.py
 
         for p in self.properties.values():
             if p.detailDisplay:
@@ -384,7 +395,11 @@ class Component(Template):
         def f7(seq):
             seen = set()
             seen_add = seen.add
+<<<<<<< HEAD:zpg/Component.py
             return [x for x in seq if x not in seen and not seen_add(x)]
+=======
+            return [ x for x in seq if x not in seen and not seen_add(x)]
+>>>>>>> zenoss:src/zpg/lib/Component.py
 
         # Remove duplicates
         self.imports = f7(self.imports)
