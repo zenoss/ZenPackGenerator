@@ -22,7 +22,10 @@ import inflect
 import textwrap
 
 from ._defaults import defaults
-from .colors import error, warn, debug, info, green, red, OUTPUT_COLORS
+try:
+    from .colors import error, warn, debug, info, green, red, OUTPUT_COLORS
+except:
+    pass
 from .ZenPack import ZenPack
 
 __all__ = ['generate']
