@@ -172,14 +172,14 @@ class ZenPack(object):
 
     def updateGitTemplates(self): # pragma: no cover
         # Create the git repo
-        repo = Repo.init(self.destdir .path)
+        repo = Repo.init(self.destdir.path)
         try:
             repo.commit()
         except:
             repo.index.commit('Initial Commit from zpg')
 
         #Update the repo
-        repo.index.add([self.destdir .path+'/Templates'])
+        repo.index.add([self.destdir.path+'/Templates'])
 
         if repo.is_dirty():
             repo.index.commit('zpg: Committed Template changes')
