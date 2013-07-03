@@ -1,4 +1,3 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -14,7 +13,7 @@
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     '',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -136,7 +135,7 @@ to leave the generator and tweak the ZenPack by hand.</p>
                                                            <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;temp_sensor_count&quot;</span> <span class="p">}</span> <span class="p">]</span> <span class="p">},</span>
                          <span class="s">&quot;path&quot;</span><span class="p">:</span> <span class="s">&quot;Device/Snmp&quot;</span><span class="p">,</span>
                          <span class="s">&quot;zPythonClass&quot;</span><span class="p">:</span> <span class="s">&quot;NetBotzDevice&quot;</span> <span class="p">}</span>
-                     <span class="p">],</span>
+                     <span class="p">]</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -154,6 +153,11 @@ to leave the generator and tweak the ZenPack by hand.</p>
 <p>At this point you can modify the templates found in <cite>/tmp/zpg/ZenPacks.training.NetBotz/Templates</cite>
 and then rerun <cite>zpg -j netbotz.json -p /tmp/zpg</cite> to regenerate your zenpack with the modified templates.  Once you find the Generator to be too limiting move on to modifying the zenpack following the normal procedures.</p>
 </div>
+<div class="section" id="development">
+<h2>Development<a class="headerlink" href="#development" title="Permalink to this headline">¶</a></h2>
+<p>Unit tests and code coverage can be checked with the following command.</p>
+<p><cite>nosetests &#8211;with-coverage &#8211;cover-erase</cite></p>
+</div>
 </div>
 
 
@@ -169,6 +173,7 @@ and then rerun <cite>zpg -j netbotz.json -p /tmp/zpg</cite> to regenerate your z
 <li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
 <li><a class="reference internal" href="#installation">Installation</a></li>
 <li><a class="reference internal" href="#quick-start">Quick Start</a></li>
+<li><a class="reference internal" href="#development">Development</a></li>
 </ul>
 </li>
 </ul>
@@ -218,8 +223,8 @@ and then rerun <cite>zpg -j netbotz.json -p /tmp/zpg</cite> to regenerate your z
     </div>
     <div class="footer">
         &copy; Copyright 2013, Zenoss, Inc..
-      Last updated on May 30, 2013.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Last updated on Jul 03, 2013.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
     </div>
   </body>
 </html>

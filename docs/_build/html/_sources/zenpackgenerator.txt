@@ -81,4 +81,9 @@ You will find the ZenPack in `/tmp/zpg/ZenPacks.training.NetBotz`
 At this point you can modify the templates found in `/tmp/zpg/ZenPacks.training.NetBotz/Templates`
 and then rerun `zpg -j netbotz.json -p /tmp/zpg` to regenerate your zenpack with the modified templates.  Once you find the Generator to be too limiting move on to modifying the zenpack following the normal procedures.
 
+Development
+-----------------------------------------------------------------------------
 
+Unit tests and code coverage can be checked with the following command.
+
+`nosetests --with-coverage --cover-erase`
