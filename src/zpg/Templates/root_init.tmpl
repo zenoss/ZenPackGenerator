@@ -108,7 +108,7 @@ class ZenPack(ZenPackBase):
             os.system('chmod 0755 %s' % plugin_path)
 
     def remove_plugin_symlinks(self):
-        for plugin in self._plugins:
+        for plugin in _plugins:
             LOG.info('Removing %s link from \$ZENHOME/libexec/', plugin)
             os.system('rm -f "%s"' % zenPath('libexec', plugin))
 
