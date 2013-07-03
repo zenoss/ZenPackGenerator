@@ -84,22 +84,11 @@ class ${zenpack.prepname}_${c.shortklass}RelationsProvider(BaseRelationsProvider
     def getEdges(self):
         my_guid = GUID(self._object)
 
-for $impactedBy in $c.impactedBy
-        # Impacted by $impacteBy
-        for $impacteBy in self._object.raidgroups():
+#for $impactedBy in $c.impactedBy
+        # Impacted by $impactedBy
+        for $impactedBy in self._object.raidgroups():
             if isinstance(raidgroup, RAIDGroup):
                 yield ImpactEdge(GUID(raidgroup), my_guid, RP)
+#end for
 #end if
 #end for
-
-class {ZP}{COMPONENT}RelationsProvider(BaseRelationsProvider):
-    adapts(COMPONENT)
-
-    def getEdges(self):
-        my_guid = GUID(self._object)
-
-	
-        component impactedBy componentB
-        componentC impacts component
-
-impact: [{"component": 'Device', "impacts": ['VServers'], "impactedBy": ['SystemNode']}

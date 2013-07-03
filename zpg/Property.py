@@ -78,13 +78,15 @@ class Property(object):
         """Input validation for the type"""
         self._Type = None
         # Zope Types we are supporting
-        valid_zope_types = ['string', 'text', 'list', 'int', 'bool',
+        valid_zope_types = ['string', 'text', 'list', 'lines', 'int', 'bool',
                             'long', 'boolean', 'float', 'password']
         # All Zope types
         # boolean,date,float,int,list,
         # long,string,text,tokens,selection,multiple_selection
         if Type is not None and Type in valid_zope_types:
             self._Type = Type
+            if self._Type == 'lines':
+                self._Type = 'list'
         else:
             if isinstance(Type, str):
                 self._Type = 'string'

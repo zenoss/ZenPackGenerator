@@ -20,14 +20,6 @@ class ImpactZcml(Template):
                  ):
         '''Args:
                  zenpack: ZenPack class instance
-                 impactArray: [
-                                component: Reference Component
-                                impacts: An Array of components that
-                                         impact the reference component.
-                                impactedBy: An Array of components that
-                                            are impacted by the reference
-                                            component.
-                              ]
 
         '''
 
