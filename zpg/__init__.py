@@ -61,12 +61,6 @@ from .ZenPack import ZenPack, Opts
 
 __all__ = [
     "defaults",
-    "__title__",
-    "__version__",
-    "__build__",
-    "__author__",
-    "__license__",
-    "__copyright__",
     "generate",
     "ZenPack"
 ]
