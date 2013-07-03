@@ -48,7 +48,7 @@ for relname, modname in NEW_DEVICE_RELATIONS:
     if relname not in (x[0] for x in Device._relations):
         Device._relations += (
             (relname, ToManyCont(ToOne,
-            '.'.join((ZENPACK_NAME, modname)), '${c.unique_name}_host')),
+            '.'.join((ZENPACK_NAME, modname)), '%s_host' % modname )),
             )
 
 # Useful to avoid making literal string references to module and class names
@@ -86,14 +86,6 @@ class ZenPack(ZenPackBase):
 
         self._buildDeviceRelations()
         self.symlink_plugins()
-
-##if $organizers
-##        # We expect these organizers to exists, but don't want to add 
-##        # them to objects.xml in case someone removes this ZenPack.
-###for $organizers in $organizers
-##        app.zport.dmd.createOrganizer('${organizer}')
-###end for
-###end if
 
     def symlink_plugins(self):
         libexec = os.path.join(os.environ.get('ZENHOME'), 'libexec')
