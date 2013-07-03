@@ -19,7 +19,6 @@ import os
 import sys
 
 import inflect
-import textwrap
 
 from ._defaults import defaults
 from .colors import error, warn, debug, info, green, red, disable_color
@@ -36,7 +35,6 @@ class ZpgOptionParser(ArgumentParser):
 
     def __init__(self):
         description = self.__class__.__doc__
-        # description = textwrap.dedent(description)
         super(ZpgOptionParser, self).__init__(description=description)
         prefix = defaults.get("prefix", os.getcwd())
         group1 = self.add_argument_group('standard arguments')
@@ -136,6 +134,10 @@ def generate(filename=None):
         if filetype == 'json':
             jsi = json.load(f)
             jsi['opts'] = opts
+        else:
+            err_msg = "File Type not supported: %s" % filename
+            error(logger, err_msg)
+            sys.exit(1)
         debug(logger, '  Loaded.')
         debug(logger, 'Populating ZenPack...')
         zp_json = ZenPack(**jsi)
