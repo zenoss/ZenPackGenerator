@@ -17,6 +17,7 @@ from ._zenoss_utils import KlassExpand
 
 
 class Organizer(object):
+
     "Placeholder for Organizer types."
 
     def __init__(self,
@@ -34,8 +35,8 @@ class Organizer(object):
         self.name = name
         self.id = name
         self.Type = Type
-        self.properties={}
-        #Dict loading
+        self.properties = {}
+        # Dict loading
         if properties:
             for p in properties:
                 self.addProperty(**p)
@@ -43,9 +44,9 @@ class Organizer(object):
         dc_search = '/zport/dmd/%s' % name
         dev_classes = self.zenpack.deviceClasses
         if dc_search in dev_classes:
-            p = { 'name': 'zPythonClass',
-                  'Type': 'string',
-                  'value': dev_classes[dc_search].zPythonClass
+            p = {'name': 'zPythonClass',
+                 'Type': 'string',
+                 'value': dev_classes[dc_search].zPythonClass
                  }
             self.addProperty(**p)
         self.zenpack.registerOrganizer(self)
@@ -58,9 +59,9 @@ class Organizer(object):
     def to_objects_xml(self):
         """Returns an xml tree if the Organizer is a Device Class"""
         if self.Type == 'DeviceClass':
-    	    o=etree.Element("object",
-                            module="Products.ZenModel.DeviceClass",
-                            id="/zport/dmd/%s" % self.name)
+            o = etree.Element("object",
+                              module="Products.ZenModel.DeviceClass",
+                              id="/zport/dmd/%s" % self.name)
             # Cant set special keyword class in the constructor so do it
             #  in a second step.
             o.set('class', 'DeviceClass')

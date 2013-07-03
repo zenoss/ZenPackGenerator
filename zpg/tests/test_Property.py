@@ -47,7 +47,7 @@ class TestPropertyCreate(SimpleSetup):
         cp4 = Property('string', value='a')
         cp5 = Property('int', value=1)
         cp6 = Property('float', value=1.0)
-        cp7 = Property('lines', value=['a', 'b'])
+        cp7 = Property('list', value=['a', 'b'])
         cp8 = Property('checksum_enabled', value=True)
         self.assertEqual(cp1.Type, 'string')
         self.assertEqual(cp2.Type, 'int')
@@ -55,14 +55,14 @@ class TestPropertyCreate(SimpleSetup):
         self.assertEqual(cp4.Type, 'string')
         self.assertEqual(cp5.Type, 'int')
         self.assertEqual(cp6.Type, 'float')
-        self.assertEqual(cp7.Type, 'lines')
+        self.assertEqual(cp7.Type, 'list')
         self.assertEqual(cp8.Type, 'boolean')
 
     def test_addPropertyValuesInit(self):
         cp1 = Property('blocksize', Type='string', value='3')
         cp2 = Property('raid_size', Type='int', value=2)
         cp3 = Property('checksum_enabled', Type='boolean', value=True)
-        cp4 = Property('checksum_enabled', Type='lines', value=['a', 'b'])
+        cp4 = Property('checksum_enabled', Type='list', value=['a', 'b'])
         self.assertEqual(cp1.value, '3')
         self.assertEqual(cp2.value, 2)
         self.assertEqual(cp3.value, True)
@@ -78,10 +78,10 @@ class TestPropertySchema(SimpleSetup):
     def testText(self):
         string1 = Property('String', Type='string')
         text1 = Property('Text', Type='text')
-        lines1 = Property('Lines', Type='lines')
+        list1 = Property('Lines', Type='list')
         self.assertEqual(string1.Schema(), 'TextLine')
         self.assertEqual(text1.Schema(), 'TextLine')
-        self.assertEqual(lines1.Schema(), 'TextLine')
+        self.assertEqual(list1.Schema(), 'TextLine')
 
     def testBool(self):
         bool1 = Property('Bool', Type='bool')

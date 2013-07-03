@@ -13,8 +13,11 @@ from lxml import etree
 
 plural = inflect.engine().plural
 
+
 class Property(object):
+
     """Define a properties capabilities inside a Component."""
+
     def __init__(self,
                  name,
                  value=None,
@@ -51,7 +54,7 @@ class Property(object):
         self.sortable = True
         self.width = width
         self.panelRenderer = panelRenderer
-        self.Type = Type if Type else type(value)
+        self.Type = Type if Type else value
         self.value = value
 
     def Schema(self):
@@ -80,7 +83,7 @@ class Property(object):
         # All Zope types
         # boolean,date,float,int,list,
         # long,string,text,tokens,selection,multiple_selection
-        if Type and Type.lower() in valid_zope_types:
+        if Type is not None and Type in valid_zope_types:
             self._Type = Type
         else:
             if isinstance(Type, str):

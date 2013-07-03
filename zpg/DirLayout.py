@@ -15,7 +15,9 @@ import sys
 def initpy(source):
     return "/".join([source, '__init__.py'])
 
+
 class DirLayout(object):
+
     """Write the ZenPack directory structure."""
 
     def __init__(self, zenpack, prefix):

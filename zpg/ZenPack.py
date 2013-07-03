@@ -187,5 +187,5 @@ class ZenPack(object):
         # Create a utils file.
         self.utils.write()
         # Create an objects.xml file
-    	self.objects_xml.write()
+        self.objects_xml.write()
         self.updateGitTemplates()

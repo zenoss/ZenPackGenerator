@@ -15,13 +15,14 @@ from lxml import etree
 
 
 class ObjectsXml(object):
+
     """Build the objects xml file"""
 
     @property
     def log(self):
         """Logger for class using class name"""
         clsname = self.__class__.__name__
-        logging.getLogger(clsname)
+        return logging.getLogger(clsname)
 
     def __init__(self,
                  zenpack
@@ -38,7 +39,7 @@ class ObjectsXml(object):
     def to_objects_xml(self):
         root = etree.XML('<?xml version="1.0"?><objects></objects>')
         for organizer in self.zenpack.organizers.values():
-	    root.append(organizer.to_objects_xml())
+            root.append(organizer.to_objects_xml())
         results = etree.tostring(root, xml_declaration=True,
                                  pretty_print=True)
         return results
@@ -51,7 +52,7 @@ class ObjectsXml(object):
                     '\t\tRemove the objects.xml if you wish to use the '
                     'generator to create a new one.']
             self.log.info("\n".join(msgs))
-    	else:
-    	    self.log.info('Generating base objects.xml file.')
-                with open(self.objects_xml, 'w') as obj_xml_file:
-                    obj_xml_file.write(self.to_objects_xml())
+        else:
+            self.log.info('Generating base objects.xml file.')
+            with open(self.objects_xml, 'w') as obj_xml_file:
+                obj_xml_file.write(self.to_objects_xml())

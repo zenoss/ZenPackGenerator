@@ -42,29 +42,29 @@ class ZpgOptionParser(ArgumentParser):
         group1 = self.add_argument_group('standard arguments')
         group2 = self.add_argument_group('special arguments')
         group1.add_argument("input", type=str,  # FileType('rt'),
-                          default=sys.stdin, nargs="?",
-                          help="input file")
+                            default=sys.stdin, nargs="?",
+                            help="input file")
         group1.add_argument("dest", type=str, nargs="?",
-                          default=prefix,
-                          help="Output folder for the zenpack. [%(default)s]")
+                            default=prefix,
+                            help="Output folder for the zenpack. [%(default)s]")
         group1.add_argument('-Z', "--zenoss_version",
-                          dest="zenoss_version", default="4",
-                          help="Zenoss version compatability [%(default)s]")
+                            dest="zenoss_version", default="4",
+                            help="Zenoss version compatability [%(default)s]")
         group1.add_argument('-s', "--skip", action='store_true',
-                          dest="skip", default=False,
-                          help="Do Not use cached Templates.")
+                            dest="skip", default=False,
+                            help="Do Not use cached Templates.")
         group1.add_argument("-C", "--no-color", action='store_false',
-                          dest="color", default=True,
-                          help="Remove color from standard output")
+                            dest="color", default=True,
+                            help="Remove color from standard output")
         group1.add_argument("-q", "--quiet", action="count",
-                          dest="quiet", default=0,
-                          help="Decrease output verbosity")
+                            dest="quiet", default=0,
+                            help="Decrease output verbosity")
         group1.add_argument("-v", "--verbose", action="count",
-                          dest="verbose", default=0,
-                          help="Increase output verbosity")
+                            dest="verbose", default=0,
+                            help="Increase output verbosity")
         group2.add_argument('-V', "--version", action="store_true",
-                          dest="version", default=False,
-                          help="Display version of %(prog)s")
+                            dest="version", default=False,
+                            help="Display version of %(prog)s")
 
 
 def determine_file_type(filename):
@@ -76,6 +76,7 @@ def determine_file_type(filename):
     elif filename.endswith('.xml'):
         filetype = 'xml'
     return filetype
+
 
 def generate(filename=None):
     """Constructs a ZenPack based upon an input file.
