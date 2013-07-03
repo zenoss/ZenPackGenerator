@@ -37,7 +37,9 @@ class Component(Template):
                  panelSort='name',
                  panelSortDirection='asc',
                  properties=None,
-                 componentTypes=None
+                 componentTypes=None,
+                 impacts=None,
+                 impactedBy=None,
                  ):
         """Args:
                  name: Component Name
@@ -56,6 +58,9 @@ class Component(Template):
                  componentTypes: an array of dictionaries of component
                              information which will create componentType
                              objects
+                 impacts: an array of components that this component impacts.
+                 impactedBy: an array of components that impact this component.
+        '''
 
         """
         super(Component, self).__init__(zenpack)
@@ -111,6 +116,8 @@ class Component(Template):
                 self.addComponentType(**component)
 
         self.updateComponents = {}
+        self.impacts = impacts
+        self.impactedBy = impactedBy
 
     def __lt__(self, other):
         """Implemented for sort operations"""
@@ -361,6 +368,14 @@ class Component(Template):
             return [x for x in seq if x not in seen and not seen_add(x)]
         # Remove duplicates
         self.imports = f7(self.imports)
+
+    def hasImpact(self):
+        # Return true if we have an impact relationship
+        if self.impacts:
+            return True
+        if self.impactedBy:
+            return True
+        return False
 
     def write(self):
         """Write the component files"""
