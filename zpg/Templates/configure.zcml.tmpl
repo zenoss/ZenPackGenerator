@@ -66,4 +66,17 @@
 
 #end for
 #end if
+#if $impactAdapters
+    <!-- Includes -->
+    <include
+        file="impact.zcml"
+        xmlns:zcml="http://namespaces.zope.org/zcml"
+        zcml:condition="installed ZenPacks.zenoss.Impact"
+        />
+
+    <!-- Dynamic View Configuration
+    <include package=".model"/>
+    -->
+
+#end if
 </configure>
