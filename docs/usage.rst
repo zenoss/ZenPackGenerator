@@ -9,7 +9,7 @@ Basic usage information can be generated from the Generators help mechanism.
 The most basic usage will involve creating a json input and then specifying a destination
 prefix for the ZenPack.
 
-* zpg -j :doc:`input.json <jsonformat>` -p /tmp/output
+* zpg :doc:`input.json <jsonformat>` /tmp/output
 
 Best practices indicate moving the input.json file into /tmp/output/*<ZenPack>* once you have run the generator.  You may wish to use the json again to regenerate the ZenPack.
 

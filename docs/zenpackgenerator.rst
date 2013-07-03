@@ -72,14 +72,14 @@ Quick Start
   .. include:: netbotzExample.txt
   See the :doc:`Json Format guide <jsonformat>` for more examples of the json input file.
 
-* run the command `zpg -j netbotz.json -p /tmp/zpg`
+* run the command `zpg examples/netbotz.json /tmp/zpg`
 
-    * /tmp/zpg is the destination prefix for the generated ZenPack.
+    * /tmp/zpg is the destination folder for the generated ZenPack.
 
 You will find the ZenPack in `/tmp/zpg/ZenPacks.training.NetBotz`
 
 At this point you can modify the templates found in `/tmp/zpg/ZenPacks.training.NetBotz/Templates`
-and then rerun `zpg -j netbotz.json -p /tmp/zpg` to regenerate your zenpack with the modified templates.  Once you find the Generator to be too limiting move on to modifying the zenpack following the normal procedures.
+and then rerun `zpg examples/netbotz.json /tmp/zpg` to regenerate your zenpack with the modified templates.  Once you find the Generator to be too limiting move on to modifying the zenpack following the normal procedures.
 
 Development
 -----------------------------------------------------------------------------

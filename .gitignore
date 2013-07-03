@@ -2,4 +2,6 @@
 *.egg-info
 *.swp
 .coverage
-src/zpg/build
+build
+dist
+ZenPacks.training.NetBotz 

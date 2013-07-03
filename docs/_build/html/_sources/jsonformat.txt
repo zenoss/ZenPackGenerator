@@ -21,6 +21,7 @@ Json Options for a ZenPack::
       "install_requires": "",
       "compat_zenoss_vers": ">=4.2",
       "prev_zenpack_name": "",
+      "organizers": [],
       "zProperties": [],
       "deviceClasses": [],
       "relationships": []
@@ -38,7 +39,7 @@ Json Options for a ZenPack::
 * zproperties: An Array of :ref:`zproperty` elements. [optional]
 * deviceClasses: An Array of :ref:`deviceClass` elements. [optional]
 * relationships: An Array of :ref:`relationship` elements. [optional]
-
+* organizers: An Array of :ref:`organizer` elements. [optional]
 
 .. _zproperty:
 
@@ -83,6 +84,26 @@ Json Options for a deviceClass::
     * The component can be in :ref:`shorthand` notation.
 * componentTypes: An Array of :ref:`componentType` objects. [optional]
 * deviceType: A single :ref:`deviceType` object. [optional]
+
+.. _organizer:
+
+Organizer
+---------
+
+Json Options for a Organizer::
+
+    {
+      "name": "Devices/Server/Dell/Blade",
+      "Type": "DeviceClass",
+      "properties": [{"name": "zPingMonitorIgnore", "Type": "boolean", "value": "True"},
+                     {"name": "zDeviceTemplates", "Type": "lines", "value": [ "example.Template" ] } 
+                     ]
+    }
+
+* name: A slash separated path for the organizer
+* Type: The Organizer Type.  Currently "DeviceClass" is the only supported type.
+* properties: An Array of :ref:`property` objects. [optional]
+    * Only the name, Type, and value fields are valid here.
 
 .. _relationship:
 
@@ -212,8 +233,8 @@ Property
 Json Options for a Property::
 
     {
-      "name": "DeviceName",
-      "names": "DeviceNames",
+      "name": "PropertyName",
+      "names": "PropertyNames",
       "mode": 'w',
       "value": 10,
       "detailDisplay": True,
