@@ -8,8 +8,8 @@
 #
 ##############################################################################
 
-from utils import KlassExpand, zpDir
-from Template import Template
+from ._zenoss_utils import KlassExpand, zpDir
+from .Template import Template
 
 
 class Impact(Template):

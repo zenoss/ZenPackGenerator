@@ -91,12 +91,9 @@ class ZenPack(object):
         self.rootinit = RootInit(self)
         self.zenpackUI = ZenPackUI(self)
         self.objects_xml = ObjectsXml(self)
-<<<<<<< HEAD:zpg/ZenPack.py
-=======
         self.impact_zcml = ImpactZcml(self)
         self.impact = Impact(self)
 
->>>>>>> Impact in progress.:src/zpg/lib/ZenPack.py
         if zProperties:
             for zp in zProperties:
                 self.addZProperty(**zp)
@@ -195,10 +192,7 @@ class ZenPack(object):
         # Create a utils file.
         self.utils.write()
         # Create an objects.xml file
-<<<<<<< HEAD:zpg/ZenPack.py
         self.objects_xml.write()
-=======
-	self.objects_xml.write()
 
         # Create the impact.zcml
         self.impact_zcml.write()
@@ -206,5 +200,4 @@ class ZenPack(object):
         # Create the impact.py
         self.impact.write()
 
->>>>>>> Impact in progress.:src/zpg/lib/ZenPack.py
         self.updateGitTemplates()
