@@ -8,6 +8,7 @@
 #
 #
 
+
 # ForeMock and StyleMock were added to allow for setup to run when
 #  Colorama is not installed.
 class ForeMock(object):
