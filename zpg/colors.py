@@ -8,9 +8,47 @@
 #
 #
 
-from colorama import init, Fore, Back, Style
+
+# ForeMock and StyleMock were added to allow for setup to run when
+#  Colorama is not installed.
+class ForeMock(object):
+    """Mocked up interface for colorama.Fore"""
+    RESET = ""
+    RED = ""
+    GREEN = ""
+    CYAN = ""
+    MAGENTA = ""
+    YELLOW = ""
+    BLACK = ""
+
+
+class StyleMock(object):
+    """Mocked up interface for colorama.Style"""
+    NORMAL = ""
+    BRIGHT = ""
+    DIM = ""
+
+# During setup.py, zpg is imported to capture the version of zpg.  But,
+#  if colorama is not already installed, then setup will fail.  Duck
+#  typing below to prevent failure to install in the absence of the
+#  colorama package.
+try:
+    from colorama import Fore, Style
+except ImportError:
+    Fore = ForeMock()
+    Style = StyleMock()
 
 OUTPUT_COLORS = True
+
+
+def disable_color():
+    """Disables color output"""
+    global OUTPUT_COLORS
+    global Fore
+    global Style
+    OUTPUT_COLORS = False
+    Fore = ForeMock()
+    Style = StyleMock()
 
 
 def colored(color, text, style=Style.BRIGHT):
