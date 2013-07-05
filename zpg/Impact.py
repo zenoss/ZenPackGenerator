@@ -8,11 +8,11 @@
 #
 ##############################################################################
 
-from ._zenoss_utils import KlassExpand, zpDir
-from .Template import Template
+from utils import KlassExpand, zpDir
+from Template import Template
 
 
-class ImpactZcml(Template):
+class Impact(Template):
     """Build the impact object"""
 
     def __init__(self,
@@ -20,14 +20,15 @@ class ImpactZcml(Template):
                  ):
         '''Args:
                  zenpack: ZenPack class instance
+
         '''
 
-        super(ImpactZcml, self).__init__(zenpack)
-        self.source_template = 'impact.zcml.tmpl'
+        super(Impact, self).__init__(zenpack)
+        self.source_template = 'impact.tmpl'
         self.zenpack = zenpack
         self.components = zenpack.components
 
-        self.dest_file = "%s/impact.zcml" % zpDir(zenpack)
+        self.dest_file = "%s/impact.py" % zpDir(zenpack)
 
     def write(self):
         '''Write the impact file'''

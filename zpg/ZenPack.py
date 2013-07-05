@@ -93,7 +93,6 @@ class ZenPack(object):
         self.objects_xml = ObjectsXml(self)
         self.impact_zcml = ImpactZcml(self)
         self.impact = ImpactPy(self)
-
         if zProperties:
             for zp in zProperties:
                 self.addZProperty(**zp)

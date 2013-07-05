@@ -55,7 +55,7 @@ class Relationship(object):
         rels = []
 
         for rel in Relationship.relationships.values():
-            if rel.hasComponent(componentA) and rel.hasComponent(componentB)
+            if rel.hasComponent(componentA) and rel.hasComponent(componentB):
                 rels.append(rel)
         return sorted(rels)
 
