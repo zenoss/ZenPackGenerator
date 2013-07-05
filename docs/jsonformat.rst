@@ -148,7 +148,9 @@ Json Options for a ComponentType::
       "panelSortDirection": "asc",
       "device": False,
       "properties": [],
-      "componentTypes": []
+      "componentTypes": [],
+      "impacts": [],
+      "impactedBy": []
     }
 
 * name: The Name of the Component, Used to define the Module and Class of a Component. [required]
@@ -180,7 +182,11 @@ Json Options for a ComponentType::
 * properties: An Array of :ref:`property` objects. [optional]
 * componentTypes: An Array of :ref:`componentType` objects. [optional]
     * This sets up a One to Many Contained relationship of Nested objects.
-
+* impacts: An Array of components that this component impacts.
+    * The component can be in :ref:`shorthand` notation.
+* impactedBy: An Array of components that this component is impactedBy.
+    * The component can be in :ref:`shorthand` notation.
+    
 .. _deviceType:
 
 DeviceType
@@ -198,7 +204,9 @@ Json Options for a DeviceType::
       "panelSort": 'PropertyA',
       "panelSortDirection": "asc",
       "properties": [],
-      "componentTypes": []
+      "componentTypes": [],
+      "impacts": [],
+      "impactedBy": []
     }
 
 * name: The Name of the Device Component, Used to define the Module and Class of a Component. [required]
@@ -224,6 +232,10 @@ Json Options for a DeviceType::
 * properties: An Array of :ref:`property` objects. [optional]
 * componentTypes: An Array of :ref:`componentType` objects. [optional]
     * This sets up a One to Many Contained relationship of Nested objects.
+* impacts: An Array of components that this component impacts.
+    * The component can be in :ref:`shorthand` notation.
+* impactedBy: An Array of components that this component is impactedBy.
+    * The component can be in :ref:`shorthand` notation.
 
 .. _property:
 
