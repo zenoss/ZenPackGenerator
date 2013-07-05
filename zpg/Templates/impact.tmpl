@@ -86,22 +86,24 @@ class ${zenpack.prepname}_${c.shortklass}RelationsProvider(BaseRelationsProvider
 
 #for $impactedBy in $c.impactedBy
         # Impacted by ${impactedBy.shortklass}
-        obj = self._object.${impactedBy.shortklass}()
+        obj = self._object.${impactedBy.relname}()
         if obj:
             yield ImpactEdge(GUID(obj), my_guid, RP)
 
-        for obj in self._object.${impactedBy.shortklass}():
-            if isinstance(obj, LUN):
+        for obj in self._object.${impactedBy.relnames}():
+            if isinstance(obj, ${impactedBy.shortklass}):
                 yield ImpactEdge(GUID(obj), my_guid, RP)
 #end for
 
 #for $impact in $c.impacts
         # Impacts ${impact.shortklass}
-        obj = self._object.${impact.shortklass}()
+        obj = self._object.${impact.relname}()
         if obj:
             yield ImpactEdge(my_guid, GUID(obj), RP)
 
-        for obj in self._object.${impact.shortklass}():
-            if isinstance(obj, PLEX):
+        for obj in self._object.${impact.relnames}():
+            if isinstance(obj, ${impact.shortklass}):
                 yield ImpactEdge(my_guid, GUID(obj), RP)
+#end for
+#end if
 #end for
