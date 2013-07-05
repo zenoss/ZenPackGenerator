@@ -29,7 +29,7 @@ from .RootInit import RootInit
 from .Setup import Setup
 from .UtilsTemplate import UtilsTemplate
 from .ZenPackUI import ZenPackUI
-from .Impact import Impact
+from .ImpactPy import ImpactPy
 from .ImpactZcml import ImpactZcml
 
 
@@ -92,7 +92,7 @@ class ZenPack(object):
         self.zenpackUI = ZenPackUI(self)
         self.objects_xml = ObjectsXml(self)
         self.impact_zcml = ImpactZcml(self)
-        self.impact = Impact(self)
+        self.impact = ImpactPy(self)
 
         if zProperties:
             for zp in zProperties:

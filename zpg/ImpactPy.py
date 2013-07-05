@@ -12,7 +12,7 @@ from ._zenoss_utils import KlassExpand, zpDir
 from .Template import Template
 
 
-class Impact(Template):
+class ImpactPy(Template):
     """Build the impact object"""
 
     def __init__(self,
@@ -23,7 +23,7 @@ class Impact(Template):
 
         '''
 
-        super(Impact, self).__init__(zenpack)
+        super(ImpactPy, self).__init__(zenpack)
         self.source_template = 'impact.tmpl'
         self.zenpack = zenpack
         self.components = zenpack.components

@@ -16,7 +16,7 @@ from ZenPacks.zenoss.Impact.impactd.interfaces \
 AVAILABILITY = 'AVAILABILITY'
 PERCENT = 'policyPercentageTrigger'
 THRESHOLD = 'policyThresholdTrigger'
-
+RP = '${zenpack.id}'
 
 def GUID(obj):
     return IGlobalIdentifier(obj).getGUID()
@@ -85,10 +85,25 @@ class ${zenpack.prepname}_${c.shortklass}RelationsProvider(BaseRelationsProvider
         my_guid = GUID(self._object)
 
 #for $impactedBy in $c.impactedBy
-        # Impacted by $impactedBy
-        for $impactedBy in self._object.raidgroups():
-            if isinstance(raidgroup, RAIDGroup):
-                yield ImpactEdge(GUID(raidgroup), my_guid, RP)
+        # Impacted by ${impactedBy.shortklass}
+        obj = self._object.${impactedBy.shortklass}()
+        if obj:
+            yield ImpactEdge(GUID(obj), my_guid, RP)
+
+        for obj in self._object.${impactedBy.shortklass}():
+            if isinstance(obj, LUN):
+                yield ImpactEdge(GUID(obj), my_guid, RP)
+#end for
+
+#for $impact in $c.impacts
+        # Impacts ${impact.shortklass}
+        obj = self._object.${impact.shortklass}()
+        if obj:
+            yield ImpactEdge(my_guid, GUID(obj), RP)
+
+        for obj in self._object.${impact.shortklass}():
+            if isinstance(obj, PLEX):
+                yield ImpactEdge(my_guid, GUID(obj), RP)
 #end for
 #end if
 #end for

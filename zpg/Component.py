@@ -17,7 +17,7 @@ from .Relationship import Relationship
 from .Template import Template
 
 plural = inflect.engine().plural
-
+findMatchingComponents = Relationship.findMatchingComponents
 
 class Component(Template):
 
@@ -116,9 +116,18 @@ class Component(Template):
                 self.addComponentType(**component)
 
         self.updateComponents = {}
-        self.impacts = impacts
-        self.impactedBy = impactedBy
-
+      
+        # Convert the component strings to real component objects.
+        self.impacts = []
+        if impacts:
+            for obj in impacts:
+                self.impacts.append(self.lookup(self.zenpack, obj))
+ 
+        self.impactedBy = []
+        if impactedBy:
+            for obj in impactedBy:
+                self.impactedBy.append(self.lookup(self.zenpack, obj))
+        
     def __lt__(self, other):
         """Implemented for sort operations"""
         return self.id < other.id

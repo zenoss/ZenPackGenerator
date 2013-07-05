@@ -50,6 +50,16 @@ class Relationship(object):
         return False
 
     @classmethod
+    def findMatchingComponents(self, componentA, componentB):
+        '''return all the relationships that match the input request.'''
+        rels = []
+
+        for rel in Relationship.relationships.values():
+            if rel.hasComponent(componentA) and rel.hasComponent(componentB)
+                rels.append(rel)
+        return sorted(rels)
+
+    @classmethod
     def find(self, component, Contained=None, First=None, Types=None):
         '''return all the relationships that match the input request.
 
