@@ -117,8 +117,8 @@ class Component(Template):
 
         self.updateComponents = {}
 
-        self.impacts = impacts
-        self.impactedBy = impactedBy
+        self.impacts = impacts if impacts is not None else []
+        self.impactedBy = impactedBy if impactedBy is not None else []
 
     def __lt__(self, other):
         """Implemented for sort operations"""
