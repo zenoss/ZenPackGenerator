@@ -1,17 +1,8 @@
 $zenpack.license.header
-from zope.component import adapts
-from zope.interface import implements
 
-from Products.ZenUtils.guid.interfaces import IGlobalIdentifier
-
-from ZenPacks.zenoss.Impact.impactd import Trigger
-from ZenPacks.zenoss.Impact.impactd.relations import ImpactEdge
-from ZenPacks.zenoss.Impact.impactd.interfaces \
-    import IRelationshipDataProvider, INodeTriggers
-
-##for $i in $imports
-##$i
-###end for
+#for $i in $imports
+$i
+#end for
 
 AVAILABILITY = 'AVAILABILITY'
 PERCENT = 'policyPercentageTrigger'
@@ -86,24 +77,31 @@ class ${zenpack.prepname}_${c.shortklass}RelationsProvider(BaseRelationsProvider
 
 #for $impactedBy in $c.impactedBy
         # Impacted by ${impactedBy.shortklass}
+#if $c.impactedBySingle($impactedBy)
         obj = self._object.${impactedBy.relname}()
         if obj:
             yield ImpactEdge(GUID(obj), my_guid, RP)
 
+#else
         for obj in self._object.${impactedBy.relnames}():
             if isinstance(obj, ${impactedBy.shortklass}):
                 yield ImpactEdge(GUID(obj), my_guid, RP)
-#end for
 
+#end if
+#end for
 #for $impact in $c.impacts
         # Impacts ${impact.shortklass}
+#if $c.impactSingle($impact)
         obj = self._object.${impact.relname}()
         if obj:
             yield ImpactEdge(my_guid, GUID(obj), RP)
 
+#else
         for obj in self._object.${impact.relnames}():
             if isinstance(obj, ${impact.shortklass}):
                 yield ImpactEdge(my_guid, GUID(obj), RP)
+
+#end if
 #end for
 #end if
 #end for

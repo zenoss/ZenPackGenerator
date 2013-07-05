@@ -17,7 +17,7 @@ from .Relationship import Relationship
 from .Template import Template
 
 plural = inflect.engine().plural
-findMatchingComponents = Relationship.findMatchingComponents
+
 
 class Component(Template):
 
@@ -116,18 +116,10 @@ class Component(Template):
                 self.addComponentType(**component)
 
         self.updateComponents = {}
-      
-        # Convert the component strings to real component objects.
-        self.impacts = []
-        if impacts:
-            for obj in impacts:
-                self.impacts.append(self.lookup(self.zenpack, obj))
- 
-        self.impactedBy = []
-        if impactedBy:
-            for obj in impactedBy:
-                self.impactedBy.append(self.lookup(self.zenpack, obj))
-        
+
+        self.impacts = impacts
+        self.impactedBy = impactedBy
+
     def __lt__(self, other):
         """Implemented for sort operations"""
         return self.id < other.id
@@ -378,6 +370,29 @@ class Component(Template):
         # Remove duplicates
         self.imports = f7(self.imports)
 
+    def convertImpactStringsToRealComponents(self):
+        # Convert the component strings to real component objects.
+        impacts = self.impacts
+        impactedBy = self.impactedBy
+
+        self.impacts = []
+        if impacts:
+            for obj in impacts:
+                real_obj = self.lookup(self.zenpack, obj, create=False)
+                if real_obj:
+                    for rel in Relationship.find(real_obj):
+                        if rel.hasComponent(self):
+                            self.impacts.append(real_obj)
+
+        self.impactedBy = []
+        if impactedBy:
+            for obj in impactedBy:
+                real_obj = self.lookup(self.zenpack, obj, create=False)
+                if real_obj:
+                    for rel in Relationship.find(real_obj):
+                        if rel.hasComponent(self):
+                            self.impactedBy.append(real_obj)
+
     def hasImpact(self):
         # Return true if we have an impact relationship
         if self.impacts:
@@ -386,8 +401,25 @@ class Component(Template):
             return True
         return False
 
+    def impactedBySingle(self, impactor):
+        'if the relationship should be a single relname return true.'
+        for rel in Relationship.find(impactor, First=True,
+                                     Types=['1-1', '1-M']):
+            if rel.hasChild(self):
+                return True
+        return False
+
+    def impactSingle(self, impactee):
+        'if the relationship should be a single relname return true.'
+        for rel in Relationship.find(impactee, First=False,
+                                     Types=['1-1', '1-M']):
+            if rel.hasChild(self):
+                return True
+        return False
+
     def write(self):
         """Write the component files"""
         self.updateImports()
         self.findUpdateComponents()
+        self.convertImpactStringsToRealComponents()
         self.processTemplate()

@@ -41,4 +41,14 @@ defaults = {
         'from Products.Zuul.interface.device import IDeviceInfo',
         'from Products.Zuul.utils import ZuulMessageFactory as _t',
     ],
+    'impact_imports': [
+        'from zope.component import adapts',
+        'from zope.interface import implements',
+        'from Products.ZenUtils.guid.interfaces import IGlobalIdentifier',
+        'from ZenPacks.zenoss.Impact.impactd import Trigger',
+        'from ZenPacks.zenoss.Impact.impactd.relations import ImpactEdge',
+        'from ZenPacks.zenoss.Impact.impactd.interfaces import \
+                       IRelationshipDataProvider',
+        'from ZenPacks.zenoss.Impact.impactd.interfaces import INodeTriggers'
+    ],
 }

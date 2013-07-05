@@ -119,12 +119,8 @@ class Property(object):
         o.set('type', self.Type)
         if self.id not in ['zendoc', 'description']:
             o.set('visible', 'True')
-        try:
-            if self.Type == 'list':
-                o.text = str(self.value)
-            else:
-                o.text = self.value
-        except Exception:
-            import pdb
-            pdb.set_trace()
+        if self.Type == 'list':
+            o.text = str(self.value)
+        else:
+            o.text = self.value
         return o
