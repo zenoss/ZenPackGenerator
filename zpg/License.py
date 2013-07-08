@@ -7,7 +7,7 @@
 # file at the top-level directory of this package.
 #
 #
-
+from ._defaults import defaults
 
 class License(object):
 
@@ -20,8 +20,7 @@ class License(object):
         self.id = id
 
     def header(self):
-        # This should be expanded...
-        return "#LICENSE HEADER SAMPLE"
+        return defaults.get('license_header')
 
     def __repr__(self):
         return self.id
