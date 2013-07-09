@@ -15,7 +15,7 @@ defaults = {
     'author': 'ZenossLabs <labs@zenoss.com>',
     'author_email': 'labs@zenoss.com',
     'description': 'A tool to assist building zenpacks.',
-    'version': '1.0.4',
+    'version': '1.0.5',
     'license': 'GPL',
     'license_header': '''
 ######################################################################
