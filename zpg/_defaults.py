@@ -17,7 +17,8 @@ defaults = {
     'description': 'A tool to assist building zenpacks.',
     'version': '1.0.3',
     'license': 'GPL',
-    'license_header': '''##############################################################################
+    'license_header': '''
+######################################################################
 #
 # Copyright (C) Zenoss, Inc. 2013, all rights reserved.
 #
@@ -25,7 +26,7 @@ defaults = {
 # License.zenoss under the directory where your Zenoss product is
 # installed.
 #
-##############################################################################
+######################################################################
 ''',
     'component_classes': [
         'Products.ZenModel.DeviceComponent.DeviceComponent',
