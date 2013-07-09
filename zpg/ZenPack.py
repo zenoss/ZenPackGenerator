@@ -167,11 +167,12 @@ class ZenPack(object):
         try:
             repo.commit()
         except:
-            repo.index.commit('Initial Commit from zpg')
+            repo.index.commit('Initial Commit from zpg (%s)' % self.version)
         # Update the repo
         repo.index.add([self.destdir.path + '/Templates'])
         if repo.is_dirty():
-            repo.index.commit('zpg: Committed Template changes')
+            repo.index.commit('zpg: Committed Template changes (%s)'
+                              % self.version)
 
     def write(self, verbose=False):
         # Write the destination folders
