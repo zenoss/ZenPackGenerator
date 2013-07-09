@@ -49,7 +49,7 @@ defaults = {
         'from Products.Zuul.form import schema',
         'from Products.Zuul.infos import ProxyProperty',
         'from Products.Zuul.infos.device import DeviceInfo',
-        'from Products.Zuul.interface.device import IDeviceInfo',
+        'from Products.Zuul.interfaces.device import IDeviceInfo',
         'from Products.Zuul.utils import ZuulMessageFactory as _t',
     ],
     'impact_imports': [
