@@ -36,6 +36,13 @@ class Configure(Template):
                 return True
         return False
 
+    def impactAdapters(self):
+        '''Return true if there are any impact relationships'''
+        for c in self.components.values():
+            if c.hasImpact():
+                return True
+        return False
+
 # TODO
 # Router and facade
 # custom device loaders

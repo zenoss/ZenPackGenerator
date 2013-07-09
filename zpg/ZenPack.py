@@ -6,7 +6,7 @@
 # This content is made available according to terms specified in the LICENSE
 # file at the top-level directory of this package.
 #
-#
+##############################################################################
 
 import os
 
@@ -29,6 +29,8 @@ from .RootInit import RootInit
 from .Setup import Setup
 from .UtilsTemplate import UtilsTemplate
 from .ZenPackUI import ZenPackUI
+from .ImpactPy import ImpactPy
+from .ImpactZcml import ImpactZcml
 
 
 class Opts(object):
@@ -89,6 +91,8 @@ class ZenPack(object):
         self.rootinit = RootInit(self)
         self.zenpackUI = ZenPackUI(self)
         self.objects_xml = ObjectsXml(self)
+        self.impact_zcml = ImpactZcml(self)
+        self.impact = ImpactPy(self)
         if zProperties:
             for zp in zProperties:
                 self.addZProperty(**zp)
@@ -163,11 +167,12 @@ class ZenPack(object):
         try:
             repo.commit()
         except:
-            repo.index.commit('Initial Commit from zpg')
+            repo.index.commit('Initial Commit from zpg (%s)' % self.version)
         # Update the repo
         repo.index.add([self.destdir.path + '/Templates'])
         if repo.is_dirty():
-            repo.index.commit('zpg: Committed Template changes')
+            repo.index.commit('zpg: Committed Template changes (%s)'
+                              % self.version)
 
     def write(self, verbose=False):
         # Write the destination folders
@@ -188,4 +193,11 @@ class ZenPack(object):
         self.utils.write()
         # Create an objects.xml file
         self.objects_xml.write()
+
+        # Create the impact.zcml
+        self.impact_zcml.write()
+
+        # Create the impact.py
+        self.impact.write()
+
         self.updateGitTemplates()
