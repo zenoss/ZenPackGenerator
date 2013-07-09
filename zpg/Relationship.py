@@ -17,14 +17,14 @@ class Relationship(object):
 
     def __init__(self,
                  ZenPack,
-                 ComponentA,
-                 ComponentB,
+                 componentA,
+                 componentB,
                  Type='1-M',
                  Contained=True):
         """Args:
                 ZenPack:  A ZenPack Class instance
-                ComponentA: Parent Component string id
-                ComponentB: Child Component string id
+                componentA: Parent component string id
+                componentB: Child component string id
                 Type: Relationship Type.  Valid inputs [1-1,1-M,M-M]
                 Contained: ComponentA contains ComponentB True or False
         """
@@ -32,7 +32,7 @@ class Relationship(object):
         from Component import Component
         lookup = Component.lookup
         self.components = lookup(
-            ZenPack, ComponentA), lookup(ZenPack, ComponentB)
+            ZenPack, componentA), lookup(ZenPack, componentB)
         self.id = '%s %s' % (self.components[0].id, self.components[1].id)
         self.Type = Type
         self.Contained = Contained

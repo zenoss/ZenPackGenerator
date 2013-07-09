@@ -75,7 +75,7 @@ class TestZenPackInitialize(unittest.TestCase):
     def test_relationships(self):
         zp = ZenPack(
             'a.a.e', deviceClasses=[{"path": "Device/Snmp", "componentTypes": [{"name": "Enclosure"}, {"name": "TemperatureSensor"}, {"name": "Fan"}]}],
-            relationships=[{"ComponentA": "Enclosure", "ComponentB": "Fan", "Contained": False}])
+            relationships=[{"componentA": "Enclosure", "componentB": "Fan", "Contained": False}])
         self.assertEqual(
             zp.relationships.keys(
             ), ['Products.ZenModel.Device.Device a.a.e.TemperatureSensor',
