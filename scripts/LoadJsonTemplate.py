@@ -23,6 +23,7 @@ from Products.Zuul import getFacade
 # http://jira.zenoss.com/jira/browse/ZEN-5017
 from Products.Zuul import info as ZuulInfo
 from Products.Zuul.facades import ObjectNotFoundException
+from Products.Zuul.infos.graphpoint import DataPointGraphPointInfo, ThresholdGraphPointInfo
 
 log = logging.getLogger("zen.JsonTemplateLoader")
 fix_ids = []
@@ -244,6 +245,13 @@ def add_graphpoint(dmd, device_class, template, graph, id_, cfg):
         threshold = [t for t in tf.getThresholds(
             template.uid) if t.name == id_][0]
         tf.addThresholdToGraph(graph.uid, threshold.uid)
+
+        graphpoints = []
+        for gp in tf.getGraphPoints(graph.uid):
+            if isinstance(gp, ThresholdGraphPointInfo) and gp.id == id_:
+                graphpoint = gp
+                break
+
     elif cfg['type'] == 'DataPoint':
         # this is all sorts of messed up getDataSources returns datapoints if the context is a device class
         # there isnt a getDataPoints call
@@ -255,22 +263,23 @@ def add_graphpoint(dmd, device_class, template, graph, id_, cfg):
                       template.uid in dp.uid]
         for datapoint in datapoints:
             tf.addDataPointToGraph(datapoint.uid, graph.uid)
+        # Normally we would try to find the created graphpoint by UID, but since we don't know that
+        # we will find all graphpoints with the datapoint name.  If there are more than one,
+        # we're in trouble.
+        graphpoints = []
+        for gp in tf.getGraphPoints(graph.uid):
+            if isinstance(gp, DataPointGraphPointInfo) and gp.dpName == cfg['dpName']:
+                graphpoints.append(gp)
+        if len(graphpoints) != 1:
+            # don't really know what to do here.. really, the only option is to delete the
+            # pre-existing ones and hope there's only one in the json, but for now i'm leaving
+            # that as an exercise to the user.
+            print "Error: Expected to find one graphpoint, but found %d instead." % len(graphpoints)
+            return
+        graphpoint = graphpoints[0]
     else:
         print "GraphPoint of %s is not supported yet." % cfg['type']
         return
-
-    # Normally we would try to find the created graphpoint by UID, but since we don't know that
-    # we will find all graphpoints with the datapoint name.  If there are more than one,
-    # we're in trouble.
-    graphpoints = [gp for gp in tf.getGraphPoints(graph.uid) if gp.dpName == cfg['dpName']]
-    if len(graphpoints) != 1:
-        # don't really know what to do here.. really, the only option is to delete the
-        # pre-existing ones and hope there's only one in the json, but for now i'm leaving
-        # that as an exercise to the user.
-        print "Error: Expected to find one graphpoint, but found %d instead." % len(graphpoints)
-        return
-
-    graphpoint = graphpoints[0]
 
     # Apply cfg items directly to graph attributes.
     for k, v in cfg.items():
