@@ -37,7 +37,9 @@ class Component(Template):
                  panelSort='name',
                  panelSortDirection='asc',
                  properties=None,
-                 componentTypes=None
+                 componentTypes=None,
+                 impacts=None,
+                 impactedBy=None,
                  ):
         """Args:
                  name: Component Name
@@ -56,6 +58,9 @@ class Component(Template):
                  componentTypes: an array of dictionaries of component
                              information which will create componentType
                              objects
+                 impacts: an array of components that this component impacts.
+                 impactedBy: an array of components that impact this component.
+        '''
 
         """
         super(Component, self).__init__(zenpack)
@@ -111,6 +116,9 @@ class Component(Template):
                 self.addComponentType(**component)
 
         self.updateComponents = {}
+
+        self.impacts = impacts if impacts is not None else []
+        self.impactedBy = impactedBy if impactedBy is not None else []
 
     def __lt__(self, other):
         """Implemented for sort operations"""
@@ -362,8 +370,56 @@ class Component(Template):
         # Remove duplicates
         self.imports = f7(self.imports)
 
+    def convertImpactStringsToRealComponents(self):
+        # Convert the component strings to real component objects.
+        impacts = self.impacts
+        impactedBy = self.impactedBy
+
+        self.impacts = []
+        if impacts:
+            for obj in impacts:
+                real_obj = self.lookup(self.zenpack, obj, create=False)
+                if real_obj:
+                    for rel in Relationship.find(real_obj):
+                        if rel.hasComponent(self):
+                            self.impacts.append(real_obj)
+
+        self.impactedBy = []
+        if impactedBy:
+            for obj in impactedBy:
+                real_obj = self.lookup(self.zenpack, obj, create=False)
+                if real_obj:
+                    for rel in Relationship.find(real_obj):
+                        if rel.hasComponent(self):
+                            self.impactedBy.append(real_obj)
+
+    def hasImpact(self):
+        # Return true if we have an impact relationship
+        if self.impacts:
+            return True
+        if self.impactedBy:
+            return True
+        return False
+
+    def impactedBySingle(self, impactor):
+        'if the relationship should be a single relname return true.'
+        for rel in Relationship.find(impactor, First=True,
+                                     Types=['1-1', '1-M']):
+            if rel.hasChild(self):
+                return True
+        return False
+
+    def impactSingle(self, impactee):
+        'if the relationship should be a single relname return true.'
+        for rel in Relationship.find(impactee, First=False,
+                                     Types=['1-1', '1-M']):
+            if rel.hasChild(self):
+                return True
+        return False
+
     def write(self):
         """Write the component files"""
         self.updateImports()
         self.findUpdateComponents()
+        self.convertImpactStringsToRealComponents()
         self.processTemplate()

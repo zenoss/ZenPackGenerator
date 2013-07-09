@@ -36,6 +36,8 @@ requires = [
     'inflect',
     'lxml',
     'Mock',
+    'nose',
+    'pep8',
 ]
 
 

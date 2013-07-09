@@ -49,6 +49,13 @@ class Relationship(object):
                 return True
         return False
 
+    def hasChild(self, component):
+        '''Return True if this relationship has this component inside
+           in the child position.'''
+        if component.id == self.components[1].id:
+            return True
+        return False
+
     @classmethod
     def find(self, component, Contained=None, First=None, Types=None):
         '''return all the relationships that match the input request.
