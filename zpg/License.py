@@ -9,6 +9,7 @@
 #
 from ._defaults import defaults
 
+
 class License(object):
 
     """
