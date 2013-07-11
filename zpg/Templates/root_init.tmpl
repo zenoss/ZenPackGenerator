@@ -55,10 +55,12 @@ for relname, modname in NEW_DEVICE_RELATIONS:
 # throughout the rest of the ZenPack.
 MODULE_NAME={}
 CLASS_NAME={}
+ZP_NAME='${zenpack.id}'
+#if $components
 for product_name in productNames:
-    ZP_NAME='${zenpack.id}'
     MODULE_NAME[product_name]='.'.join([ZP_NAME, product_name])
     CLASS_NAME[product_name]='.'.join([ZP_NAME, product_name, product_name])
+#end if
 
 _PACK_Z_PROPS=[
 #for $zprop in $zenpack.zproperties.values

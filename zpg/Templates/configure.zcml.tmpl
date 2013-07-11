@@ -31,13 +31,13 @@
 #end if
 #end for
 #end if
+#if $components
     <!-- Browser Resources -->
     <browser:resourceDirectory
         name="$zenpack.prepname"
         directory="resources"
         />
 
-#if $components
     <!-- JavaScript needed for all Zenoss pages. -->
     <browser:viewlet
         name="js-${zenpack.prepname}"
