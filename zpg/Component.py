@@ -91,7 +91,7 @@ class Component(Template):
         self.relname = self.shortklass.lower()
         self.relnames = plural(self.relname)
         self.unique_name = meta_type
-        self.dest_file = "%s/%s.py" % (zpDir(zenpack), self.unique_name)
+        self.dest_file = "%s/%s.py" % (zpDir(zenpack), self.shortklass)
         if not klasses:
             if not device:
                 self.klasses = defaults.get('component_classes')
