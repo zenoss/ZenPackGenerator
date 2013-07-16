@@ -359,7 +359,7 @@ class Component(Template):
                     Types['ToOne'] = 1
                 if 'M-' in relationship.Type:
                     Types['ToMany'] = 1
-        imports = "from Products.ZenRelations.RelSchema import %s" % ",".join(
+        imports = "from Products.ZenRelations.RelSchema import %s" % ", ".join(
             sorted(Types.keys()))
         self.imports.append(imports)
 

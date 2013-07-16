@@ -1,5 +1,7 @@
+$zenpack.license.header
+
 import logging
-log = logging.getLogger('zen.${zenpack.id}')
+LOG = logging.getLogger('zen.${zenpack.id}')
 
 import os
 import Globals
@@ -10,7 +12,7 @@ from Products.ZenRelations.RelSchema import ToManyCont, ToOne
 from Products.ZenRelations.zPropertyCategory import setzPropertyCategory
 from Products.CMFCore.DirectoryView import registerDirectory
 from Products.Zuul.interfaces import ICatalogTool
-from Products.ZenUtils.Utils import unused
+from Products.ZenUtils.Utils import unused, zenPath
 
 unused(Globals)
 
@@ -19,8 +21,8 @@ if os.path.isdir(skinsDir):
     registerDirectory(skinsDir, globals())
 
 ZENPACK_NAME = '${zenpack.id}'
-
 #if $components
+
 # Modules containing model classes. Used by zenchkschema to validate
 # bidirectional integrity of defined relationships.
 productNames = (
@@ -47,26 +49,28 @@ NEW_COMPONENT_TYPES = (
 for relname, modname in NEW_DEVICE_RELATIONS:
     if relname not in (x[0] for x in Device._relations):
         Device._relations += (
-            (relname, ToManyCont(ToOne,
-            '.'.join((ZENPACK_NAME, modname)), '%s_host' % modname )),
+            (relname, ToManyCont(
+                ToOne,
+                '.'.join((ZENPACK_NAME, modname)),
+                '%s_host' % modname)),
             )
 
 # Useful to avoid making literal string references to module and class names
 # throughout the rest of the ZenPack.
-MODULE_NAME={}
-CLASS_NAME={}
-ZP_NAME='${zenpack.id}'
+MODULE_NAME = {}
+CLASS_NAME = {}
 #if $components
+
 for product_name in productNames:
-    MODULE_NAME[product_name]='.'.join([ZP_NAME, product_name])
-    CLASS_NAME[product_name]='.'.join([ZP_NAME, product_name, product_name])
+    MODULE_NAME[product_name] = '.'.join([ZENPACK_NAME, product_name])
+    CLASS_NAME[product_name] = '.'.join([ZENPACK_NAME, product_name, product_name])
 #end if
 
-_PACK_Z_PROPS=[
+_PACK_Z_PROPS = [
 #for $zprop in $zenpack.zproperties.values
-               ('${zprop[0]}', ${zprop[1]}, '${zprop[2]}'),
+    ('${zprop[0]}', ${zprop[1]}, '${zprop[2]}'),
 #end for
-               ]
+    ]
 
 #for $zprop in $zenpack.zproperties.values
 #if $zprop[3]
@@ -78,13 +82,13 @@ _plugins = (
 ##    'poll_device.py'
     )
 
-class ZenPack(ZenPackBase):
 
+class ZenPack(ZenPackBase):
     packZProperties = _PACK_Z_PROPS
 
-    def install(self,app):
+    def install(self, app):
         super(ZenPack, self).install(app)
-        log.info('Adding ${zenpack.id} relationships to existing devices')
+        LOG.info('Adding ${zenpack.id} relationships to existing devices')
 
         self._buildDeviceRelations()
         self.symlink_plugins()
@@ -110,7 +114,7 @@ class ZenPack(ZenPackBase):
         if not leaveObjects:
             self.remove_plugin_symlinks()
 
-            log.info('Removing ${zenpack.id} components')
+            LOG.info('Removing ${zenpack.id} components')
             cat = ICatalogTool(app.zport.dmd)
 
             # Search the catalog for components of this zenpacks type.
@@ -121,10 +125,10 @@ class ZenPack(ZenPackBase):
 
             # Remove our Device relations additions.
             Device._relations = tuple(
-                [x for x in Device._relations \
+                [x for x in Device._relations
                     if x[0] not in NEW_DEVICE_RELATIONS])
 
-            log.info('Removing ${zenpack.id} relationships from existing devices')
+            LOG.info('Removing ${zenpack.id} relationships from existing devices')
             self._buildDeviceRelations()
 
         super(ZenPack, self).remove(app, leaveObjects=leaveObjects)
