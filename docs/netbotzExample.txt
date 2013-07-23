@@ -2,18 +2,26 @@ NetBotz Example JSON::
 
 
     {   "id": "ZenPacks.training.NetBotz",
-        "deviceClasses": [ { "componentTypes": [ { "name": "Enclosure",
-                                                   "properties": [ { "name": "enclosure_status" },
-                                                                   { "name": "error_status" },
-                                                                   { "name": "parent_id" },
-                                                                   { "name": "docked_id" } ] },
-                                                 { "name": "TemperatureSensor",
-                                                   "properties": [ { "name": "port" } ] } ],
-                             "deviceType": { "name": "NetBotzDevice",
-                                             "properties": [ { "Type": "int",
-                                                               "name": "temp_sensor_count" } ] },
-                             "path": "Device/Snmp",
-                             "zPythonClass": "NetBotzDevice" }
-                         ]
+        "deviceClasses": [{ 
+           "componentTypes": [{ 
+              "name": "Enclosure",
+              "properties": [ { "name": "enclosure_status" },
+                  { "name": "error_status" },
+                  { "name": "parent_id" },
+                  { "name": "docked_id" } 
+              ]}, { 
+              "name": "TemperatureSensor",
+              "properties": [ { "name": "port" } ] 
+              }],
+            "deviceType": { 
+               "name": "NetBotzDevice",
+               "properties": 
+                   [{ 
+                      "Type": "int",
+                      "name": "temp_sensor_count" } 
+                   ]},
+            "path": "Device/Snmp",
+            "zPythonClass": "NetBotzDevice" 
+        }]
     }
 
