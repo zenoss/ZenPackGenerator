@@ -21,7 +21,16 @@ if sys.argv[-1] == 'publish':
     os.system('python setup.py sdist upload')
     sys.exit()
 
-import zpg
+# This is a hack to pull in the defaults from zpg until we have
+#  something better.  This eliminates the necessity of importing
+#  zpg at the start and allows us to run the setup file without the
+#  dependencies installed.
+filepath = os.path.abspath(__file__)
+folder = os.path.dirname(filepath)
+defaults_path = os.path.join(folder, 'zpg', '_defaults.py')
+with open(defaults_path, 'r') as fd:
+    data = "".join(fd.readlines())
+    exec data
 
 packages = [
     'zpg',
@@ -43,7 +52,7 @@ requires = [
 
 setup(
     name="zpg",
-    version=zpg.__version__,
+    version=defaults.get("version", "0.0.1"), # zpg.__version__
     description="ZenPack Generator",
     long_description=open('README.rst').read() + '\n\n' +
     open('HISTORY.rst').read(),
@@ -55,6 +64,7 @@ setup(
     package_data={'': ['LICENSE', 'NOTICE'], 'zpg': ['Templates/*.tmpl']},
     packages=packages,
     requires=requires,
+    setup_requires=requires,
     install_requires=requires,
     entry_points={'console_scripts': ['zpg = zpg:generate']},
     license=open('LICENSE').read(),
