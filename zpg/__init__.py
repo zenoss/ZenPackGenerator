@@ -41,7 +41,6 @@ __license__ = defaults.get('license', 'GPL')
 __copyright__ = defaults.get('copyright', 'Copyright 2013 Zenoss, Inc.')
 
 from .api import generate
-from ._defaults import defaults
 from ._zenoss_utils import prepId, KlassExpand, zpDir
 from .Component import Component
 from .ComponentJS import ComponentJS
