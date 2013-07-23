@@ -18,8 +18,6 @@ import logging
 import os
 import sys
 
-import inflect
-
 from ._defaults import defaults
 from .colors import error, warn, debug, info, green, red, disable_color
 from .ZenPack import ZenPack
