@@ -1,3 +1,4 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -13,7 +14,7 @@
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
+        URL_ROOT:    '',
         VERSION:     '',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -25,6 +26,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="top" title="ZenPack Generator Documentation" href="index.html" />
+    <link rel="next" title="Examples of JSON input files" href="examples.html" />
     <link rel="prev" title="Usage" href="usage.html" />
 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
@@ -49,6 +51,9 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="examples.html" title="Examples of JSON input files"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
           <a href="usage.html" title="Usage"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">ZenPack Generator Documentation</a> &raquo;</li> 
@@ -65,19 +70,27 @@
 <p>This is one of the simplest json input files that will actually generate a zenpack.</p>
 <p>NetBotz Example JSON:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>   <span class="s">&quot;id&quot;</span><span class="p">:</span> <span class="s">&quot;ZenPacks.training.NetBotz&quot;</span><span class="p">,</span>
-    <span class="s">&quot;deviceClasses&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="p">{</span> <span class="s">&quot;componentTypes&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="p">{</span> <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;Enclosure&quot;</span><span class="p">,</span>
-                                               <span class="s">&quot;properties&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="p">{</span> <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;enclosure_status&quot;</span> <span class="p">},</span>
-                                                               <span class="p">{</span> <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;error_status&quot;</span> <span class="p">},</span>
-                                                               <span class="p">{</span> <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;parent_id&quot;</span> <span class="p">},</span>
-                                                               <span class="p">{</span> <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;docked_id&quot;</span> <span class="p">}</span> <span class="p">]</span> <span class="p">},</span>
-                                             <span class="p">{</span> <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;TemperatureSensor&quot;</span><span class="p">,</span>
-                                               <span class="s">&quot;properties&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="p">{</span> <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;port&quot;</span> <span class="p">}</span> <span class="p">]</span> <span class="p">}</span> <span class="p">],</span>
-                         <span class="s">&quot;deviceType&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;NetBotzDevice&quot;</span><span class="p">,</span>
-                                         <span class="s">&quot;properties&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="p">{</span> <span class="s">&quot;Type&quot;</span><span class="p">:</span> <span class="s">&quot;int&quot;</span><span class="p">,</span>
-                                                           <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;temp_sensor_count&quot;</span> <span class="p">}</span> <span class="p">]</span> <span class="p">},</span>
-                         <span class="s">&quot;path&quot;</span><span class="p">:</span> <span class="s">&quot;Device/Snmp&quot;</span><span class="p">,</span>
-                         <span class="s">&quot;zPythonClass&quot;</span><span class="p">:</span> <span class="s">&quot;NetBotzDevice&quot;</span> <span class="p">}</span>
-                     <span class="p">]</span>
+    <span class="s">&quot;deviceClasses&quot;</span><span class="p">:</span> <span class="p">[{</span>
+       <span class="s">&quot;componentTypes&quot;</span><span class="p">:</span> <span class="p">[{</span>
+          <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;Enclosure&quot;</span><span class="p">,</span>
+          <span class="s">&quot;properties&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="p">{</span> <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;enclosure_status&quot;</span> <span class="p">},</span>
+              <span class="p">{</span> <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;error_status&quot;</span> <span class="p">},</span>
+              <span class="p">{</span> <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;parent_id&quot;</span> <span class="p">},</span>
+              <span class="p">{</span> <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;docked_id&quot;</span> <span class="p">}</span>
+          <span class="p">]},</span> <span class="p">{</span>
+          <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;TemperatureSensor&quot;</span><span class="p">,</span>
+          <span class="s">&quot;properties&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="p">{</span> <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;port&quot;</span> <span class="p">}</span> <span class="p">]</span>
+          <span class="p">}],</span>
+        <span class="s">&quot;deviceType&quot;</span><span class="p">:</span> <span class="p">{</span>
+           <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;NetBotzDevice&quot;</span><span class="p">,</span>
+           <span class="s">&quot;properties&quot;</span><span class="p">:</span>
+               <span class="p">[{</span>
+                  <span class="s">&quot;Type&quot;</span><span class="p">:</span> <span class="s">&quot;int&quot;</span><span class="p">,</span>
+                  <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;temp_sensor_count&quot;</span> <span class="p">}</span>
+               <span class="p">]},</span>
+        <span class="s">&quot;path&quot;</span><span class="p">:</span> <span class="s">&quot;Device/Snmp&quot;</span><span class="p">,</span>
+        <span class="s">&quot;zPythonClass&quot;</span><span class="p">:</span> <span class="s">&quot;NetBotzDevice&quot;</span>
+    <span class="p">}]</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -130,25 +143,25 @@
 </li>
 <li><p class="first">prev_zenpack_name: A String representing previous zenpack names. [optional]</p>
 </li>
-<li><p class="first">zproperties: An Array of <a class="reference internal" href="#zproperty"><em>zProperty</em></a> elements. [optional]</p>
+<li><p class="first">zproperties: An Array of <em class="xref std std-ref">zproperty</em> elements. [optional]</p>
 </li>
-<li><p class="first">deviceClasses: An Array of <a class="reference internal" href="#deviceclass"><em>deviceClass</em></a> elements. [optional]</p>
+<li><p class="first">deviceClasses: An Array of <em class="xref std std-ref">deviceClass</em> elements. [optional]</p>
 </li>
-<li><p class="first">relationships: An Array of <a class="reference internal" href="#relationship"><em>Relationship</em></a> elements. [optional]</p>
+<li><p class="first">relationships: An Array of <em class="xref std std-ref">relationship</em> elements. [optional]</p>
 </li>
-<li><p class="first">organizers: An Array of <a class="reference internal" href="#organizer"><em>Organizer</em></a> elements. [optional]</p>
+<li><p class="first">organizers: An Array of <em class="xref std std-ref">organizer</em> elements. [optional]</p>
 </li>
 </ul>
 </div>
-<div class="section" id="zproperty">
-<span id="id1"></span><h2>zProperty<a class="headerlink" href="#zproperty" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="zproperties">
+<span id="id1"></span><h2>zProperties []<a class="headerlink" href="#zproperties" title="Permalink to this headline">¶</a></h2>
 <p>Json Options for a zProperty:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span> <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;zExampleProperty&quot;</span><span class="p">,</span>
-  <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;string&quot;</span><span class="p">,</span>
-  <span class="s">&quot;default&quot;</span><span class="p">:</span> <span class="s">&quot;Default Value&quot;</span><span class="p">,</span>
-  <span class="s">&quot;Category&quot;</span><span class="p">:</span> <span class="bp">None</span>
-<span class="p">}</span>
-</pre></div>
+<div class="highlight-python"><pre>"zProperties": [{
+    "name": "zExampleProperty",
+    "type": "string",
+    "default": "Default Value",
+    "Category": None
+}]</pre>
 </div>
 <ul>
 <li><p class="first">name: The Name of the zproperty as a string. [required]</p>
@@ -165,17 +178,16 @@
 </li>
 </ul>
 </div>
-<div class="section" id="deviceclass">
-<span id="id2"></span><h2>deviceClass<a class="headerlink" href="#deviceclass" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="deviceclasses">
+<span id="id2"></span><h2>deviceClasses []<a class="headerlink" href="#deviceclasses" title="Permalink to this headline">¶</a></h2>
 <p>Json Options for a deviceClass:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
-  <span class="s">&quot;path&quot;</span><span class="p">:</span> <span class="s">&#39;Device/Snmp&#39;</span><span class="p">,</span>
-  <span class="s">&quot;prefix&quot;</span><span class="p">:</span> <span class="s">&#39;/zport/dmd&#39;</span><span class="p">,</span>
-  <span class="s">&quot;zPythonClass&quot;</span><span class="p">:</span> <span class="s">&#39;Products.ZenModel.Device.Device&#39;</span><span class="p">,</span>
-  <span class="s">&quot;componentTypes&quot;</span><span class="p">:</span> <span class="p">[],</span>
-  <span class="s">&quot;deviceType&quot;</span><span class="p">:</span> <span class="n">null</span>
-<span class="p">}</span>
-</pre></div>
+<div class="highlight-python"><pre>"deviceClasses": [{
+    "path": 'Device/Snmp',
+    "prefix": '/zport/dmd',
+    "zPythonClass": 'Products.ZenModel.Device.Device',
+    "componentTypes": [],
+    "deviceType": null
+}]</pre>
 </div>
 <ul>
 <li><p class="first">path: A Path within the device class hierarchy. [required]</p>
@@ -196,23 +208,28 @@
 </dd>
 </dl>
 </li>
-<li><p class="first">componentTypes: An Array of <a class="reference internal" href="#componenttype"><em>ComponentType</em></a> objects. [optional]</p>
+<li><p class="first">componentTypes: An Array of <em class="xref std std-ref">componentType</em> objects. [optional]</p>
 </li>
-<li><p class="first">deviceType: A single <a class="reference internal" href="#devicetype"><em>DeviceType</em></a> object. [optional]</p>
+<li><p class="first">deviceType: A single <a class="reference internal" href="#devicetype"><em>deviceType []</em></a> object. [optional]</p>
 </li>
 </ul>
 </div>
-<div class="section" id="organizer">
-<span id="id3"></span><h2>Organizer<a class="headerlink" href="#organizer" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="organizers">
+<span id="id3"></span><h2>organizers []<a class="headerlink" href="#organizers" title="Permalink to this headline">¶</a></h2>
 <p>Json Options for a Organizer:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
-  <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;Devices/Server/Dell/Blade&quot;</span><span class="p">,</span>
-  <span class="s">&quot;Type&quot;</span><span class="p">:</span> <span class="s">&quot;DeviceClass&quot;</span><span class="p">,</span>
-  <span class="s">&quot;properties&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;zPingMonitorIgnore&quot;</span><span class="p">,</span> <span class="s">&quot;Type&quot;</span><span class="p">:</span> <span class="s">&quot;boolean&quot;</span><span class="p">,</span> <span class="s">&quot;value&quot;</span><span class="p">:</span> <span class="s">&quot;True&quot;</span><span class="p">},</span>
-                 <span class="p">{</span><span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;zDeviceTemplates&quot;</span><span class="p">,</span> <span class="s">&quot;Type&quot;</span><span class="p">:</span> <span class="s">&quot;lines&quot;</span><span class="p">,</span> <span class="s">&quot;value&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="s">&quot;example.Template&quot;</span> <span class="p">]</span> <span class="p">}</span>
-                 <span class="p">]</span>
-<span class="p">}</span>
-</pre></div>
+<div class="highlight-python"><pre>"organizers": [{
+    "name": "Devices/Server/Dell/Blade",
+    "Type": "DeviceClass",
+    "properties": [{
+        "name": "zPingMonitorIgnore",
+        "Type": "boolean",
+        "value": "True"
+    }, {
+        "name": "zDeviceTemplates",
+        "Type": "lines",
+        "value": [ "example.Template" ]
+    }]
+}]</pre>
 </div>
 <ul>
 <li><p class="first">name: A slash separated path for the organizer</p>
@@ -220,7 +237,7 @@
 <li><p class="first">Type: The Organizer Type.  Currently &#8220;DeviceClass&#8221; is the only supported type.</p>
 </li>
 <li><dl class="first docutils">
-<dt>properties: An Array of <a class="reference internal" href="#property"><em>Property</em></a> objects. [optional]</dt>
+<dt>properties: An Array of <em class="xref std std-ref">property</em> objects. [optional]</dt>
 <dd><ul class="first last simple">
 <li>Only the name, Type, and value fields are valid here.</li>
 </ul>
@@ -229,16 +246,25 @@
 </li>
 </ul>
 </div>
-<div class="section" id="relationship">
-<span id="id4"></span><h2>Relationship<a class="headerlink" href="#relationship" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="relationships">
+<span id="id4"></span><h2>relationships []<a class="headerlink" href="#relationships" title="Permalink to this headline">¶</a></h2>
 <p>Json Options for a Relationship:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
-  <span class="s">&quot;componentA&quot;</span><span class="p">:</span> <span class="s">&#39;Fan&#39;</span><span class="p">,</span>
-  <span class="s">&quot;componentB&quot;</span><span class="p">:</span> <span class="s">&#39;Blades&#39;</span><span class="p">,</span>
-  <span class="s">&quot;Type&quot;</span><span class="p">:</span> <span class="s">&#39;1-M&#39;</span><span class="p">,</span>
-  <span class="s">&quot;Contained&quot;</span><span class="p">:</span> <span class="bp">True</span>
-<span class="p">}</span>
-</pre></div>
+<div class="highlight-python"><pre>"relationships": [{
+    "componentA": 'Fan',
+    "componentB": 'Blades',
+    "Type": '1-M',
+    "Contained": True
+}, {
+    "componentA": "VirtualServer",
+    "componentB": "Service",
+    "Type": "M-M",
+    "Contained": false
+}, {
+    "componentA": "HardDrive",
+    "componentB": "TemperatureSensor",
+    "Type": "1-1",
+    "Contained": True
+}]</pre>
 </div>
 <ul>
 <li><dl class="first docutils">
@@ -277,23 +303,24 @@
 </li>
 </ul>
 </div>
-<div class="section" id="componenttype">
-<span id="id5"></span><h2>ComponentType<a class="headerlink" href="#componenttype" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="componenttypes">
+<span id="id5"></span><h2>componentTypes []<a class="headerlink" href="#componenttypes" title="Permalink to this headline">¶</a></h2>
 <p>Json Options for a ComponentType:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
-  <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;ComponentName&quot;</span><span class="p">,</span>
-  <span class="s">&quot;names&quot;</span><span class="p">:</span> <span class="s">&quot;ComponentNames&quot;</span><span class="p">,</span>
-  <span class="s">&quot;klasses&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;DeviceComponent&#39;</span><span class="p">],</span>
-  <span class="s">&quot;imports&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&quot;import os&quot;</span><span class="p">,</span> <span class="s">&quot;import sys&quot;</span><span class="p">],</span>
-  <span class="s">&quot;meta_type&quot;</span><span class="p">:</span> <span class="s">&quot;componentname&quot;</span><span class="p">,</span>
-  <span class="s">&quot;namespace&quot;</span><span class="p">:</span> <span class="s">&quot;Zenpacks.example.Demo&quot;</span><span class="p">,</span>
-  <span class="s">&quot;panelSort&quot;</span><span class="p">:</span> <span class="s">&#39;PropertyA&#39;</span><span class="p">,</span>
-  <span class="s">&quot;panelSortDirection&quot;</span><span class="p">:</span> <span class="s">&quot;asc&quot;</span><span class="p">,</span>
-  <span class="s">&quot;device&quot;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
-  <span class="s">&quot;properties&quot;</span><span class="p">:</span> <span class="p">[],</span>
-  <span class="s">&quot;componentTypes&quot;</span><span class="p">:</span> <span class="p">[]</span>
-<span class="p">}</span>
-</pre></div>
+<div class="highlight-python"><pre>"componentTypes": [{
+    "name": "ComponentName",
+    "names": "ComponentNames",
+    "klasses": ['DeviceComponent'],
+    "imports": ["import os", "import sys"],
+    "meta_type": "componentname",
+    "namespace": "Zenpacks.example.Demo",
+    "panelSort": 'PropertyA',
+    "panelSortDirection": "asc",
+    "device": False,
+    "properties": [],
+    "componentTypes": [],
+    "impacts": [],
+    "impactedBy": []
+}]</pre>
 </div>
 <ul>
 <li><p class="first">name: The Name of the Component, Used to define the Module and Class of a Component. [required]</p>
@@ -382,12 +409,28 @@
 </dd>
 </dl>
 </li>
-<li><p class="first">properties: An Array of <a class="reference internal" href="#property"><em>Property</em></a> objects. [optional]</p>
+<li><p class="first">properties: An Array of <em class="xref std std-ref">property</em> objects. [optional]</p>
 </li>
 <li><dl class="first docutils">
-<dt>componentTypes: An Array of <a class="reference internal" href="#componenttype"><em>ComponentType</em></a> objects. [optional]</dt>
+<dt>componentTypes: An Array of <em class="xref std std-ref">componentType</em> objects. [optional]</dt>
 <dd><ul class="first last simple">
 <li>This sets up a One to Many Contained relationship of Nested objects.</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>impacts: An Array of components that this component impacts.</dt>
+<dd><ul class="first last simple">
+<li>The component can be in <a class="reference internal" href="#shorthand"><em>ShortHand</em></a> notation.</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>impactedBy: An Array of components that this component is impactedBy.</dt>
+<dd><ul class="first last simple">
+<li>The component can be in <a class="reference internal" href="#shorthand"><em>ShortHand</em></a> notation.</li>
 </ul>
 </dd>
 </dl>
@@ -395,21 +438,22 @@
 </ul>
 </div>
 <div class="section" id="devicetype">
-<span id="id6"></span><h2>DeviceType<a class="headerlink" href="#devicetype" title="Permalink to this headline">¶</a></h2>
+<span id="id6"></span><h2>deviceType []<a class="headerlink" href="#devicetype" title="Permalink to this headline">¶</a></h2>
 <p>Json Options for a DeviceType:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
-  <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;DeviceName&quot;</span><span class="p">,</span>
-  <span class="s">&quot;names&quot;</span><span class="p">:</span> <span class="s">&quot;DeviceNames&quot;</span><span class="p">,</span>
-  <span class="s">&quot;klasses&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;DeviceComponent&#39;</span><span class="p">],</span>
-  <span class="s">&quot;imports&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&quot;import os&quot;</span><span class="p">,</span> <span class="s">&quot;import sys&quot;</span><span class="p">],</span>
-  <span class="s">&quot;meta_type&quot;</span><span class="p">:</span> <span class="s">&quot;devicename&quot;</span><span class="p">,</span>
-  <span class="s">&quot;namespace&quot;</span><span class="p">:</span> <span class="s">&quot;Zenpacks.example.Demo&quot;</span><span class="p">,</span>
-  <span class="s">&quot;panelSort&quot;</span><span class="p">:</span> <span class="s">&#39;PropertyA&#39;</span><span class="p">,</span>
-  <span class="s">&quot;panelSortDirection&quot;</span><span class="p">:</span> <span class="s">&quot;asc&quot;</span><span class="p">,</span>
-  <span class="s">&quot;properties&quot;</span><span class="p">:</span> <span class="p">[],</span>
-  <span class="s">&quot;componentTypes&quot;</span><span class="p">:</span> <span class="p">[]</span>
-<span class="p">}</span>
-</pre></div>
+<div class="highlight-python"><pre>"deviceType": [{
+    "name": "DeviceName",
+    "names": "DeviceNames",
+    "klasses": ['DeviceComponent'],
+    "imports": ["import os", "import sys"],
+    "meta_type": "devicename",
+    "namespace": "Zenpacks.example.Demo",
+    "panelSort": 'PropertyA',
+    "panelSortDirection": "asc",
+    "properties": [],
+    "componentTypes": [],
+    "impacts": [],
+    "impactedBy": []
+}]</pre>
 </div>
 <ul>
 <li><p class="first">name: The Name of the Device Component, Used to define the Module and Class of a Component. [required]</p>
@@ -479,33 +523,48 @@
 </dd>
 </dl>
 </li>
-<li><p class="first">properties: An Array of <a class="reference internal" href="#property"><em>Property</em></a> objects. [optional]</p>
+<li><p class="first">properties: An Array of <em class="xref std std-ref">property</em> objects. [optional]</p>
 </li>
 <li><dl class="first docutils">
-<dt>componentTypes: An Array of <a class="reference internal" href="#componenttype"><em>ComponentType</em></a> objects. [optional]</dt>
+<dt>componentTypes: An Array of <em class="xref std std-ref">componentType</em> objects. [optional]</dt>
 <dd><ul class="first last simple">
 <li>This sets up a One to Many Contained relationship of Nested objects.</li>
 </ul>
 </dd>
 </dl>
 </li>
+<li><dl class="first docutils">
+<dt>impacts: An Array of components that this component impacts.</dt>
+<dd><ul class="first last simple">
+<li>The component can be in <a class="reference internal" href="#shorthand"><em>ShortHand</em></a> notation.</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>impactedBy: An Array of components that this component is impactedBy.</dt>
+<dd><ul class="first last simple">
+<li>The component can be in <a class="reference internal" href="#shorthand"><em>ShortHand</em></a> notation.</li>
+</ul>
+</dd>
+</dl>
+</li>
 </ul>
 </div>
-<div class="section" id="property">
-<span id="id7"></span><h2>Property<a class="headerlink" href="#property" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="properties">
+<span id="id7"></span><h2>properties []<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
 <p>Json Options for a Property:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
-  <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;PropertyName&quot;</span><span class="p">,</span>
-  <span class="s">&quot;names&quot;</span><span class="p">:</span> <span class="s">&quot;PropertyNames&quot;</span><span class="p">,</span>
-  <span class="s">&quot;mode&quot;</span><span class="p">:</span> <span class="s">&#39;w&#39;</span><span class="p">,</span>
-  <span class="s">&quot;value&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
-  <span class="s">&quot;detailDisplay&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
-  <span class="s">&quot;gridDisplay&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
-  <span class="s">&quot;sortable&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
-  <span class="s">&quot;width&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
-  <span class="s">&quot;panelRenderer&quot;</span><span class="p">:</span> <span class="s">&#39;PanelRenderer&#39;</span>
-<span class="p">}</span>
-</pre></div>
+<div class="highlight-python"><pre>"properties": [{
+    "name": "PropertyName",
+    "names": "PropertyNames",
+    "mode": 'w',
+    "value": 10,
+    "detailDisplay": True,
+    "gridDisplay": True,
+    "sortable": True,
+    "width": 10,
+    "panelRenderer": 'PanelRenderer'
+}]</pre>
 </div>
 <ul>
 <li><p class="first">name: The Name of the property [required]</p>
@@ -628,13 +687,13 @@ This means the shorthand form will search for a component class with the same na
   <ul>
 <li><a class="reference internal" href="#">JSON Format</a><ul>
 <li><a class="reference internal" href="#zenpack">ZenPack</a></li>
-<li><a class="reference internal" href="#zproperty">zProperty</a></li>
-<li><a class="reference internal" href="#deviceclass">deviceClass</a></li>
-<li><a class="reference internal" href="#organizer">Organizer</a></li>
-<li><a class="reference internal" href="#relationship">Relationship</a></li>
-<li><a class="reference internal" href="#componenttype">ComponentType</a></li>
-<li><a class="reference internal" href="#devicetype">DeviceType</a></li>
-<li><a class="reference internal" href="#property">Property</a></li>
+<li><a class="reference internal" href="#zproperties">zProperties []</a></li>
+<li><a class="reference internal" href="#deviceclasses">deviceClasses []</a></li>
+<li><a class="reference internal" href="#organizers">organizers []</a></li>
+<li><a class="reference internal" href="#relationships">relationships []</a></li>
+<li><a class="reference internal" href="#componenttypes">componentTypes []</a></li>
+<li><a class="reference internal" href="#devicetype">deviceType []</a></li>
+<li><a class="reference internal" href="#properties">properties []</a></li>
 <li><a class="reference internal" href="#shorthand">ShortHand</a></li>
 </ul>
 </li>
@@ -643,6 +702,9 @@ This means the shorthand form will search for a component class with the same na
   <h4>Previous topic</h4>
   <p class="topless"><a href="usage.html"
                         title="previous chapter">Usage</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="examples.html"
+                        title="next chapter">Examples of JSON input files</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/jsonformat.txt"
@@ -672,6 +734,9 @@ This means the shorthand form will search for a component class with the same na
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
+          <a href="examples.html" title="Examples of JSON input files"
+             >next</a> |</li>
+        <li class="right" >
           <a href="usage.html" title="Usage"
              >previous</a> |</li>
         <li><a href="index.html">ZenPack Generator Documentation</a> &raquo;</li> 
@@ -679,8 +744,8 @@ This means the shorthand form will search for a component class with the same na
     </div>
     <div class="footer">
         &copy; Copyright 2013, Zenoss, Inc..
-      Last updated on Jul 03, 2013.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+      Last updated on Jul 24, 2013.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
 </html>

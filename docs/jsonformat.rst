@@ -41,18 +41,19 @@ Json Options for a ZenPack::
 * relationships: An Array of :ref:`relationship` elements. [optional]
 * organizers: An Array of :ref:`organizer` elements. [optional]
 
-.. _zproperty:
+.. _zproperties:
 
-zProperty
------------
+zProperties []
+----------------
 
 Json Options for a zProperty::
 
-    { "name": "zExampleProperty",
-      "type": "string",
-      "default": "Default Value",
-      "Category": None
-    }
+    "zProperties": [{
+        "name": "zExampleProperty",
+        "type": "string",
+        "default": "Default Value",
+        "Category": None
+    }]
 
 * name: The Name of the zproperty as a string. [required]
 * type: The Type of zproperty. [optional]
@@ -60,20 +61,20 @@ Json Options for a zProperty::
 * default: The default value for the zProperty. [optional]
 * Category: An optional category for the zProperty. [optional]
 
-.. _deviceClass:
+.. _deviceClasses:
 
-deviceClass
------------
+deviceClasses []
+---------------------------
 
 Json Options for a deviceClass::
 
-    {
-      "path": 'Device/Snmp',
-      "prefix": '/zport/dmd',
-      "zPythonClass": 'Products.ZenModel.Device.Device',
-      "componentTypes": [],
-      "deviceType": null
-    }
+    "deviceClasses": [{
+        "path": 'Device/Snmp',
+        "prefix": '/zport/dmd',
+        "zPythonClass": 'Products.ZenModel.Device.Device',
+        "componentTypes": [],
+        "deviceType": null
+    }]
 
 
 * path: A Path within the device class hierarchy. [required]
@@ -85,39 +86,55 @@ Json Options for a deviceClass::
 * componentTypes: An Array of :ref:`componentType` objects. [optional]
 * deviceType: A single :ref:`deviceType` object. [optional]
 
-.. _organizer:
+.. _organizers:
 
-Organizer
----------
+organizers []
+-------------
 
 Json Options for a Organizer::
 
-    {
-      "name": "Devices/Server/Dell/Blade",
-      "Type": "DeviceClass",
-      "properties": [{"name": "zPingMonitorIgnore", "Type": "boolean", "value": "True"},
-                     {"name": "zDeviceTemplates", "Type": "lines", "value": [ "example.Template" ] } 
-                     ]
-    }
+    "organizers": [{
+        "name": "Devices/Server/Dell/Blade",
+        "Type": "DeviceClass",
+        "properties": [{
+            "name": "zPingMonitorIgnore", 
+            "Type": "boolean", 
+            "value": "True"
+        }, {
+            "name": "zDeviceTemplates", 
+            "Type": "lines", 
+            "value": [ "example.Template" ] 
+        }]
+    }]
 
 * name: A slash separated path for the organizer
 * Type: The Organizer Type.  Currently "DeviceClass" is the only supported type.
 * properties: An Array of :ref:`property` objects. [optional]
     * Only the name, Type, and value fields are valid here.
 
-.. _relationship:
+.. _relationships:
 
-Relationship
-------------
+relationships []
+----------------
 
 Json Options for a Relationship::
 
-    {
-      "componentA": 'Fan',
-      "componentB": 'Blades',
-      "Type": '1-M',
-      "Contained": True
-    }
+    "relationships": [{
+        "componentA": 'Fan',
+        "componentB": 'Blades',
+        "Type": '1-M',
+        "Contained": True
+    }, {
+        "componentA": "VirtualServer",
+        "componentB": "Service",
+        "Type": "M-M",
+        "Contained": false
+    }, {
+        "componentA": "HardDrive",
+        "componentB": "TemperatureSensor",
+        "Type": "1-1",
+        "Contained": True
+    }]
 
 * componentA: a Parent component [required]
     * The component can be in :ref:`shorthand` notation.
@@ -130,28 +147,28 @@ Json Options for a Relationship::
     * Defaults to True
     * Valid Options [True/False]
 
-.. _componentType:
+.. _componentTypes:
 
-ComponentType
--------------
+componentTypes []
+-----------------
 
 Json Options for a ComponentType::
 
-    {
-      "name": "ComponentName",
-      "names": "ComponentNames",
-      "klasses": ['DeviceComponent'],
-      "imports": ["import os", "import sys"],
-      "meta_type": "componentname",
-      "namespace": "Zenpacks.example.Demo",
-      "panelSort": 'PropertyA',
-      "panelSortDirection": "asc",
-      "device": False,
-      "properties": [],
-      "componentTypes": [],
-      "impacts": [],
-      "impactedBy": []
-    }
+    "componentTypes": [{
+        "name": "ComponentName",
+        "names": "ComponentNames",
+        "klasses": ['DeviceComponent'],
+        "imports": ["import os", "import sys"],
+        "meta_type": "componentname",
+        "namespace": "Zenpacks.example.Demo",
+        "panelSort": 'PropertyA',
+        "panelSortDirection": "asc",
+        "device": False,
+        "properties": [],
+        "componentTypes": [],
+        "impacts": [],
+        "impactedBy": []
+    }]
 
 * name: The Name of the Component, Used to define the Module and Class of a Component. [required]
 * names: The Plural Form of the Component Name. [optional]
@@ -189,25 +206,25 @@ Json Options for a ComponentType::
     
 .. _deviceType:
 
-DeviceType
-----------
+deviceType []
+-------------
 
 Json Options for a DeviceType::
 
-    {
-      "name": "DeviceName",
-      "names": "DeviceNames",
-      "klasses": ['DeviceComponent'],
-      "imports": ["import os", "import sys"],
-      "meta_type": "devicename",
-      "namespace": "Zenpacks.example.Demo",
-      "panelSort": 'PropertyA',
-      "panelSortDirection": "asc",
-      "properties": [],
-      "componentTypes": [],
-      "impacts": [],
-      "impactedBy": []
-    }
+    "deviceType": [{
+        "name": "DeviceName",
+        "names": "DeviceNames",
+        "klasses": ['DeviceComponent'],
+        "imports": ["import os", "import sys"],
+        "meta_type": "devicename",
+        "namespace": "Zenpacks.example.Demo",
+        "panelSort": 'PropertyA',
+        "panelSortDirection": "asc",
+        "properties": [],
+        "componentTypes": [],
+        "impacts": [],
+        "impactedBy": []
+    }]
 
 * name: The Name of the Device Component, Used to define the Module and Class of a Component. [required]
 * names: The Plural Form of the Device Component Name. [optional]
@@ -237,24 +254,24 @@ Json Options for a DeviceType::
 * impactedBy: An Array of components that this component is impactedBy.
     * The component can be in :ref:`shorthand` notation.
 
-.. _property:
+.. _properties:
 
-Property
---------
+properties []
+-------------
 
 Json Options for a Property::
 
-    {
-      "name": "PropertyName",
-      "names": "PropertyNames",
-      "mode": 'w',
-      "value": 10,
-      "detailDisplay": True,
-      "gridDisplay": True,
-      "sortable": True,
-      "width": 10,
-      "panelRenderer": 'PanelRenderer'
-    }
+    "properties": [{
+        "name": "PropertyName",
+        "names": "PropertyNames",
+        "mode": 'w',
+        "value": 10,
+        "detailDisplay": True,
+        "gridDisplay": True,
+        "sortable": True,
+        "width": 10,
+        "panelRenderer": 'PanelRenderer'
+    }]
 
 * name: The Name of the property [required]
 * names: The Plural Name of the property [optional]
