@@ -1,3 +1,4 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -13,7 +14,7 @@
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
+        URL_ROOT:    '',
         VERSION:     '',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -81,6 +82,10 @@ to leave the generator and tweak the ZenPack by hand.</p>
 <li>Create Components.</li>
 <li>Create Relationships between Components.</li>
 <li>Create most of the JavaScript for the UI.</li>
+<li>Create simple impact relationships.  The components in the
+impact graph must be either a parent or a child relationship.
+nested relationships are not supported at this time.
+Complex relationships will still need to be performed by hand.</li>
 </ul>
 <p>The ZenPack Generator will NOT perform these operations.</p>
 <ul class="simple">
@@ -123,19 +128,27 @@ to leave the generator and tweak the ZenPack by hand.</p>
 <li><p class="first">Write a JSON file.  An example is listed below.</p>
 <p>NetBotz Example JSON:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>   <span class="s">&quot;id&quot;</span><span class="p">:</span> <span class="s">&quot;ZenPacks.training.NetBotz&quot;</span><span class="p">,</span>
-    <span class="s">&quot;deviceClasses&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="p">{</span> <span class="s">&quot;componentTypes&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="p">{</span> <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;Enclosure&quot;</span><span class="p">,</span>
-                                               <span class="s">&quot;properties&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="p">{</span> <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;enclosure_status&quot;</span> <span class="p">},</span>
-                                                               <span class="p">{</span> <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;error_status&quot;</span> <span class="p">},</span>
-                                                               <span class="p">{</span> <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;parent_id&quot;</span> <span class="p">},</span>
-                                                               <span class="p">{</span> <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;docked_id&quot;</span> <span class="p">}</span> <span class="p">]</span> <span class="p">},</span>
-                                             <span class="p">{</span> <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;TemperatureSensor&quot;</span><span class="p">,</span>
-                                               <span class="s">&quot;properties&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="p">{</span> <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;port&quot;</span> <span class="p">}</span> <span class="p">]</span> <span class="p">}</span> <span class="p">],</span>
-                         <span class="s">&quot;deviceType&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;NetBotzDevice&quot;</span><span class="p">,</span>
-                                         <span class="s">&quot;properties&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="p">{</span> <span class="s">&quot;Type&quot;</span><span class="p">:</span> <span class="s">&quot;int&quot;</span><span class="p">,</span>
-                                                           <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;temp_sensor_count&quot;</span> <span class="p">}</span> <span class="p">]</span> <span class="p">},</span>
-                         <span class="s">&quot;path&quot;</span><span class="p">:</span> <span class="s">&quot;Device/Snmp&quot;</span><span class="p">,</span>
-                         <span class="s">&quot;zPythonClass&quot;</span><span class="p">:</span> <span class="s">&quot;NetBotzDevice&quot;</span> <span class="p">}</span>
-                     <span class="p">]</span>
+    <span class="s">&quot;deviceClasses&quot;</span><span class="p">:</span> <span class="p">[{</span>
+       <span class="s">&quot;componentTypes&quot;</span><span class="p">:</span> <span class="p">[{</span>
+          <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;Enclosure&quot;</span><span class="p">,</span>
+          <span class="s">&quot;properties&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="p">{</span> <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;enclosure_status&quot;</span> <span class="p">},</span>
+              <span class="p">{</span> <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;error_status&quot;</span> <span class="p">},</span>
+              <span class="p">{</span> <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;parent_id&quot;</span> <span class="p">},</span>
+              <span class="p">{</span> <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;docked_id&quot;</span> <span class="p">}</span>
+          <span class="p">]},</span> <span class="p">{</span>
+          <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;TemperatureSensor&quot;</span><span class="p">,</span>
+          <span class="s">&quot;properties&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="p">{</span> <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;port&quot;</span> <span class="p">}</span> <span class="p">]</span>
+          <span class="p">}],</span>
+        <span class="s">&quot;deviceType&quot;</span><span class="p">:</span> <span class="p">{</span>
+           <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;NetBotzDevice&quot;</span><span class="p">,</span>
+           <span class="s">&quot;properties&quot;</span><span class="p">:</span>
+               <span class="p">[{</span>
+                  <span class="s">&quot;Type&quot;</span><span class="p">:</span> <span class="s">&quot;int&quot;</span><span class="p">,</span>
+                  <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;temp_sensor_count&quot;</span> <span class="p">}</span>
+               <span class="p">]},</span>
+        <span class="s">&quot;path&quot;</span><span class="p">:</span> <span class="s">&quot;Device/Snmp&quot;</span><span class="p">,</span>
+        <span class="s">&quot;zPythonClass&quot;</span><span class="p">:</span> <span class="s">&quot;NetBotzDevice&quot;</span>
+    <span class="p">}]</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -223,8 +236,8 @@ and then rerun <cite>zpg examples/netbotz.json /tmp/zpg</cite> to regenerate you
     </div>
     <div class="footer">
         &copy; Copyright 2013, Zenoss, Inc..
-      Last updated on Jul 03, 2013.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+      Last updated on Jul 24, 2013.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
 </html>

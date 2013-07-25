@@ -28,6 +28,11 @@ The ZenPack Generator will perform these operations for you
 
 * Create most of the JavaScript for the UI.
 
+* Create simple impact relationships.  The components in the 
+  impact graph must be either a parent or a child relationship.
+  nested relationships are not supported at this time.
+  Complex relationships will still need to be performed by hand.
+
 The ZenPack Generator will NOT perform these operations.
 
 * Create custom modelers.
