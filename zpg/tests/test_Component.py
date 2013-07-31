@@ -358,7 +358,7 @@ class TestUpdatedImports(SimpleSetup):
         e.addComponentType('a.Disk')
         e.updateImports()
         self.assertTrue(
-            'from Products.ZenRelations.RelSchema import ToManyCont,ToOne' in e.imports)
+            'from Products.ZenRelations.RelSchema import ToManyCont, ToOne' in e.imports)
 
     def testOnetoMany(self):
         dc = self.zp.addDeviceClass('Device', zPythonClass='a.b.c.d.Device')
@@ -369,7 +369,7 @@ class TestUpdatedImports(SimpleSetup):
         d.updateImports()
         e.updateImports()
         self.assertTrue(
-            'from Products.ZenRelations.RelSchema import ToMany,ToOne'
+            'from Products.ZenRelations.RelSchema import ToMany, ToOne'
             in d.imports)
 
     def testOnetoOne(self):
@@ -404,7 +404,7 @@ class TestUpdatedImports(SimpleSetup):
         d.updateImports()
         e.updateImports()
         self.assertTrue(
-            'from Products.ZenRelations.RelSchema import ToMany,ToManyCont'
+            'from Products.ZenRelations.RelSchema import ToMany, ToManyCont'
             in d.imports)
 
 
