@@ -74,6 +74,7 @@ class TemplateJSONDecoder(json.JSONDecoder):
         json_string = re.sub('"Contained"', '"contained"', json_string)
         json_string = re.sub('"Type"', '"type_"', json_string)
         json_string = re.sub('"type"', '"type_"', json_string)
+        json_string = re.sub('#.*\n', '\n', json_string)
         default_obj = super(TemplateJSONDecoder, self).decode(json_string)
         return default_obj
 
