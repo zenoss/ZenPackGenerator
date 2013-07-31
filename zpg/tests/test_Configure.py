@@ -22,7 +22,6 @@ class SimpleSetup(unittest.TestCase):
         self.zp = ZenPack('a.a.Configure')
 
     def tearDown(self):
-        print "Calling teardown"
         del(self.zp)
 
 
@@ -47,7 +46,6 @@ class WriteTemplatesBase(unittest.TestCase):
             self.results = wfh.write.call_args_list
 
     def tearDown(self):
-        print "Calling teardown"
         os.makedirs = self.makedirs
         del(self.zp)
 
@@ -60,9 +58,9 @@ class TestCustomPaths(SimpleSetup):
         dc.addComponentType('Blade')
         dc.addComponentType('Fan')
 
-        Relationship(self.zp, 'Enclosure', 'Fan', Type='1-M', Contained=False)
+        Relationship(self.zp, 'Enclosure', 'Fan', type_='1-M', contained=False)
         Relationship(self.zp, 'Enclosure',
-                     'Blade', Type='1-M', Contained=False)
+                     'Blade', type_='1-M', contained=False)
         self.assertTrue(self.zp.configure_zcml.customPathReporters())
 
     def test_findCustomPathsFalse(self):
