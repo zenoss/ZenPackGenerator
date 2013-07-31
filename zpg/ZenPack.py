@@ -132,15 +132,15 @@ class ZenPack(object):
         o = Organizer(self, *args, **kwargs)
         return o
 
-    def addZProperty(self, name, type='string', default='', Category=None):
-        if type == 'string':
+    def addZProperty(self, name, type_='string', default='', Category=None):
+        if type_ == 'string':
             if not default.startswith('\''):
                 default = '\'' + default
                 if len(default) == 1:
                     default = default + '\''
             if not default.endswith('\''):
                 default = default + '\''
-        self.zproperties[name] = (name, default, type, Category)
+        self.zproperties[name] = (name, default, type_, Category)
 
     def registerComponent(self, component):
         self.components[component.id] = component

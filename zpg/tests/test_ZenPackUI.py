@@ -45,7 +45,6 @@ class WriteTemplatesBase(unittest.TestCase):
             self.results = wfh.write.call_args_list
 
     def tearDown(self):
-        print "Calling teardown"
         os.makedirs = self.makedirs
         del(self.zp)
 

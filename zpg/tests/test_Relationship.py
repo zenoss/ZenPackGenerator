@@ -34,10 +34,10 @@ class TestRelationshipCreate(SimpleSetup):
 
     def test_RelationshipCreate_Overrides(self):
         '''test the defaults when creating a relationship.'''
-        r = Relationship(self.zp, 'CiscoDevice', 'VRF', Contained=False)
+        r = Relationship(self.zp, 'CiscoDevice', 'VRF', contained=False)
         self.assertIsInstance(r, Relationship)
 
-        r = Relationship(self.zp, 'CiscoDevice', 'VRF', Type='1-1')
+        r = Relationship(self.zp, 'CiscoDevice', 'VRF', type_='1-1')
         self.assertIsInstance(r, Relationship)
 
 
@@ -60,9 +60,9 @@ class TestRelationship_FindComponents(SimpleSetup):
         c = self.zp.addComponentType('SampleComponent')
         r = Relationship(self.zp, 'SampleDevice', 'SampleComponent')
         self.assertEqual([r], Relationship.find(c))
-        self.assertEqual([], Relationship.find(c, Types='1-M'))
-        self.assertEqual([r], Relationship.find(c, Types=['1-M', 'M-M']))
-        self.assertEqual([], Relationship.find(c, Types=['1-1']))
+        self.assertEqual([], Relationship.find(c, types='1-M'))
+        self.assertEqual([r], Relationship.find(c, types=['1-M', 'M-M']))
+        self.assertEqual([], Relationship.find(c, types=['1-1']))
 
     def test_ReturnsNoRelationships(self):
         c2 = self.zp.addComponentType('SampleComponent2')
@@ -78,11 +78,11 @@ class TestRelationship_FindComponentsContainment(SimpleSetup):
         c3 = Component(self.zp, 'SampleComponent3')
         r = Relationship(self.zp, 'SampleDevice', 'SampleComponent')
         r3 = Relationship(
-            self.zp, 'SampleComponent3', 'SampleComponent4', Contained=False)
+            self.zp, 'SampleComponent3', 'SampleComponent4', contained=False)
         Relationship(self.zp, 'SampleComponent4', 'SampleComponent5')
         self.maxDiff = None
-        self.assertEqual([r], Relationship.find(c, Contained=True))
-        self.assertEqual([r3], Relationship.find(c3, Contained=False))
+        self.assertEqual([r], Relationship.find(c, contained=True))
+        self.assertEqual([r3], Relationship.find(c3, contained=False))
 
 
 class TestRelationship_stringoutput(SimpleSetup):
@@ -99,7 +99,7 @@ class TestRelationship_stringoutput(SimpleSetup):
     def test_returnsOneToMany(self):
         d2 = Component(self.zp, 'Device2')
         c2 = Component(self.zp, 'Component2')
-        r2 = Relationship(self.zp, 'Device2', 'Component2', Contained=False)
+        r2 = Relationship(self.zp, 'Device2', 'Component2', contained=False)
         self.assertEqual(
             "('component2s', ToMany(ToOne, 'a.b.c.Component2', 'device2',)),", r2.toString(d2))
         self.assertEqual(
@@ -109,7 +109,7 @@ class TestRelationship_stringoutput(SimpleSetup):
         d3 = Component(self.zp, 'Device3')
         c3 = Component(self.zp, 'Component3')
         r3 = Relationship(
-            self.zp, 'Device3', 'Component3', Contained=False, Type='1-1')
+            self.zp, 'Device3', 'Component3', contained=False, type_='1-1')
         self.assertEqual(
             "('component3', ToOne(ToOne, 'a.b.c.Component3', 'device3',)),", r3.toString(d3))
         self.assertEqual(
@@ -118,7 +118,7 @@ class TestRelationship_stringoutput(SimpleSetup):
     def test_returnsManyToManyCont(self):
         d4 = Component(self.zp, 'Device4')
         c4 = Component(self.zp, 'Component4')
-        r4 = Relationship(self.zp, 'Device4', 'Component4', Type='M-M')
+        r4 = Relationship(self.zp, 'Device4', 'Component4', type_='M-M')
         self.assertEqual(
             "('component4s', ToMany(ToManyCont, 'a.b.c.Component4', 'device4s',)),", r4.toString(d4))
         self.assertEqual(
@@ -128,7 +128,7 @@ class TestRelationship_stringoutput(SimpleSetup):
         d5 = Component(self.zp, 'Device5')
         c5 = Component(self.zp, 'Component5')
         r5 = Relationship(
-            self.zp, 'Device5', 'Component5', Contained=False, Type='M-M')
+            self.zp, 'Device5', 'Component5', contained=False, type_='M-M')
         self.assertEqual(
             "('component5s', ToMany(ToMany, 'a.b.c.Component5', 'device5s',)),", r5.toString(d5))
         self.assertEqual(

@@ -95,7 +95,7 @@ class DeviceClass(object):
         def ComponentFind(child=None):
             components = []
             if child:
-                rels = find(child, First=True)
+                rels = find(child, first=True)
                 for rel in rels:
                     newchild = rel.child()
                     components.append(newchild)

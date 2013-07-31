@@ -1,3 +1,4 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -13,7 +14,7 @@
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
+        URL_ROOT:    '',
         VERSION:     '',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -207,9 +208,9 @@
 <p>Json Options for a Organizer:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
   <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;Devices/Server/Dell/Blade&quot;</span><span class="p">,</span>
-  <span class="s">&quot;Type&quot;</span><span class="p">:</span> <span class="s">&quot;DeviceClass&quot;</span><span class="p">,</span>
-  <span class="s">&quot;properties&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;zPingMonitorIgnore&quot;</span><span class="p">,</span> <span class="s">&quot;Type&quot;</span><span class="p">:</span> <span class="s">&quot;boolean&quot;</span><span class="p">,</span> <span class="s">&quot;value&quot;</span><span class="p">:</span> <span class="s">&quot;True&quot;</span><span class="p">},</span>
-                 <span class="p">{</span><span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;zDeviceTemplates&quot;</span><span class="p">,</span> <span class="s">&quot;Type&quot;</span><span class="p">:</span> <span class="s">&quot;lines&quot;</span><span class="p">,</span> <span class="s">&quot;value&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="s">&quot;example.Template&quot;</span> <span class="p">]</span> <span class="p">}</span>
+  <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;DeviceClass&quot;</span><span class="p">,</span>
+  <span class="s">&quot;properties&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;zPingMonitorIgnore&quot;</span><span class="p">,</span> <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;boolean&quot;</span><span class="p">,</span> <span class="s">&quot;value&quot;</span><span class="p">:</span> <span class="s">&quot;True&quot;</span><span class="p">},</span>
+                 <span class="p">{</span><span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;zDeviceTemplates&quot;</span><span class="p">,</span> <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;lines&quot;</span><span class="p">,</span> <span class="s">&quot;value&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="s">&quot;example.Template&quot;</span> <span class="p">]</span> <span class="p">}</span>
                  <span class="p">]</span>
 <span class="p">}</span>
 </pre></div>
@@ -217,7 +218,7 @@
 <ul>
 <li><p class="first">name: A slash separated path for the organizer</p>
 </li>
-<li><p class="first">Type: The Organizer Type.  Currently &#8220;DeviceClass&#8221; is the only supported type.</p>
+<li><p class="first">type: The Organizer Type.  Currently &#8220;DeviceClass&#8221; is the only supported type.</p>
 </li>
 <li><dl class="first docutils">
 <dt>properties: An Array of <a class="reference internal" href="#property"><em>Property</em></a> objects. [optional]</dt>
@@ -235,8 +236,8 @@
 <div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
   <span class="s">&quot;componentA&quot;</span><span class="p">:</span> <span class="s">&#39;Fan&#39;</span><span class="p">,</span>
   <span class="s">&quot;componentB&quot;</span><span class="p">:</span> <span class="s">&#39;Blades&#39;</span><span class="p">,</span>
-  <span class="s">&quot;Type&quot;</span><span class="p">:</span> <span class="s">&#39;1-M&#39;</span><span class="p">,</span>
-  <span class="s">&quot;Contained&quot;</span><span class="p">:</span> <span class="bp">True</span>
+  <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&#39;1-M&#39;</span><span class="p">,</span>
+  <span class="s">&quot;contained&quot;</span><span class="p">:</span> <span class="bp">True</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -258,16 +259,16 @@
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt>Type: The Type of Relationship [optional]</dt>
+<dt>type: The type of Relationship [optional]</dt>
 <dd><ul class="first last simple">
 <li>Defaults to 1-M</li>
-<li>Valid Types: 1-1, 1-M, M-M</li>
+<li>Valid types: 1-1, 1-M, M-M</li>
 </ul>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt>Contained: Is componentB contained within componentA [optional]</dt>
+<dt>contained: Is componentB contained within componentA [optional]</dt>
 <dd><ul class="first last simple">
 <li>Defaults to True</li>
 <li>Valid Options [True/False]</li>
@@ -291,7 +292,9 @@
   <span class="s">&quot;panelSortDirection&quot;</span><span class="p">:</span> <span class="s">&quot;asc&quot;</span><span class="p">,</span>
   <span class="s">&quot;device&quot;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
   <span class="s">&quot;properties&quot;</span><span class="p">:</span> <span class="p">[],</span>
-  <span class="s">&quot;componentTypes&quot;</span><span class="p">:</span> <span class="p">[]</span>
+  <span class="s">&quot;componentTypes&quot;</span><span class="p">:</span> <span class="p">[],</span>
+  <span class="s">&quot;impacts&quot;</span><span class="p">:</span> <span class="p">[],</span>
+  <span class="s">&quot;impactedBy&quot;</span><span class="p">:</span> <span class="p">[]</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -392,6 +395,22 @@
 </dd>
 </dl>
 </li>
+<li><dl class="first docutils">
+<dt>impacts: An Array of components that this component impacts.</dt>
+<dd><ul class="first last simple">
+<li>The component can be in <a class="reference internal" href="#shorthand"><em>ShortHand</em></a> notation.</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>impactedBy: An Array of components that this component is impactedBy.</dt>
+<dd><ul class="first last simple">
+<li>The component can be in <a class="reference internal" href="#shorthand"><em>ShortHand</em></a> notation.</li>
+</ul>
+</dd>
+</dl>
+</li>
 </ul>
 </div>
 <div class="section" id="devicetype">
@@ -407,7 +426,9 @@
   <span class="s">&quot;panelSort&quot;</span><span class="p">:</span> <span class="s">&#39;PropertyA&#39;</span><span class="p">,</span>
   <span class="s">&quot;panelSortDirection&quot;</span><span class="p">:</span> <span class="s">&quot;asc&quot;</span><span class="p">,</span>
   <span class="s">&quot;properties&quot;</span><span class="p">:</span> <span class="p">[],</span>
-  <span class="s">&quot;componentTypes&quot;</span><span class="p">:</span> <span class="p">[]</span>
+  <span class="s">&quot;componentTypes&quot;</span><span class="p">:</span> <span class="p">[],</span>
+  <span class="s">&quot;impacts&quot;</span><span class="p">:</span> <span class="p">[],</span>
+  <span class="s">&quot;impactedBy&quot;</span><span class="p">:</span> <span class="p">[]</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -484,7 +505,23 @@
 <li><dl class="first docutils">
 <dt>componentTypes: An Array of <a class="reference internal" href="#componenttype"><em>ComponentType</em></a> objects. [optional]</dt>
 <dd><ul class="first last simple">
-<li>This sets up a One to Many Contained relationship of Nested objects.</li>
+<li>This sets up a One to Many contained relationship of Nested objects.</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>impacts: An Array of components that this component impacts.</dt>
+<dd><ul class="first last simple">
+<li>The component can be in <a class="reference internal" href="#shorthand"><em>ShortHand</em></a> notation.</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>impactedBy: An Array of components that this component is impactedBy.</dt>
+<dd><ul class="first last simple">
+<li>The component can be in <a class="reference internal" href="#shorthand"><em>ShortHand</em></a> notation.</li>
 </ul>
 </dd>
 </dl>
@@ -679,8 +716,8 @@ This means the shorthand form will search for a component class with the same na
     </div>
     <div class="footer">
         &copy; Copyright 2013, Zenoss, Inc..
-      Last updated on Jul 03, 2013.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+      Last updated on Jul 31, 2013.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
 </html>

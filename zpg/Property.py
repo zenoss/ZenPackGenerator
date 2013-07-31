@@ -103,6 +103,14 @@ class Property(object):
             self._Type = 'string'
 
     @property
+    def Type(self):
+        return self.type_
+
+    @Type.setter
+    def Type(self, type_):
+        self.type_ = type_
+
+    @property
     def value(self):
         """Return the value"""
         return self._value
