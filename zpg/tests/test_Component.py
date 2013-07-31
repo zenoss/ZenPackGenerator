@@ -209,8 +209,8 @@ class TestComponentProperties(SimpleSetup):
 
     def test_Property_extraParams(self):
         c = Component(self.zp, 'Component')
-        c.addProperty('oids', Type='int', value=2)
-        self.assertEqual(c.properties['oids'].Type, 'int')
+        c.addProperty('oids', type_='int', value=2)
+        self.assertEqual(c.properties['oids'].type_, 'int')
         self.assertEqual(c.properties['oids'].value, 2)
 
     def test_Property_init_dict(self):
