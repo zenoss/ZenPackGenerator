@@ -25,13 +25,13 @@ class TestOrganizerCreate(SimpleSetup):
 
     def test_addProperty(self):
         org = Organizer(
-            self.zp, 'Devices/Server/Organizer', Type='DeviceClass')
+            self.zp, 'Devices/Server/Organizer', type_='DeviceClass')
         self.assertIsInstance(org, Organizer)
 
     def test_zPythonClassProperty(self):
         dc = DeviceClass(self.zp, 'Devices/Server/Organizer')
         org = Organizer(
-            self.zp, 'Devices/Server/Organizer', Type='DeviceClass')
+            self.zp, 'Devices/Server/Organizer', type_='DeviceClass')
         self.assertEqual(dc.path, '/zport/dmd/Devices/Server/Organizer')
         self.assertEqual(dc.zPythonClass, 'Products.ZenModel.Device.Device')
         self.assertEqual(
