@@ -49,7 +49,7 @@ class ObjectsXml(object):
             msgs = ['  objects.xml already exists.',
                     '         Remove the objects.xml if you wish to use the '
                     'generator to create a new one.']
-            debug(self.log, yellow("\n".join(msgs)))
+            warn(self.log, yellow("\n".join(msgs)))
         else:
             self.log.info('Generating base objects.xml file.')
             with open(self.objects_xml, 'w') as obj_xml_file:
