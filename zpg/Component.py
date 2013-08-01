@@ -124,12 +124,15 @@ class Component(Template):
         """Implemented for sort operations"""
         return self.id < other.id
 
-    def Type(self):
+    def type_(self):
         """return the type Device/Component"""
         if self.device:
             return 'Device'
         else:
             return 'Component'
+
+    def Type(self):
+        return self.type_()
 
     @property
     def unique_name(self):
@@ -216,17 +219,17 @@ class Component(Template):
            {Type: component, parent component of the parent components}
         """
         custompaths = {}
-        rels = Relationship.find(self, Contained=False, First=False)
+        rels = Relationship.find(self, contained=False, first=False)
         for rel in rels:
             for component in rel.components:
                 if component == self:
                     continue
                 prel = Relationship.find(
-                    component, Contained=True, First=False)
+                    component, contained=True, first=False)
                 if prel:
                     prel = prel[0]
-                    if not rel.Type in custompaths.keys():
-                        custompaths[rel.Type] = [
+                    if not rel.type_ in custompaths.keys():
+                        custompaths[rel.type_] = [
                             (component, prel.components[0])]
         if custompaths:
             imports = "from Products.Zuul.catalog.paths "
@@ -242,18 +245,18 @@ class Component(Template):
         """return a dictionary of components used in the updateToOne or
         updateToMany Methods."""
         results = {}
-        rels = Relationship.find(self, Contained=False)
+        rels = Relationship.find(self, contained=False)
         for rel in rels:
             if rel.components[0].id != self.id:
                 component = rel.components[0]
-                Type = rel.Type.split('-')[0]
+                type_ = rel.type_.split('-')[0]
             else:
                 component = rel.components[1]
-                Type = rel.Type.split('-')[1]
-            if Type in results:
-                results[Type].append(component)
+                type_ = rel.type_.split('-')[1]
+            if type_ in results:
+                results[type_].append(component)
             else:
-                results[Type] = [component]
+                results[type_] = [component]
         imports = []
         if '1' in results:
             imports.append('updateToOne')
@@ -276,7 +279,7 @@ class Component(Template):
 
     def ManyRelationships(self):
         """return all of the ManyRelationships related to this component."""
-        rels = Relationship.find(self, First=True, Types=['1-M', 'M-M'])
+        rels = Relationship.find(self, first=True, types=['1-M', 'M-M'])
         return rels
 
     def relationstoArrayofStrings(self):
@@ -350,14 +353,14 @@ class Component(Template):
         Types = {}
         for relationship in self.zenpack.relationships.values():
             if relationship.hasComponent(self):
-                if '-M' in relationship.Type:
-                    if relationship.Contained:
+                if '-M' in relationship.type_:
+                    if relationship.contained:
                         Types['ToManyCont'] = 1
                     else:
                         Types['ToMany'] = 1
-                if '1' in relationship.Type:
+                if '1' in relationship.type_:
                     Types['ToOne'] = 1
-                if 'M-' in relationship.Type:
+                if 'M-' in relationship.type_:
                     Types['ToMany'] = 1
         imports = "from Products.ZenRelations.RelSchema import %s" % ", ".join(
             sorted(Types.keys()))
@@ -403,16 +406,16 @@ class Component(Template):
 
     def impactedBySingle(self, impactor):
         'if the relationship should be a single relname return true.'
-        for rel in Relationship.find(impactor, First=True,
-                                     Types=['1-1', '1-M']):
+        for rel in Relationship.find(impactor, first=True,
+                                     types=['1-1', '1-M']):
             if rel.hasChild(self):
                 return True
         return False
 
     def impactSingle(self, impactee):
         'if the relationship should be a single relname return true.'
-        for rel in Relationship.find(impactee, First=False,
-                                     Types=['1-1', '1-M']):
+        for rel in Relationship.find(impactee, first=False,
+                                     types=['1-1', '1-M']):
             if rel.hasChild(self):
                 return True
         return False

@@ -17,6 +17,7 @@ import json
 import logging
 import os
 import sys
+import re
 
 import inflect
 
@@ -63,6 +64,18 @@ class ZpgOptionParser(ArgumentParser):
         group2.add_argument('-V', "--version", action="store_true",
                             dest="version", default=False,
                             help="Display version of %(prog)s")
+
+
+class TemplateJSONDecoder(json.JSONDecoder):
+    def decode(self, json_string):
+        """
+        json_string is basically string that you give to json.loads method
+        """
+        json_string = re.sub('"Contained"', '"contained"', json_string)
+        json_string = re.sub('"Type"', '"type_"', json_string)
+        json_string = re.sub('"type"', '"type_"', json_string)
+        default_obj = super(TemplateJSONDecoder, self).decode(json_string)
+        return default_obj
 
 
 def determine_file_type(filename):
@@ -132,7 +145,7 @@ def generate(filename=None):
     with open(filename, 'r') as f:
         debug(logger, 'Loading input file: %s...' % filename)
         if filetype == 'json':
-            jsi = json.load(f)
+            jsi = json.load(f, cls=TemplateJSONDecoder)
             jsi['opts'] = opts
         else:
             err_msg = "File Type not supported: %s" % filename

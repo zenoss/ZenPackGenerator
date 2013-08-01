@@ -47,7 +47,6 @@ class WriteBase(unittest.TestCase):
             self.results = wfh.write.call_args_list
 
     def tearDown(self):
-        print "Calling teardown"
         os.mkdir = self.mkdir
         os.makedirs = self.makedirs
         del(self.zp)
@@ -64,7 +63,7 @@ class TestZenPackInitialize(unittest.TestCase):
 
     def test_zProperties(self):
         zp = ZenPack('a.a.c', zProperties=[
-                     {"type": "boolean", "default": True, "Category": "NetBotz", "name": "zNetBotzExample"}, {"name": "e1"}])
+                     {"type_": "boolean", "default": True, "Category": "NetBotz", "name": "zNetBotzExample"}, {"name": "e1"}])
         self.assertEqual(
             zp.zproperties, {'e1': ('e1', "''", 'string', None), 'zNetBotzExample': ('zNetBotzExample', True, 'boolean', 'NetBotz')})
 
@@ -75,7 +74,7 @@ class TestZenPackInitialize(unittest.TestCase):
     def test_relationships(self):
         zp = ZenPack(
             'a.a.e', deviceClasses=[{"path": "Device/Snmp", "componentTypes": [{"name": "Enclosure"}, {"name": "TemperatureSensor"}, {"name": "Fan"}]}],
-            relationships=[{"componentA": "Enclosure", "componentB": "Fan", "Contained": False}])
+            relationships=[{"componentA": "Enclosure", "componentB": "Fan", "contained": False}])
         self.assertEqual(
             zp.relationships.keys(
             ), ['Products.ZenModel.Device.Device a.a.e.TemperatureSensor',
