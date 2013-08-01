@@ -46,16 +46,18 @@ class ZenPack(object):
                  id,
                  author=defaults.get("author"),
                  version=defaults.get("version"),
-                 license=License(defaults.get("license")),
                  install_requires=None,
                  compat_zenoss_vers=">=4.2",
                  prev_zenpack_name="",
+                 license=defaults.get("license"),
                  organizers=None,
                  zProperties=None,
                  deviceClasses=None,
                  relationships=None,
                  opts=None,
                  ):
+
+
         self.id = id
         self.opts = Opts() if opts is None else opts
         self.destdir = DirLayout(self, self.opts.dest)
@@ -68,7 +70,7 @@ class ZenPack(object):
         self.zproperties = {}
         self.author = author
         self.version = version
-        self.license = license
+        self.license = License(self, license)
         self.prepname = prepId(id).replace('.', '_')
         if install_requires:
             if isinstance(install_requires, basestring):
@@ -177,20 +179,31 @@ class ZenPack(object):
     def write(self, verbose=False):
         # Write the destination folders
         self.destdir.write()
+
+        # Write the LICENSE.txt
+        self.license.write()
+
         # Write the base setup.py
         self.setup.write()
+
         # Write configure.zcml
         self.configure_zcml.write()
+
         # Create the components
         for component in self.components.values():
             component.write()
         for cjs in self.componentJSs.values():
             cjs.write()
+
+        # Write the ui elements
         self.zenpackUI.write()
+
         # Create the root level __init__.py file
         self.rootinit.write()
+
         # Create a utils file.
         self.utils.write()
+
         # Create an objects.xml file
         self.objects_xml.write()
 

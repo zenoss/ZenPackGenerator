@@ -11,6 +11,8 @@ import os
 from os.path import expanduser
 import logging
 import json
+from .colors import error, warn, debug, info, green, red, disable_color
+
 log = logging.getLogger('Defaults')
 
 """Defaults for Zenoss ZenPack Builder"""
@@ -20,18 +22,7 @@ defaults = {
     'author_email': 'labs@zenoss.com',
     'description': 'A tool to assist building zenpacks.',
     'version': '1.0.5',
-    'license': 'GPL',
-    'license_header': '''
-######################################################################
-#
-# Copyright (C) Zenoss, Inc. 2013, all rights reserved.
-#
-# This content is made available according to terms specified in
-# License.zenoss under the directory where your Zenoss product is
-# installed.
-#
-######################################################################
-''',
+    'license': 'GPLv2',
     'component_classes': [
         'Products.ZenModel.DeviceComponent.DeviceComponent',
         'Products.ZenModel.ManagedEntity.ManagedEntity'
@@ -66,6 +57,8 @@ defaults = {
         'from ZenPacks.zenoss.Impact.impactd.interfaces import INodeTriggers'
     ],
 }
+user_zpg_defaults_config = expanduser('~')+'/.zpg/config'
+user_zpg_license_dir = expanduser('~')+'/.zpg/licenses'
 
 class DefaultsJSONDecoder(json.JSONDecoder):
     def decode(self, json_string):
@@ -79,13 +72,15 @@ class DefaultsJSONDecoder(json.JSONDecoder):
 class Defaults(object):
     def __init__(self):
         self.defaults = defaults
-        user_zpg_defaults = expanduser('~')+'/.zpg'
-        if os.path.exists(user_zpg_defaults):
-            with open(user_zpg_defaults, 'r') as f:
+        if os.path.exists(user_zpg_defaults_config):
+            debug(log, "Loading user configuration from %s" % user_zpg_defaults_config)
+            with open(user_zpg_defaults_config, 'r') as f:
                 try:
                     self.userdefaults = json.load(f, cls=DefaultsJSONDecoder)
+                    if self.userdefaults:
+                        debug(log, "  Loaded.")
                 except Exception:
-                    print "Failed to load user defaults to error in ~/.zpg json file"
+                    debug(log, red("  Failed."))
                     self.userdefaults = None
         else:
             self.userdefaults = None

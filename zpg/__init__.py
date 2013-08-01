@@ -76,3 +76,7 @@ except ImportError:
 
 logging.getLogger(__name__).addHandler(NullHandler())
 logging.basicConfig(format="%(message)s")
+
+# Set the root to Debug to catch startup debug messages
+root_logger = logging.getLogger()
+root_logger.setLevel(logging.DEBUG)
