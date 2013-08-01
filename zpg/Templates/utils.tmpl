@@ -8,6 +8,7 @@ from Products.Zuul.interfaces import ICatalogTool
 from zope.event import notify
 from Products.Zuul.catalog.events import IndexingEvent
 
+
 def add_local_lib_path():
     '''
     Helper to add the ZenPack's lib directory to sys.path.
@@ -98,4 +99,3 @@ def updateToOne(relationship, root, type_, id_):
         new_obj.index_object()
 
     return
-

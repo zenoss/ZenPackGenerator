@@ -53,7 +53,7 @@ defaults = {
         'from ZenPacks.zenoss.Impact.impactd import Trigger',
         'from ZenPacks.zenoss.Impact.impactd.relations import ImpactEdge',
         'from ZenPacks.zenoss.Impact.impactd.interfaces import \
-                       IRelationshipDataProvider',
+IRelationshipDataProvider',
         'from ZenPacks.zenoss.Impact.impactd.interfaces import INodeTriggers'
     ],
 }
