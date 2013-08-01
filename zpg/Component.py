@@ -10,14 +10,14 @@
 
 import inflect
 
-from ._defaults import defaults
+from ._defaults import Defaults
 from ._zenoss_utils import KlassExpand, zpDir
 from .Property import Property
 from .Relationship import Relationship
 from .Template import Template
 
 plural = inflect.engine().plural
-
+defaults = Defaults()
 
 class Component(Template):
 

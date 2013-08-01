@@ -7,9 +7,13 @@
 # file at the top-level directory of this package.
 #
 #
+import os
+from os.path import expanduser
+import logging
+import json
+log = logging.getLogger('Defaults')
 
 """Defaults for Zenoss ZenPack Builder"""
-
 defaults = {
     'color': True,
     'author': 'ZenossLabs <labs@zenoss.com>',
@@ -62,3 +66,29 @@ defaults = {
         'from ZenPacks.zenoss.Impact.impactd.interfaces import INodeTriggers'
     ],
 }
+
+class DefaultsJSONDecoder(json.JSONDecoder):
+    def decode(self, json_string):
+        """
+        json_string is basically string that you give to json.loads method
+        """
+        #json_string = re.sub('"Contained"', '"contained"', json_string)
+        default_obj = super(DefaultsJSONDecoder, self).decode(json_string)
+        return default_obj
+
+class Defaults(object):
+    def __init__(self):
+        self.defaults = defaults
+        user_zpg_defaults = expanduser('~')+'/.zpg'
+        if os.path.exists(user_zpg_defaults):
+            with open(user_zpg_defaults, 'r') as f:
+                try:
+                    self.userdefaults = json.load(f, cls=DefaultsJSONDecoder)
+                except Exception:
+                    print "Failed to load user defaults to error in ~/.zpg json file"
+                    self.userdefaults = None
+        else:
+            self.userdefaults = None
+
+    def get(self, *args, **kwargs):
+        return self.userdefaults.get(args[0], self.defaults.get(*args, **kwargs))

@@ -14,7 +14,7 @@ from git import Repo
 
 from .memoize import memoize
 
-from ._defaults import defaults
+from ._defaults import Defaults
 from ._zenoss_utils import prepId
 from .Component import Component
 from .ComponentJS import ComponentJS
@@ -31,7 +31,7 @@ from .UtilsTemplate import UtilsTemplate
 from .ZenPackUI import ZenPackUI
 from .ImpactPy import ImpactPy
 from .ImpactZcml import ImpactZcml
-
+defaults = Defaults()
 
 class Opts(object):
 

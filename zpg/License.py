@@ -7,7 +7,8 @@
 # file at the top-level directory of this package.
 #
 #
-from ._defaults import defaults
+from ._defaults import Defaults
+defaults = Defaults()
 
 
 class License(object):

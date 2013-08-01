@@ -21,7 +21,7 @@ import re
 
 import inflect
 
-from ._defaults import defaults
+from ._defaults import Defaults
 from .colors import error, warn, debug, info, green, red, disable_color
 from .ZenPack import ZenPack
 
@@ -37,6 +37,7 @@ class ZpgOptionParser(ArgumentParser):
     def __init__(self):
         description = self.__class__.__doc__
         super(ZpgOptionParser, self).__init__(description=description)
+        defaults = Defaults()
         prefix = defaults.get("prefix", os.getcwd())
         group1 = self.add_argument_group('standard arguments')
         group2 = self.add_argument_group('special arguments')
@@ -117,6 +118,7 @@ def generate(filename=None):
     opts.verbose = 20 + opts.quiet * 10 - opts.verbose * 10
     opts.verbose = 1 if opts.verbose <= 0 else opts.verbose
     logger.setLevel(level=opts.verbose)
+    defaults = Defaults()
 
     if opts.version:
         msg = "%s Version: %s" % ('ZenPackGenerator', defaults.get('version'))
