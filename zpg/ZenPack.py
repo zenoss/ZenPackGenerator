@@ -123,8 +123,6 @@ class ZenPack(object):
 
     @memoize
     def addComponentType(self, *args, **kwargs):
-        print args
-        print kwargs
         c = Component(self, *args, **kwargs)
         return c
 

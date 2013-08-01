@@ -57,9 +57,12 @@ class DeviceClass(object):
 
     def DeviceType(self, *args, **kwargs):
         '''Create a deviceType component from a zPythonClass reference'''
-
-        self.deviceType = self.zenpack.addComponentType(
-            self.zPythonClass, device=True, *args, **kwargs)
+        if 'name' in kwargs:
+            self.deviceType = self.zenpack.addComponentType(
+                device=True, *args, **kwargs)
+        else:
+            self.deviceType = self.zenpack.addComponentType(
+                self.zPythonClass, device=True, *args, **kwargs)
 
     def addClass(self, deviceClass, *args, **kwargs):
         '''Create a sub device class'''
