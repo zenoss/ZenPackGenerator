@@ -60,6 +60,7 @@ defaults = {
 user_zpg_defaults_config = expanduser('~')+'/.zpg/config'
 user_zpg_license_dir = expanduser('~')+'/.zpg/licenses'
 
+
 class DefaultsJSONDecoder(json.JSONDecoder):
     def decode(self, json_string):
         """
@@ -69,11 +70,13 @@ class DefaultsJSONDecoder(json.JSONDecoder):
         default_obj = super(DefaultsJSONDecoder, self).decode(json_string)
         return default_obj
 
+
 class Defaults(object):
     def __init__(self):
         self.defaults = defaults
         if os.path.exists(user_zpg_defaults_config):
-            debug(log, "Loading user configuration from %s" % user_zpg_defaults_config)
+            debug(log, "Loading user configuration from %s" %
+                       user_zpg_defaults_config)
             with open(user_zpg_defaults_config, 'r') as f:
                 try:
                     self.userdefaults = json.load(f, cls=DefaultsJSONDecoder)
@@ -86,4 +89,8 @@ class Defaults(object):
             self.userdefaults = None
 
     def get(self, *args, **kwargs):
-        return self.userdefaults.get(args[0], self.defaults.get(*args, **kwargs))
+        if self.userdefaults:
+            return self.userdefaults.get(args[0],
+                                         self.defaults.get(*args, **kwargs))
+        else:
+            return self.defaults.get(*args, **kwargs)

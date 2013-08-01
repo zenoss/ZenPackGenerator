@@ -32,6 +32,7 @@ defaults = Defaults()
 
 logger = logging.getLogger('ZenPack Generator')
 
+
 class ZpgOptionParser(ArgumentParser):
 
     """

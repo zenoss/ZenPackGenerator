@@ -14,6 +14,7 @@ import os
 from lxml import etree
 from .colors import error, warn, debug, info, green, red, yellow, disable_color
 
+
 class ObjectsXml(object):
 
     """Build the objects xml file"""

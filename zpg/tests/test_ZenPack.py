@@ -87,7 +87,7 @@ class TestZenPackLicense(SimpleSetup):
 
     def test_default(self):
         package_license = str(self.zp.license)
-        defaults_license = str(License(defaults.get("license", '')))
+        defaults_license = str(License(self.zp, defaults.get("license", '')))
         self.assertEqual(package_license, defaults_license)
 
 

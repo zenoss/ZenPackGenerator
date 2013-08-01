@@ -19,6 +19,7 @@ from .Template import Template
 plural = inflect.engine().plural
 defaults = Defaults()
 
+
 class Component(Template):
 
     """Build the component object"""

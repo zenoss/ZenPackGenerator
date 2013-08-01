@@ -16,11 +16,14 @@ import shutil
 log = logging.getLogger('License')
 defaults = Defaults()
 
+
 def find_subdir(path):
     if os.path.exists(path):
-        return [name for name in os.listdir(path) if os.path.isdir(os.path.join(path, name))]
+        return [name for name in os.listdir(path)
+                if os.path.isdir(os.path.join(path, name))]
     else:
         return []
+
 
 def load_header(path, id_):
 
@@ -32,9 +35,11 @@ def load_header(path, id_):
             header = hf.read()
 
     if header == "":
-        debug(log, yellow("License header failed to load, using blank header."))
+        debug(log,
+              yellow("License header failed to load, using blank header."))
 
     return header
+
 
 def load_license(path, id_):
     license_dir = os.path.join(path, id_)
@@ -48,6 +53,7 @@ def load_license(path, id_):
 
     return license
 
+
 class License(object):
 
     """
@@ -57,12 +63,14 @@ class License(object):
 
     def __init__(self, zenpack, id_):
         self.zenpack = zenpack
-        valid_licenses = []
-        if os.path.exists(user_zpg_license_dir) and os.path.isdir(user_zpg_license_dir):
-            debug(log, 'Found user license folder.')
-            user_licenses = find_subdir(user_zpg_license_dir)
-            if user_licenses:
-                debug(log, '  Loaded User Licenses.')
+        user_licenses = []
+        dflt_licenses = []
+
+        if os.path.isdir(user_zpg_license_dir):
+                debug(log, 'Found user license folder.')
+                user_licenses = find_subdir(user_zpg_license_dir)
+                if user_licenses:
+                    debug(log, '  Loaded User Licenses.')
 
         if os.path.exists('Licenses') and os.path.isdir('Licenses'):
             dflt_licenses = find_subdir('Licenses')
@@ -78,7 +86,9 @@ class License(object):
             self.license = load_license('Licenses', self.id)
         else:
             # Default GPlv2
-            info(log, red('Specified License [%s] not known. Defaulting to GPLv2.' % id_))
+            info(log,
+                 red('Specified License [%s] not known. Defaulting to GPLv2.'
+                     % id_))
             self.id = 'GPLv2'
             self.header = load_header('Licenses', self.id)
             self.license = load_license('Licenses', self.id)

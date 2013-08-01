@@ -33,6 +33,7 @@ from .ImpactPy import ImpactPy
 from .ImpactZcml import ImpactZcml
 defaults = Defaults()
 
+
 class Opts(object):
 
     def __init__(self):
@@ -56,7 +57,6 @@ class ZenPack(object):
                  relationships=None,
                  opts=None,
                  ):
-
 
         self.id = id
         self.opts = Opts() if opts is None else opts
@@ -123,6 +123,8 @@ class ZenPack(object):
 
     @memoize
     def addComponentType(self, *args, **kwargs):
+        print args
+        print kwargs
         c = Component(self, *args, **kwargs)
         return c
 

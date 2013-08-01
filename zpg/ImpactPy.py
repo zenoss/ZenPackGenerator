@@ -13,6 +13,7 @@ from ._zenoss_utils import KlassExpand, zpDir
 from .Template import Template
 defaults = Defaults()
 
+
 class ImpactPy(Template):
     """Build the impact object"""
 
