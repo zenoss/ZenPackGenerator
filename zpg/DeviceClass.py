@@ -42,7 +42,7 @@ class DeviceClass(object):
         self.id = self.path
         self.subClasses = {}
         self.zPythonClass = KlassExpand(self.zenpack, zPythonClass)
-        self.DeviceType()
+        self.DeviceType(**deviceType)
 
         DeviceClass.deviceClasses[self.id] = self
         self.zenpack.registerDeviceClass(self)
@@ -52,11 +52,10 @@ class DeviceClass(object):
             for component in componentTypes:
                 self.addComponentType(**component)
 
-    def DeviceType(self):
+    def DeviceType(self, *args, **kwargs):
         '''Create a deviceType component from a zPythonClass reference'''
-
         self.deviceType = self.zenpack.addComponentType(
-            self.zPythonClass, device=True)
+            device=True, *args, **kwargs)
 
     def addClass(self, deviceClass, *args, **kwargs):
         '''Create a sub device class'''

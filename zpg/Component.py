@@ -91,7 +91,7 @@ class Component(Template):
         self.relname = self.shortklass.lower()
         self.relnames = plural(self.relname)
         self.unique_name = meta_type
-        self.dest_file = "%s/%s.py" % (zpDir(zenpack), self.unique_name)
+        self.dest_file = "%s/%s.py" % (zpDir(zenpack), self.shortklass)
         if not klasses:
             if not device:
                 self.klasses = defaults.get('component_classes')
@@ -359,7 +359,7 @@ class Component(Template):
                     Types['ToOne'] = 1
                 if 'M-' in relationship.Type:
                     Types['ToMany'] = 1
-        imports = "from Products.ZenRelations.RelSchema import %s" % ",".join(
+        imports = "from Products.ZenRelations.RelSchema import %s" % ", ".join(
             sorted(Types.keys()))
         self.imports.append(imports)
 

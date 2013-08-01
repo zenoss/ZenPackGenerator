@@ -21,7 +21,7 @@ class License(object):
         self.id = id
 
     def header(self):
-        return defaults.get('license_header')
+        return defaults.get('license_header').strip()
 
     def __repr__(self):
         return self.id
