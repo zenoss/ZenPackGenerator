@@ -124,8 +124,6 @@ def generate(filename=None):
     root_logger = logging.getLogger()
     root_logger.setLevel(level=opts.verbose)
 
-    #defaults = Defaults()
-
     if opts.version:
         msg = "%s Version: %s" % ('ZenPackGenerator', defaults.get('version'))
         info(logger, msg)
