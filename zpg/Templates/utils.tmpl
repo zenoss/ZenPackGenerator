@@ -1,3 +1,5 @@
+$zenpack.license.header
+
 from Products.AdvancedQuery import Eq, Or
 
 from Products.ZenUtils.Utils import prepId
@@ -5,6 +7,7 @@ from Products.Zuul.interfaces import ICatalogTool
 
 from zope.event import notify
 from Products.Zuul.catalog.events import IndexingEvent
+
 
 def add_local_lib_path():
     '''
@@ -96,4 +99,3 @@ def updateToOne(relationship, root, type_, id_):
         new_obj.index_object()
 
     return
-

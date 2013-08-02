@@ -95,20 +95,20 @@ Json Options for a Organizer::
 
     "organizers": [{
         "name": "Devices/Server/Dell/Blade",
-        "Type": "DeviceClass",
+        "type": "DeviceClass",
         "properties": [{
             "name": "zPingMonitorIgnore", 
-            "Type": "boolean", 
+            "type": "boolean", 
             "value": "True"
         }, {
             "name": "zDeviceTemplates", 
-            "Type": "lines", 
+            "type": "lines", 
             "value": [ "example.Template" ] 
         }]
     }]
 
 * name: A slash separated path for the organizer
-* Type: The Organizer Type.  Currently "DeviceClass" is the only supported type.
+* type: The Organizer Type.  Currently "DeviceClass" is the only supported type.
 * properties: An Array of :ref:`property` objects. [optional]
     * Only the name, Type, and value fields are valid here.
 
@@ -122,28 +122,28 @@ Json Options for a Relationship::
     "relationships": [{
         "componentA": 'Fan',
         "componentB": 'Blades',
-        "Type": '1-M',
-        "Contained": True
+        "type": '1-M',
+        "contained": True
     }, {
         "componentA": "VirtualServer",
         "componentB": "Service",
-        "Type": "M-M",
-        "Contained": false
+        "type": "M-M",
+        "contained": false
     }, {
         "componentA": "HardDrive",
         "componentB": "TemperatureSensor",
-        "Type": "1-1",
-        "Contained": True
+        "type": "1-1",
+        "contained": True
     }]
 
 * componentA: a Parent component [required]
     * The component can be in :ref:`shorthand` notation.
 * componentB: a Child component [required]
     * The component can be in :ref:`shorthand` notation.
-* Type: The Type of Relationship [optional]
+* type: The type of Relationship [optional]
     * Defaults to 1-M
-    * Valid Types: 1-1, 1-M, M-M
-* Contained: Is componentB contained within componentA [optional]
+    * Valid types: 1-1, 1-M, M-M
+* contained: Is componentB contained within componentA [optional]
     * Defaults to True
     * Valid Options [True/False]
 
@@ -248,7 +248,7 @@ Json Options for a DeviceType::
         * ['asc', 'dsc']
 * properties: An Array of :ref:`property` objects. [optional]
 * componentTypes: An Array of :ref:`componentType` objects. [optional]
-    * This sets up a One to Many Contained relationship of Nested objects.
+    * This sets up a One to Many contained relationship of Nested objects.
 * impacts: An Array of components that this component impacts.
     * The component can be in :ref:`shorthand` notation.
 * impactedBy: An Array of components that this component is impactedBy.
