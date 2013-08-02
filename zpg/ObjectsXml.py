@@ -12,6 +12,7 @@ import logging
 import os
 
 from lxml import etree
+from .colors import error, warn, debug, info, green, red, yellow, disable_color
 
 
 class ObjectsXml(object):
@@ -46,11 +47,11 @@ class ObjectsXml(object):
         """Write the object.xml file"""
         self.to_objects_xml()
         if os.path.exists(self.objects_xml):
-            msgs = ['objects.xml already exists.  Skipping....',
-                    '\t\tRemove the objects.xml if you wish to use the '
+            msgs = ['  objects.xml already exists.',
+                    '         Remove the objects.xml if you wish to use the '
                     'generator to create a new one.']
-            self.log.info("\n".join(msgs))
+            warn(self.log, yellow("\n".join(msgs)))
         else:
-            self.log.info('Generating base objects.xml file.')
+            info(self.log, 'Generating base objects.xml file.')
             with open(self.objects_xml, 'w') as obj_xml_file:
                 obj_xml_file.write(self.to_objects_xml())

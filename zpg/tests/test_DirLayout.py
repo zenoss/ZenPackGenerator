@@ -14,11 +14,16 @@ import unittest
 
 from mock import mock_open, patch, call, MagicMock
 
-from zpg import initpy, DirLayout, defaults
+from zpg import initpy, DirLayout, Defaults
 
 DEFAULT_NAME = 'a.b.c'
 DEFAULT_NAME2 = 'a.a.Template'
 
+def zpg_home(self):
+        return '/tests/'
+Defaults.zpg_home = zpg_home
+
+defaults = Defaults()
 
 class SimpleSetup(unittest.TestCase):
 

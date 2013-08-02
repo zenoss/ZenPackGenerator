@@ -21,11 +21,15 @@ import re
 
 import inflect
 
-from ._defaults import defaults
 from .colors import error, warn, debug, info, green, red, disable_color
 from .ZenPack import ZenPack
 
 __all__ = ['generate']
+
+from ._defaults import Defaults
+defaults = Defaults()
+
+logger = logging.getLogger('ZenPack Generator')
 
 
 class ZpgOptionParser(ArgumentParser):
@@ -105,7 +109,6 @@ def generate(filename=None):
 
         Currently only parses JSON files.
     """
-    logger = logging.getLogger('ZenPack Generator')
 
     # commandline parsing probably should happen somewhere else...
     #  keeping this here until a better spot opens up
@@ -116,7 +119,10 @@ def generate(filename=None):
         disable_color()
     opts.verbose = 20 + opts.quiet * 10 - opts.verbose * 10
     opts.verbose = 1 if opts.verbose <= 0 else opts.verbose
-    logger.setLevel(level=opts.verbose)
+
+    # Reset the root logger logging level based on options
+    root_logger = logging.getLogger()
+    root_logger.setLevel(level=opts.verbose)
 
     if opts.version:
         msg = "%s Version: %s" % ('ZenPackGenerator', defaults.get('version'))
@@ -154,10 +160,10 @@ def generate(filename=None):
         debug(logger, '  Loaded.')
         debug(logger, 'Populating ZenPack...')
         zp_json = ZenPack(**jsi)
-        debug(logger, '  Done populating.')
+        debug(logger, 'Done ZenPack populating.')
         debug(logger, 'Writing output...')
         zp_json.write()
-        debug(logger, '  Done writing.')
+        debug(logger, 'Done writing.')
 
     debug(logger, 'Created ZenPack: %s' % green(zp_json.id))
     fpath = os.path.join(opts.dest, zp_json.id)

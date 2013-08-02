@@ -13,10 +13,13 @@ import os
 
 from mock import mock_open, patch, MagicMock
 
-from zpg import Component, DeviceClass, License, ZenPack, defaults
+from zpg import Component, DeviceClass, License, ZenPack, Defaults
 
 DEFAULT_NAME = 'a.b.c'
-
+def zpg_home(self):
+        return '/tests/'
+Defaults.zpg_home = zpg_home
+defaults = Defaults()
 
 class SimpleSetup(unittest.TestCase):
 
@@ -87,7 +90,7 @@ class TestZenPackLicense(SimpleSetup):
 
     def test_default(self):
         package_license = str(self.zp.license)
-        defaults_license = str(License(defaults.get("license", '')))
+        defaults_license = str(License(self.zp, defaults.get("license", '')))
         self.assertEqual(package_license, defaults_license)
 
 

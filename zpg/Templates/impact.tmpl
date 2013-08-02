@@ -9,6 +9,7 @@ PERCENT = 'policyPercentageTrigger'
 THRESHOLD = 'policyThresholdTrigger'
 RP = '${zenpack.id}'
 
+
 def GUID(obj):
     return IGlobalIdentifier(obj).getGUID()
 
@@ -29,7 +30,7 @@ def getRedundancyTriggers(guid, format, **kwargs):
         Trigger(guid, format % 'ATRISK_2', THRESHOLD, AVAILABILITY, dict(
             kwargs, state='ATRISK', dependentState='ATRISK', threshold='1',
         )),
-    ):
+    )
 
 
 def getPoolTriggers(guid, format, **kwargs):
