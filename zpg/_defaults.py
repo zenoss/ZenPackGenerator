@@ -57,8 +57,6 @@ IRelationshipDataProvider',
         'from ZenPacks.zenoss.Impact.impactd.interfaces import INodeTriggers'
     ],
 }
-user_zpg_defaults_config = expanduser('~')+'/.zpg/config'
-user_zpg_license_dir = expanduser('~')+'/.zpg/licenses'
 
 
 class DefaultsJSONDecoder(json.JSONDecoder):
@@ -72,12 +70,22 @@ class DefaultsJSONDecoder(json.JSONDecoder):
 
 
 class Defaults(object):
+    def zpg_home(self):
+        return expanduser('~') + '/.zpg/'
+
+    def user_zpg_defaults_config(self):
+        return self.zpg_home() + 'config'
+
+    def user_zpg_license_dir(self):
+        return self.zpg_home() + 'licenses'
+
     def __init__(self):
         self.defaults = defaults
-        if os.path.exists(user_zpg_defaults_config):
+
+        if os.path.exists(self.user_zpg_defaults_config()):
             debug(log, "Loading user configuration from %s" %
-                       user_zpg_defaults_config)
-            with open(user_zpg_defaults_config, 'r') as f:
+                       self.user_zpg_defaults_config())
+            with open(self.user_zpg_defaults_config(), 'r') as f:
                 try:
                     self.userdefaults = json.load(f, cls=DefaultsJSONDecoder)
                     if self.userdefaults:

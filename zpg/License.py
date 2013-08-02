@@ -7,7 +7,7 @@
 # file at the top-level directory of this package.
 #
 #
-from ._defaults import Defaults, user_zpg_license_dir
+from ._defaults import Defaults
 from .colors import error, warn, debug, info, green, red, yellow, disable_color
 import logging
 import os
@@ -66,9 +66,10 @@ class License(object):
         user_licenses = []
         dflt_licenses = []
 
-        if os.path.isdir(user_zpg_license_dir):
-                debug(log, 'Found user license folder.')
-                user_licenses = find_subdir(user_zpg_license_dir)
+        if os.path.isdir(defaults.user_zpg_license_dir()):
+                debug(log, 'Found user license folder at %s.' %
+                      defaults.user_zpg_license_dir())
+                user_licenses = find_subdir(defaults.user_zpg_license_dir())
                 if user_licenses:
                     debug(log, '  Loaded User Licenses.')
 
@@ -77,8 +78,9 @@ class License(object):
 
         if id_ in user_licenses:
             self.id = id_
-            self.header = load_header(user_zpg_license_dir, self.id)
-            self.license = load_license(user_zpg_license_dir, self.id)
+            self.header = load_header(defaults.user_zpg_license_dir(), self.id)
+            self.license = load_license(defaults.user_zpg_license_dir(),
+                                        self.id)
 
         elif id_ in dflt_licenses:
             self.id = id_

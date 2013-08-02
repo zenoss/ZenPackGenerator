@@ -52,6 +52,6 @@ class ObjectsXml(object):
                     'generator to create a new one.']
             warn(self.log, yellow("\n".join(msgs)))
         else:
-            self.log.info('Generating base objects.xml file.')
+            info(self.log, 'Generating base objects.xml file.')
             with open(self.objects_xml, 'w') as obj_xml_file:
                 obj_xml_file.write(self.to_objects_xml())

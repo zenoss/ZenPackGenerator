@@ -11,7 +11,6 @@
 import unittest
 from zpg.License import License
 
-
 class SimpleSetup(unittest.TestCase):
 
     def setUp(self):

@@ -23,11 +23,10 @@ import inflect
 
 from .colors import error, warn, debug, info, green, red, disable_color
 from .ZenPack import ZenPack
-from ._defaults import Defaults
 
 __all__ = ['generate']
 
-global defaults
+from ._defaults import Defaults
 defaults = Defaults()
 
 logger = logging.getLogger('ZenPack Generator')
@@ -125,7 +124,7 @@ def generate(filename=None):
     root_logger = logging.getLogger()
     root_logger.setLevel(level=opts.verbose)
 
-    defaults = Defaults()
+    #defaults = Defaults()
 
     if opts.version:
         msg = "%s Version: %s" % ('ZenPackGenerator', defaults.get('version'))
