@@ -11,7 +11,12 @@ import os
 from os.path import expanduser
 import logging
 import json
-from .colors import error, warn, debug, info, green, red, disable_color
+
+# Wrapped in Exception handler so that setup.py can load this file.
+try:
+    from .colors import error, warn, debug, info, green, red, disable_color
+except Exception:
+    pass
 
 log = logging.getLogger('Defaults')
 
