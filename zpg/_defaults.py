@@ -11,7 +11,12 @@ import os
 from os.path import expanduser
 import logging
 import json
-from .colors import error, warn, debug, info, green, red, disable_color
+
+# Wrapped in Exception handler so that setup.py can load this file.
+try:
+    from .colors import error, warn, debug, info, green, red, disable_color
+except Exception:
+    pass
 
 log = logging.getLogger('Defaults')
 
@@ -21,7 +26,7 @@ defaults = {
     'author': 'ZenossLabs <labs@zenoss.com>',
     'author_email': 'labs@zenoss.com',
     'description': 'A tool to assist building zenpacks.',
-    'version': '1.0.5',
+    'version': '1.0.6',
     'license': 'GPLv2',
     'component_classes': [
         'Products.ZenModel.DeviceComponent.DeviceComponent',
