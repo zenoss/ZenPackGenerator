@@ -19,14 +19,14 @@ class Relationship(object):
                  ZenPack,
                  componentA,
                  componentB,
-                 Type='1-M',
-                 Contained=True):
+                 type_='1-M',
+                 contained=True):
         """Args:
                 ZenPack:  A ZenPack Class instance
                 componentA: Parent component string id
                 componentB: Child component string id
-                Type: Relationship Type.  Valid inputs [1-1,1-M,M-M]
-                Contained: ComponentA contains ComponentB True or False
+                type_: Relationship type_.  Valid inputs [1-1,1-M,M-M]
+                contained: ComponentA contains ComponentB True or False
         """
         self.ZenPack = ZenPack
         from Component import Component
@@ -34,8 +34,8 @@ class Relationship(object):
         self.components = lookup(
             ZenPack, componentA), lookup(ZenPack, componentB)
         self.id = '%s %s' % (self.components[0].id, self.components[1].id)
-        self.Type = Type
-        self.Contained = Contained
+        self.type_ = type_
+        self.contained = contained
 
         # Register the relationship on a zenpack so we can find it later.
         self.ZenPack.registerRelationship(self)
@@ -57,16 +57,16 @@ class Relationship(object):
         return False
 
     @classmethod
-    def find(self, component, Contained=None, First=None, Types=None):
+    def find(self, component, contained=None, first=None, types=None):
         '''return all the relationships that match the input request.
 
            Args:
               component: A parent or child component in this relationship
-              Contained: True/False containment relationship
-              First: True/False  True if we are searching for the Parent
+              contained: True/False containment relationship
+              first: True/False  True if we are searching for the Parent
                                  Component in the relationship.
 
-              Types: 1-1, 1-M, M-M are valid relationship types.
+              types_: 1-1, 1-M, M-M are valid relationship types_.
                      1-1: One to One
                      1-M: One to Many
                      M-M: Many to Many
@@ -75,18 +75,18 @@ class Relationship(object):
         rels = []
         for rel in Relationship.relationships.values():
             if rel.hasComponent(component):
-                if not Contained is None:
-                    if not rel.Contained == Contained:
+                if not contained is None:
+                    if not rel.contained == contained:
                         continue
-                if not First is None:
-                    if not rel.first(component) == First:
+                if not first is None:
+                    if not rel.first(component) == first:
                         continue
-                if not Types is None:
-                    if isinstance(Types, basestring):
-                        if rel.Type == Types:
+                if not types is None:
+                    if isinstance(types, basestring):
+                        if rel.type_ == types:
                             continue
                     else:
-                        if not rel.Type in Types:
+                        if not rel.type_ in types:
                             continue
 
                 rels.append(rel)
@@ -113,18 +113,18 @@ class Relationship(object):
             compA = self.components[0]
             compB = self.components[1]
 
-        if self.Contained:
+        if self.contained:
             contained = 'Cont'
         else:
             contained = ''
 
-        if self.Type == '1-1':
+        if self.type_ == '1-1':
             direction = 'ToOne(ToOne'
             return "('{0}', {1}, '{2}', '{3}',)),".format(compA.relname,
                                                           direction,
                                                           compA.id,
                                                           compB.relname)
-        elif self.Type == '1-M':
+        elif self.type_ == '1-M':
             if self.first(component):
                 direction = 'ToMany{0}(ToOne'.format(contained)
                 return "('{0}', {1}, '{2}', '{3}',)),".format(compA.relnames,
@@ -137,7 +137,7 @@ class Relationship(object):
                                                               direction,
                                                               compA.id,
                                                               compB.relnames)
-        elif self.Type == 'M-M':
+        elif self.type_ == 'M-M':
             if self.first(component):
                 direction = 'ToMany(ToMany{0}'.format(contained)
 

@@ -13,7 +13,7 @@ import logging
 import os
 
 from Cheetah.Template import Template as cTemplate
-
+from .colors import error, warn, debug, info, green, red, disable_color
 import zpg
 
 
@@ -58,7 +58,7 @@ class Template(object):
             sep = os.path.sep
             tpath = sep.join(inspect.getfile(zpg).split(sep)[:-1])
             self.tfile = "%s/Templates/%s" % (tpath, self.source_template)
-        self.log.info('Using template %s' % self.tfile)
+        debug(self.log, '  Using template %s' % self.tfile)
         # print 'Using template %s' % self.tfile
 
     def processTemplate(self):

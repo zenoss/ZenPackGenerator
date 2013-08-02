@@ -17,7 +17,6 @@ class SimpleSetup(unittest.TestCase):
         self.zp = ZenPack(DEFAULT_NAME, opts=Opts())
 
     def tearDown(self):
-        print "Calling teardown"
         del(self.zp)
 
 
@@ -42,7 +41,6 @@ class WriteTemplatesBase(unittest.TestCase):
             self.results = wfh.write.call_args_list
 
     def tearDown(self):
-        print "Calling teardown"
         os.makedirs = self.makedirs
         del(self.zp)
 
@@ -209,8 +207,8 @@ class TestComponentProperties(SimpleSetup):
 
     def test_Property_extraParams(self):
         c = Component(self.zp, 'Component')
-        c.addProperty('oids', Type='int', value=2)
-        self.assertEqual(c.properties['oids'].Type, 'int')
+        c.addProperty('oids', type_='int', value=2)
+        self.assertEqual(c.properties['oids'].type_, 'int')
         self.assertEqual(c.properties['oids'].value, 2)
 
     def test_Property_init_dict(self):
@@ -264,9 +262,9 @@ class TestCustomPaths(SimpleSetup):
         b = dc.addComponentType('Blade')
         f = dc.addComponentType('Fan')
 
-        Relationship(self.zp, 'Enclosure', 'Fan', Type='1-M', Contained=False)
+        Relationship(self.zp, 'Enclosure', 'Fan', type_='1-M', contained=False)
         Relationship(self.zp, 'Enclosure',
-                     'Blade', Type='1-M', Contained=False)
+                     'Blade', type_='1-M', contained=False)
 
         self.assertEqual(
             [c.id for c in f.custompaths(
@@ -284,7 +282,7 @@ class TestDropDownComponents(SimpleSetup):
         dc = self.zp.addDeviceClass('Device', zPythonClass='a.b.c.d.Device')
         dc.addComponentType('Enclosure')
         f = dc.addComponentType('Fan')
-        Relationship(self.zp, 'Enclosure', 'Fan', Type='1-M', Contained=False)
+        Relationship(self.zp, 'Enclosure', 'Fan', type_='1-M', contained=False)
         self.assertEqual(
             [c.id for c in f.dropdowncomponents()], ['a.b.c.Enclosure'])
 
@@ -358,25 +356,25 @@ class TestUpdatedImports(SimpleSetup):
         e.addComponentType('a.Disk')
         e.updateImports()
         self.assertTrue(
-            'from Products.ZenRelations.RelSchema import ToManyCont,ToOne' in e.imports)
+            'from Products.ZenRelations.RelSchema import ToManyCont, ToOne' in e.imports)
 
     def testOnetoMany(self):
         dc = self.zp.addDeviceClass('Device', zPythonClass='a.b.c.d.Device')
         e = dc.addComponentType('a.Enclosure')
         d = e.addComponentType('a.Disk')
         Relationship(self.zp, 'a.Enclosure',
-                     'a.Disk', Type='1-M', Contained=False)
+                     'a.Disk', type_='1-M', contained=False)
         d.updateImports()
         e.updateImports()
         self.assertTrue(
-            'from Products.ZenRelations.RelSchema import ToMany,ToOne'
+            'from Products.ZenRelations.RelSchema import ToMany, ToOne'
             in d.imports)
 
     def testOnetoOne(self):
         dc = self.zp.addDeviceClass('Device', zPythonClass='a.b.c.d.Device')
         e = dc.addComponentType('a.Enclosure')
         Relationship(self.zp, 'a.Enclosure',
-                     'a.Disk', Type='1-1', Contained=False)
+                     'a.Disk', type_='1-1', contained=False)
         d = Component(self.zp, 'a.Disk')
         d.updateImports()
         e.updateImports()
@@ -388,7 +386,7 @@ class TestUpdatedImports(SimpleSetup):
         dc = self.zp.addDeviceClass('Device', zPythonClass='a.b.c.d.e.Device')
         e = dc.addComponentType('a.b.Enclosure')
         Relationship(self.zp, 'a.b.Enclosure',
-                     'a.b.Disk', Type='M-M', Contained=False)
+                     'a.b.Disk', type_='M-M', contained=False)
         d = Component(self.zp, 'a.b.Disk')
         d.updateImports()
         e.updateImports()
@@ -399,12 +397,12 @@ class TestUpdatedImports(SimpleSetup):
         dc = self.zp.addDeviceClass('Device', zPythonClass='a.b.c.d.e.Device')
         e = dc.addComponentType('a.b.Enclosure')
         Relationship(self.zp, 'a.b.Enclosure',
-                     'a.b.Disk', Type='M-M', Contained=True)
+                     'a.b.Disk', type_='M-M', contained=True)
         d = Component(self.zp, 'a.b.Disk')
         d.updateImports()
         e.updateImports()
         self.assertTrue(
-            'from Products.ZenRelations.RelSchema import ToMany,ToManyCont'
+            'from Products.ZenRelations.RelSchema import ToMany, ToManyCont'
             in d.imports)
 
 

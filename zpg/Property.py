@@ -21,7 +21,7 @@ class Property(object):
     def __init__(self,
                  name,
                  value=None,
-                 Type=None,
+                 type_=None,
                  width=10,
                  detailDisplay=True,
                  gridDisplay=True,
@@ -30,7 +30,7 @@ class Property(object):
         """Args:
              name: Property name
              value: default value [None]
-             Type: type of property [None]
+             type_: type of property [None]
                    valid types: ['string', 'text', 'list', 'int',
                                  'bool', 'long', 'boolean', 'float',
                                  'password']
@@ -54,27 +54,27 @@ class Property(object):
         self.sortable = True
         self.width = width
         self.panelRenderer = panelRenderer
-        self.Type = Type if Type else value
+        self.type_ = type_ if type_ else value
         self.value = value
 
     def Schema(self):
         """Given the type return the correct Schema."""
-        if self.Type.lower() in ['int']:
+        if self.type_.lower() in ['int']:
             return 'Int'
-        elif self.Type.lower() in ['string', 'text', 'list']:
+        elif self.type_.lower() in ['string', 'text', 'list']:
             return 'TextLine'
-        elif self.Type.lower() in ['bool']:
+        elif self.type_.lower() in ['bool']:
             return 'Bool'
         else:
             return 'TextLine'
 
     @property
-    def Type(self):
+    def type_(self):
         """Return the type"""
         return self._Type
 
-    @Type.setter
-    def Type(self, Type):
+    @type_.setter
+    def type_(self, type_):
         """Input validation for the type"""
         self._Type = None
         # Zope Types we are supporting
@@ -83,24 +83,32 @@ class Property(object):
         # All Zope types
         # boolean,date,float,int,list,
         # long,string,text,tokens,selection,multiple_selection
-        if Type is not None and Type in valid_zope_types:
-            self._Type = Type
+        if type_ is not None and type_ in valid_zope_types:
+            self._Type = type_
             if self._Type == 'lines':
                 self._Type = 'list'
         else:
-            if isinstance(Type, str):
+            if isinstance(type_, str):
                 self._Type = 'string'
-            elif isinstance(Type, bool):
+            elif isinstance(type_, bool):
                 self._Type = 'boolean'
-            elif isinstance(Type, int):
+            elif isinstance(type_, int):
                 self._Type = 'int'
-            elif isinstance(Type, float):
+            elif isinstance(type_, float):
                 self._Type = 'float'
-            elif isinstance(Type, list):
+            elif isinstance(type_, list):
                 self._Type = 'list'
         # Default return of string
         if not self._Type:
             self._Type = 'string'
+
+    @property
+    def Type(self):
+        return self.type_
+
+    @Type.setter
+    def Type(self, type_):
+        self.type_ = type_
 
     @property
     def value(self):
