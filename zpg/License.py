@@ -78,7 +78,6 @@ class License(object):
         sep = os.path.sep
         tpath = sep.join(inspect.getfile(zpg).split(sep)[:-1]) + '/Licenses'
         if os.path.isdir(tpath):
-            import pdb;pdb.set_trace()
             dflt_licenses = find_subdir(tpath)
 
         if id_ in user_licenses:
