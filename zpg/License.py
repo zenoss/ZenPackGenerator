@@ -12,6 +12,8 @@ from .colors import error, warn, debug, info, green, red, yellow, disable_color
 import logging
 import os
 import shutil
+import inspect
+import zpg
 
 log = logging.getLogger('License')
 defaults = Defaults()
@@ -73,8 +75,11 @@ class License(object):
                 if user_licenses:
                     debug(log, '  Loaded User Licenses.')
 
-        if os.path.exists('Licenses') and os.path.isdir('Licenses'):
-            dflt_licenses = find_subdir('Licenses')
+        sep = os.path.sep
+        tpath = sep.join(inspect.getfile(zpg).split(sep)[:-1]) + '/Licenses'
+        if os.path.isdir(tpath):
+            import pdb;pdb.set_trace()
+            dflt_licenses = find_subdir(tpath)
 
         if id_ in user_licenses:
             self.id = id_
