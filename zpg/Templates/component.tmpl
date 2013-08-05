@@ -26,7 +26,7 @@ class ${shortklass}(#echo ', '.join($klassNames)#):
     _properties = _properties + (
 #for $key in $properties
 #set $p=$properties[key]
-        {'id': '$p.id', 'type': '$p.Type', 'mode': '$p.mode'},
+        {'id': '$p.id', 'type': '$p.type_', 'mode': '$p.mode'},
 #end for
         )
 
@@ -133,7 +133,7 @@ class ${shortklass}(#echo ', '.join($klassNames)#):
 #if $displayInfo
 
 
-class I${shortklass}Info(I${Type}Info):
+class I${shortklass}Info(I${type_}Info):
 #if $ManyRelationships
 #for $rel in $ManyRelationships
     ${rel.components[1].relname}_count = schema.Int(title=_t(u'Number of ${rel.components[1].names}'))
@@ -149,7 +149,7 @@ class I${shortklass}Info(I${Type}Info):
 #if $displayIInfo
 
 
-class ${shortklass}Info(${Type}Info):
+class ${shortklass}Info(${type_}Info):
     implements(I${shortklass}Info)
 #if $properties.values()
 

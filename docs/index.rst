@@ -14,6 +14,7 @@ This is the documentation for the ZenPack Generator tool.
    zenpackgenerator
    usage
    jsonformat
+   examples
 
 
 Indices and tables

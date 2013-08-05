@@ -23,7 +23,7 @@ class Organizer(object):
     def __init__(self,
                  zenpack,
                  name,
-                 Type,
+                 type_,
                  properties=None
                  ):
         """Args:
@@ -34,7 +34,7 @@ class Organizer(object):
         self.zenpack = zenpack
         self.name = name
         self.id = name
-        self.Type = Type
+        self.type_ = type_
         self.properties = {}
         # Dict loading
         if properties:
@@ -45,7 +45,7 @@ class Organizer(object):
         dev_classes = self.zenpack.deviceClasses
         if dc_search in dev_classes:
             p = {'name': 'zPythonClass',
-                 'Type': 'string',
+                 'type_': 'string',
                  'value': dev_classes[dc_search].zPythonClass
                  }
             self.addProperty(**p)
@@ -58,7 +58,7 @@ class Organizer(object):
 
     def to_objects_xml(self):
         """Returns an xml tree if the Organizer is a Device Class"""
-        if self.Type == 'DeviceClass':
+        if self._type == 'DeviceClass':
             o = etree.Element("object",
                               module="Products.ZenModel.DeviceClass",
                               id="/zport/dmd/%s" % self.name)

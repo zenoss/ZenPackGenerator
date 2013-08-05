@@ -14,8 +14,14 @@ import inspect
 
 from mock import mock_open, patch, call, MagicMock
 
+from zpg import Template, ZenPack, Defaults
 import zpg
-from zpg import Template, ZenPack, defaults
+
+def zpg_home(self):
+    return '/tests/'
+Defaults.zpg_home = zpg_home
+
+defaults = Defaults()
 
 DEFAULT_NAME = 'a.b.c'
 DEFAULT_NAME2 = 'a.a.Template'
@@ -52,7 +58,6 @@ class WriteTemplatesBase(unittest.TestCase):
             self.results = wfh.write.call_args_list
 
     def tearDown(self):
-        print "Calling teardown"
         os.makedirs = self.makedirs
         del(self.zp)
 

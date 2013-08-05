@@ -31,8 +31,8 @@ Python.  Basic usage:
 
 """
 
-from ._defaults import defaults
-
+from ._defaults import Defaults
+defaults = Defaults()
 __title__ = 'ZenPack Generator'
 __version__ = defaults.get('version', "0.0.1")
 __build__ = defaults.get('build', 0x000001)
@@ -76,3 +76,7 @@ except ImportError:
 
 logging.getLogger(__name__).addHandler(NullHandler())
 logging.basicConfig(format="%(message)s")
+
+# Set the root to Debug to catch startup debug messages
+root_logger = logging.getLogger()
+root_logger.setLevel(logging.DEBUG)

@@ -8,9 +8,10 @@
 #
 ##############################################################################
 
-from ._defaults import defaults
+from ._defaults import Defaults
 from ._zenoss_utils import KlassExpand, zpDir
 from .Template import Template
+defaults = Defaults()
 
 
 class ImpactPy(Template):
