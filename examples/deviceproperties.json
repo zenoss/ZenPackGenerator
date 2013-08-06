@@ -1,0 +1,29 @@
+{
+ "deviceClasses": [ {
+   "deviceType": 
+     { "name": "ExampleDevice",
+       "properties": [ 
+         { "Type": "list",
+           "name": "array_param",
+           "value": ["a","b"] 
+         }, 
+         { "Type": "int",
+           "name": "int_param",
+           "value": 4 
+         }, 
+         { "Type": "boolean",
+           "name": "bool_param",
+           "value": true
+         }, 
+         { "name": "string_param",
+           "value": "Default String"
+         }, 
+         { "name": "string_param2"
+         } 
+       ] 
+     },
+   "path": "Device"
+   }
+ ],
+ "id": "ZenPacks.training.DeviceProperties"
+}
