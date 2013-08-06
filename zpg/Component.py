@@ -338,11 +338,19 @@ class Component(Template):
 
     def addComponentType(self, *args, **kwargs):
         """add a subcomponent"""
+        type_ = '1-1'
+        contained = 'True'
         if 'zenpack' in kwargs:
             del(kwargs['zenpack'])
+        if 'type_' in kwargs:
+            type_ = kwargs['type_']
+            del(kwargs['type_'])
+        if 'contained' in kwargs:
+            type_ = kwargs['contained']
+            del(kwargs['contained'])
         c = Component(self.zenpack, *args, **kwargs)
         self.components[c.id] = c
-        Relationship(self.zenpack, self.id, c.id)
+        Relationship(self.zenpack, self.id, c.id, type_=type_, contained=contained)
         return c
 
     def updateImports(self):

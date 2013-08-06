@@ -164,6 +164,8 @@ Json Options for a ComponentType::
         "panelSort": 'PropertyA',
         "panelSortDirection": "asc",
         "device": False,
+        "type": "1-M",
+        "contained": "False",
         "properties": [],
         "componentTypes": [],
         "impacts": [],
@@ -196,6 +198,8 @@ Json Options for a ComponentType::
         * True
         * False
     * Defaults to False
+* type: Type of relationship [1-1, 1-M, M-M ]
+* contained: Relationship containment [True/False]
 * properties: An Array of :ref:`property` objects. [optional]
 * componentTypes: An Array of :ref:`componentType` objects. [optional]
     * This sets up a One to Many Contained relationship of Nested objects.

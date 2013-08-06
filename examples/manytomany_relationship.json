@@ -1,0 +1,16 @@
+{
+ "deviceClasses": [ {
+   "componentTypes": [ 
+     { "name": "Enclosure" , 
+       "componentTypes": [ { "name": "Bay",
+                             "type": "M-M",
+                             "contained": "False" } 
+       ]},
+     { "name": "TemperatureSensor" }],
+   "deviceType": { "name": "ManyDevice" },
+   "path": "Device/Snmp",
+   "zPythonClass": "NetBotzDevice" }
+ ],
+ "relationships": [ {"componentA": "Enclosure", "componentB": "TemperatureSensor", "Type": "M-M", "Contained": false} ],
+ "id": "ZenPacks.training.ManyManyRel"
+}
