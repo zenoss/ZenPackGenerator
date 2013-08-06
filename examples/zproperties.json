@@ -1,0 +1,17 @@
+{
+ "id": "ZenPacks.training.zPropsOnly",
+ "zProperties": [ 
+   { "type": "boolean",
+     "default": true,
+     "Category": "zProps",
+     "name": "zPropBool" },
+   { "name": "zPropInt",
+     "type": "int" },
+   { "name": "zPropInt2",
+     "type": "int",
+     "default": 5 },
+   { "name": "zPropString" },
+   { "name": "zPropString",
+     "default": "Custom default string"}
+ ]
+}
