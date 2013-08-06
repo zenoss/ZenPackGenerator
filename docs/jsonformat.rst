@@ -57,7 +57,7 @@ Json Options for a zProperty::
 
 * name: The Name of the zproperty as a string. [required]
 * type: The Type of zproperty. [optional]
-        Valid values: [string, int]
+        Valid values: [string, int, boolean]
 * default: The default value for the zProperty. [optional]
 * Category: An optional category for the zProperty. [optional]
 
