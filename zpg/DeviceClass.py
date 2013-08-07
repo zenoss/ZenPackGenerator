@@ -26,7 +26,7 @@ class DeviceClass(object):
                  componentTypes=None,
                  deviceType=None,
                  *args,
-                 **kwargs,
+                 **kwargs
                  ):
         '''Args:
                  path: Destination device class path (the prefix is

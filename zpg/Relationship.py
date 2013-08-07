@@ -20,9 +20,9 @@ class Relationship(object):
                  componentA,
                  componentB,
                  type_='1-M',
-                 contained=True
+                 contained=True,
                  *args,
-                 **kwargs,
+                 **kwargs
                  ):
         """Args:
                 ZenPack:  A ZenPack Class instance

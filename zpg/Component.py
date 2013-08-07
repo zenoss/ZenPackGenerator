@@ -42,7 +42,7 @@ class Component(Template):
                  impacts=None,
                  impactedBy=None,
                  *args,
-                 **kwargs,
+                 **kwargs
                  ):
         """Args:
                  name: Component Name

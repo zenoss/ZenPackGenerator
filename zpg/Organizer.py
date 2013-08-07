@@ -26,7 +26,7 @@ class Organizer(object):
                  type_,
                  properties=None,
                  *args,
-                 **kwargs,
+                 **kwargs
                  ):
         """Args:
             name: Organizer Name in the form of a Slash separated path.

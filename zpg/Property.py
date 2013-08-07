@@ -29,7 +29,7 @@ class Property(object):
                  sortable=True,
                  panelRenderer=None,
                  *args,
-                 **kwargs,
+                 **kwargs
                  ):
         """Args:
              name: Property name
