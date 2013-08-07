@@ -16,7 +16,7 @@ class ${shortklass}(#echo ', '.join($klassNames)#):
 #if $properties
 #for $key in $properties
 #set $p=$properties[key]
-    $p.id = $p.value
+    $p.id = $p.quoted_value
 #end for
 
     _properties = ()
