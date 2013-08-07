@@ -45,7 +45,7 @@ class ZpgOptionParser(ArgumentParser):
         group1 = self.add_argument_group('standard arguments')
         group2 = self.add_argument_group('special arguments')
         group1.add_argument("input", type=str,  # FileType('rt'),
-                            default=sys.stdin, nargs="?",
+                            default='', nargs="?",
                             help="input file")
         group1.add_argument("dest", type=str, nargs="?",
                             default=prefix,
@@ -65,6 +65,9 @@ class ZpgOptionParser(ArgumentParser):
         group1.add_argument("-v", "--verbose", action="count",
                             dest="verbose", default=0,
                             help="Increase output verbosity")
+        group1.add_argument("-c", "--clean", action="store_true",
+                            dest="clean", default=False,
+                            help="Cleans destination path before generating")
         group2.add_argument('-V', "--version", action="store_true",
                             dest="version", default=False,
                             help="Display version of %(prog)s")
@@ -85,6 +88,21 @@ def remove_comments(text):
     engine = re.compile(pattern, flags)
     lines = re.sub(engine, replacer, text).split("\n")
     return "\n".join(line for line in lines if line.strip())
+
+
+def remove_folder(fpath):
+    removed = []
+    if os.path.exists(fpath):
+        for root, folders, files in os.walk(fpath, topdown=False):
+            for file in files:
+                filepath = os.path.join(root, file)
+                os.remove(filepath)
+                removed.append(filepath)
+            for folder in folders:
+                folderpath = os.path.join(root, folder)
+                if os.path.exists(folderpath):
+                    os.removedirs(folderpath)
+                    removed.append(folderpath)
 
 
 class TemplateJSONDecoder(json.JSONDecoder):
@@ -148,11 +166,16 @@ def generate(filename=None):
         sys.exit(0)
 
     if not filename or not os.path.exists(filename):
-        if not opts.input or not os.path.exists(str(opts.input)):
+        filename = opts.input
+        # Make sure filename is an expanded, absolute path
+        if filename.startswith('~'):
+            filename = os.path.expanduser(filename)
+        elif filename.startswith('.'):
+            filename = os.path.abspath(filename)
+        if not filename or not os.path.exists(filename):
             err_msg = "Required input file missing.  Exiting...\n"
             error(logger, err_msg)
             sys.exit(1)
-        filename = opts.input
 
     if not os.path.exists(filename):
         err_msg = "Input file does not exist! %s" % filename
@@ -178,8 +201,12 @@ def generate(filename=None):
         debug(logger, '  Loaded.')
         debug(logger, 'Populating ZenPack...')
         zp_json = ZenPack(**jsi)
+        fpath = os.path.join(opts.dest, zp_json.id)
         debug(logger, 'Done ZenPack populating.')
         debug(logger, 'Writing output...')
+        if opts.clean:
+            info(logger, 'Cleaning: %s' % fpath)
+            remove_folder(fpath)
         zp_json.write()
         debug(logger, 'Done writing.')
 
