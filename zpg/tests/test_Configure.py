@@ -62,7 +62,6 @@ class TestCustomPaths(SimpleSetup):
                      'Fan', type_='1-M', contained=False)
         Relationship(self.zp, 'Enclosure',
                      'Blade', type_='1-M', contained=False)
-        import pdb; pdb.set_trace()
         self.assertTrue(self.zp.configure_zcml.customPathReporters())
 
     def test_findCustomPathsFalse(self):
