@@ -52,7 +52,7 @@ requires = [
 
 setup(
     name="zpg",
-    version=defaults.get("version", "0.0.1"), # zpg.__version__
+    version=defaults.get("version", "0.0.1"),  # zpg.__version__
     description="ZenPack Generator",
     long_description=open('README.rst').read() + '\n\n' +
     open('HISTORY.rst').read(),
