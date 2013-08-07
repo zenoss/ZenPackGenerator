@@ -8,9 +8,13 @@
 #
 #
 
+import logging
+import re
+
 import inflect
 from lxml import etree
-import re
+
+from .colors import error, warn, debug, info, green, red, yellow
 
 plural = inflect.engine().plural
 
@@ -59,6 +63,23 @@ class Property(object):
         self.panelRenderer = panelRenderer
         self.type_ = type_ if type_ else value
         self.value = value
+        self.logger = logger = logging.getLogger('ZenPack Generator')
+        for key in kwargs:
+            do_not_warn = False
+            clsname = self.__class__.__name__
+            layer = "%s:%s" % (clsname, self.name)
+            msg = "WARNING: [%s] unknown keyword ignored in file: '%s'"
+            margs = (layer, key)
+            if key == "Type":
+                msg = "WARNING: [%s] keyword deprecated: "\
+                      "'%s' is now '%s'."
+                margs = (layer, key, key.lower())
+                self.type_ = type_ = kwargs[key]
+            elif key == "type":
+                self.type_ = type_ = kwargs[key]
+                do_not_warn = True
+            if not do_not_warn:
+                warn(self.logger, yellow(msg) % margs)
 
     def Schema(self):
         """Given the type return the correct Schema."""

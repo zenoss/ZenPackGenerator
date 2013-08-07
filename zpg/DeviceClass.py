@@ -7,7 +7,9 @@
 # file at the top-level directory of this package.
 #
 #
+import logging
 
+from .colors import error, warn, debug, info, green, red, yellow
 from ._zenoss_utils import KlassExpand
 from .Relationship import Relationship
 find = Relationship.find
@@ -45,6 +47,14 @@ class DeviceClass(object):
         self.id = self.path
         self.subClasses = {}
         self.zPythonClass = KlassExpand(self.zenpack, zPythonClass)
+        self.logger = logger = logging.getLogger('ZenPack Generator')
+        for key in kwargs:
+            do_not_warn = False
+            layer = self.__class__.__name__
+            msg = "WARNING: JSON keyword ignored in layer '%s': '%s'"
+            margs = (layer, key)
+            if not do_not_warn:
+                warn(self.logger, yellow(msg) % margs)
         if deviceType:
             self.DeviceType(**deviceType)
         else:

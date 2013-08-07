@@ -8,12 +8,15 @@
 #
 ##############################################################################
 
+import logging
 import os
 
 from git import Repo
 
 from .memoize import memoize
 
+from .colors import error, warn, debug, info, green, red, yellow
+from ._defaults import Defaults
 from ._zenoss_utils import prepId
 from .Component import Component
 from .ComponentJS import ComponentJS
@@ -31,7 +34,6 @@ from .ZenPackUI import ZenPackUI
 from .ImpactPy import ImpactPy
 from .ImpactZcml import ImpactZcml
 
-from ._defaults import Defaults
 defaults = Defaults()
 
 
@@ -75,6 +77,14 @@ class ZenPack(object):
         self.version = version
         self.license = License(self, license)
         self.prepname = prepId(id).replace('.', '_')
+        self.logger = logger = logging.getLogger('ZenPack Generator')
+        for key in kwargs:
+            do_not_warn = False
+            layer = self.__class__.__name__
+            msg = "WARNING: JSON keyword ignored in layer '%s': '%s'"
+            margs = (layer, key)
+            if not do_not_warn:
+                warn(self.logger, yellow(msg) % margs)
         if install_requires:
             if isinstance(install_requires, basestring):
                 self.install_requires = [install_requires]
