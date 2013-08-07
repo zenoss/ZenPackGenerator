@@ -350,7 +350,11 @@ class Component(Template):
             del(kwargs['contained'])
         c = Component(self.zenpack, *args, **kwargs)
         self.components[c.id] = c
-        Relationship(self.zenpack, self.id, c.id, type_=type_, contained=contained)
+        Relationship(self.zenpack,
+                     self.id,
+                     c.id,
+                     type_=type_,
+                     contained=contained)
         return c
 
     def updateImports(self):
@@ -372,8 +376,9 @@ class Component(Template):
                 if 'M-' in relationship.type_:
                     Types['ToMany'] = 1
         if len(Types.keys()) > 0:
-            imports = "from Products.ZenRelations.RelSchema import %s" % ", ".join(
-                sorted(Types.keys()))
+
+            imports = "from Products.ZenRelations.RelSchema import %s"
+            imports = imports % ", ".join(sorted(Types.keys()))
             self.imports.append(imports)
 
         def f7(seq):
