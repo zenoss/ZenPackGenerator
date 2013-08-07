@@ -8,28 +8,72 @@
 #
 #
 
+import logging
+
+from .colors import error, warn, debug, info, green, red, yellow
+
 
 class Relationship(object):
-
     '''ZenPack Relationship Management'''
 
+    valid_relationship_types = ['1-M', 'M-M', '1-1']
     relationships = {}
 
     def __init__(self,
                  ZenPack,
                  componentA,
                  componentB,
-                 type_='1-M',
-                 contained=True):
+                 type_=None,
+                 contained=True,
+                 *args,
+                 **kwargs
+                 ):
         """Args:
                 ZenPack:  A ZenPack Class instance
                 componentA: Parent component string id
                 componentB: Child component string id
-                type_: Relationship type_.  Valid inputs [1-1,1-M,M-M]
+                type_: Relationship type_.  Valid inputs [1-1, 1-M, M-M]
                 contained: ComponentA contains ComponentB True or False
         """
         self.ZenPack = ZenPack
-        from Component import Component
+        from .Component import Component
+
+        self.logger = logger = logging.getLogger('ZenPack Generator')
+        name = "-".join([componentA, componentB])
+        layer = "%s:%s" % (self.__class__.__name__, name)
+        if type_ not in self.valid_relationship_types:
+            msg = "WARNING: [%s] unknown type: '%s'.  Defaulted to '%s'. "
+            layer = "%s:%s" % (self.__class__.__name__, name)
+            margs = (layer, type, '1-M')
+            if type_ == 'M-1':
+                a_b = (componentA, componentB)
+                msg += "Reversed '%s' and '%s'." % a_b
+                swap = componentB
+                componentB = componentA
+                componentA = swap
+            if type_ is not None:
+                warn(self.logger, yellow(msg) % margs)
+            type_ = '1-M'
+        for key in kwargs:
+            do_not_warn = False
+            msg = "WARNING: [%s] unknown keyword ignored in file: '%s'"
+            margs = (layer, key)
+            if key == "Type":
+                msg = "WARNING: [%s] keyword deprecated: "\
+                      "'%s' is now '%s'."
+                margs = (layer, key, key.lower())
+                self.type_ = kwargs[key]
+            elif key == "type":
+                self.type_ = type_ = kwargs[key]
+                do_not_warn = True
+            elif key == "Contained":
+                msg = "WARNING: [%s] keyword deprecated: "\
+                      "'%s' is now '%s'."
+                margs = (layer, key, key.lower())
+                self.contained = kwargs[key]
+            if not do_not_warn:
+                warn(self.logger, yellow(msg) % margs)
+
         lookup = Component.lookup
         self.components = lookup(
             ZenPack, componentA), lookup(ZenPack, componentB)

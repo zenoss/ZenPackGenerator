@@ -8,10 +8,12 @@
 #
 #
 
+import logging
 import sys
 
 from lxml import etree
 
+from .colors import error, warn, debug, info, green, red, yellow
 from .Property import Property
 from ._zenoss_utils import KlassExpand
 
@@ -24,7 +26,9 @@ class Organizer(object):
                  zenpack,
                  name,
                  type_,
-                 properties=None
+                 properties=None,
+                 *args,
+                 **kwargs
                  ):
         """Args:
             name: Organizer Name in the form of a Slash separated path.
@@ -36,6 +40,27 @@ class Organizer(object):
         self.id = name
         self.type_ = type_
         self.properties = {}
+        self.logger = logger = logging.getLogger('ZenPack Generator')
+        for key in kwargs:
+            do_not_warn = False
+            layer = self.__class__.__name__
+            msg = "WARNING: JSON keyword ignored in layer '%s': '%s'"
+            margs = (layer, key)
+            if key == "Type":
+                msg = "WARNING: JSON keyword deprecated in '%s' layer. "\
+                      "'%s' is now '%s'."
+                margs = (layer, key, key.lower())
+                self.type_ = kwargs[key]
+            elif key == "type":
+                self.type_ = type_ = kwargs[key]
+                do_not_warn = True
+            elif key == "Contained":
+                msg = "WARNING: JSON keyword deprecated in '%s' layer. "\
+                      "'%s' is now '%s'."
+                margs = (layer, key, key.lower())
+                self.contained = kwargs[key]
+            if not do_not_warn:
+                warn(self.logger, yellow(msg) % margs)
         # Dict loading
         if properties:
             for p in properties:

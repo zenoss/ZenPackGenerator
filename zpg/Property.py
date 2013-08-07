@@ -8,9 +8,13 @@
 #
 #
 
+import logging
+import re
+
 import inflect
 from lxml import etree
-import re
+
+from .colors import error, warn, debug, info, green, red, yellow
 
 plural = inflect.engine().plural
 
@@ -27,7 +31,10 @@ class Property(object):
                  detailDisplay=True,
                  gridDisplay=True,
                  sortable=True,
-                 panelRenderer=None):
+                 panelRenderer=None,
+                 *args,
+                 **kwargs
+                 ):
         """Args:
              name: Property name
              value: default value [None]
@@ -56,6 +63,23 @@ class Property(object):
         self.panelRenderer = panelRenderer
         self.type_ = type_ if type_ else value
         self.value = value
+        self.logger = logger = logging.getLogger('ZenPack Generator')
+        for key in kwargs:
+            do_not_warn = False
+            clsname = self.__class__.__name__
+            layer = "%s:%s" % (clsname, self.name)
+            msg = "WARNING: [%s] unknown keyword ignored in file: '%s'"
+            margs = (layer, key)
+            if key == "Type":
+                msg = "WARNING: [%s] keyword deprecated: "\
+                      "'%s' is now '%s'."
+                margs = (layer, key, key.lower())
+                self.type_ = type_ = kwargs[key]
+            elif key == "type":
+                self.type_ = type_ = kwargs[key]
+                do_not_warn = True
+            if not do_not_warn:
+                warn(self.logger, yellow(msg) % margs)
 
     def Schema(self):
         """Given the type return the correct Schema."""
@@ -119,14 +143,10 @@ class Property(object):
     def value(self, value):
         """Input validation for the value"""
         # Valid values can be implemented later.
-        if value is not None and self.type_ == 'string':
-            if not value.startswith('\''):
-                value = '\'' + value 
-                if len(value) == 1:
-                    value = value + '\''
-            if not value.endswith('\''):
-                value = value + '\''
-        self._value = 'None' if value is None else value
+        if self.type_ == 'string':
+            if not isinstance(value, str):
+                value = str(value)
+        self._value = str(value) if value is None else value
 
     def to_objects_xml(self):
         o = etree.Element("property")

@@ -8,8 +8,11 @@
 #
 #
 
+import logging
+
 import inflect
 
+from .colors import error, warn, debug, info, green, red, yellow
 from ._defaults import Defaults
 from ._zenoss_utils import KlassExpand, zpDir
 from .Property import Property
@@ -41,6 +44,8 @@ class Component(Template):
                  componentTypes=None,
                  impacts=None,
                  impactedBy=None,
+                 *args,
+                 **kwargs
                  ):
         """Args:
                  name: Component Name
@@ -65,6 +70,14 @@ class Component(Template):
 
         """
         super(Component, self).__init__(zenpack)
+        self.logger = logger = logging.getLogger('ZenPack Generator')
+        for key in kwargs:
+            do_not_warn = False
+            layer = self.__class__.__name__
+            msg = "WARNING: JSON keyword ignored in layer '%s': '%s'"
+            margs = (layer, key)
+            if not do_not_warn:
+                warn(self.logger, yellow(msg) % margs)
         self.source_template = 'component.tmpl'
         self.name = name.split('.')[-1]
         self.names = names
@@ -350,7 +363,11 @@ class Component(Template):
             del(kwargs['contained'])
         c = Component(self.zenpack, *args, **kwargs)
         self.components[c.id] = c
-        Relationship(self.zenpack, self.id, c.id, type_=type_, contained=contained)
+        Relationship(self.zenpack,
+                     self.id,
+                     c.id,
+                     type_=type_,
+                     contained=contained)
         return c
 
     def updateImports(self):
@@ -372,8 +389,9 @@ class Component(Template):
                 if 'M-' in relationship.type_:
                     Types['ToMany'] = 1
         if len(Types.keys()) > 0:
-            imports = "from Products.ZenRelations.RelSchema import %s" % ", ".join(
-                sorted(Types.keys()))
+
+            imports = "from Products.ZenRelations.RelSchema import %s"
+            imports = imports % ", ".join(sorted(Types.keys()))
             self.imports.append(imports)
 
         def f7(seq):
