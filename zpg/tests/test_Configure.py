@@ -58,9 +58,11 @@ class TestCustomPaths(SimpleSetup):
         dc.addComponentType('Blade')
         dc.addComponentType('Fan')
 
-        Relationship(self.zp, 'Enclosure', 'Fan', type_='1-M', contained=False)
+        Relationship(self.zp, 'Enclosure',
+                     'Fan', type_='1-M', contained=False)
         Relationship(self.zp, 'Enclosure',
                      'Blade', type_='1-M', contained=False)
+        import pdb; pdb.set_trace()
         self.assertTrue(self.zp.configure_zcml.customPathReporters())
 
     def test_findCustomPathsFalse(self):
