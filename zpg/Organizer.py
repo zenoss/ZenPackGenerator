@@ -58,7 +58,7 @@ class Organizer(object):
 
     def to_objects_xml(self):
         """Returns an xml tree if the Organizer is a Device Class"""
-        if self._type == 'DeviceClass':
+        if self.type_ == 'DeviceClass':
             o = etree.Element("object",
                               module="Products.ZenModel.DeviceClass",
                               id="/zport/dmd/%s" % self.name)

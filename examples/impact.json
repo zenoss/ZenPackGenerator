@@ -1,0 +1,45 @@
+{
+ "deviceClasses": [
+  {
+   "componentTypes": [
+    {
+     "impactedBy": [
+      "TemperatureSensorController"
+     ],
+     "impacts": [
+      "TemperatureSensor"
+     ],
+     "name": "Enclosure"
+    },
+    {
+     "name": "TemperatureSensor"
+    },
+    {
+     "name": "TemperatureSensorController"
+    },
+    {
+     "name": "Cpu"
+    }
+   ],
+   "deviceType": {
+    "name": "ExampleDevice"
+   },
+   "path": "Devices/Example",
+   "zPythonClass": "ExampleDevice"
+  }
+ ],
+ "id": "ZenPacks.training.ExampleImpact",
+ "organizers": [
+  {
+   "Type": "DeviceClass",
+   "name": "Devices/Example"
+  }
+ ],
+ "relationships": [
+  {
+   "Contained": false,
+   "componentA": "Enclosure",
+   "componentB": "TemperatureSensor"
+  }
+ ]
+}

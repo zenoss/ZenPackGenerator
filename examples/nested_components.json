@@ -1,0 +1,33 @@
+{
+ "deviceClasses": [
+  {
+   "componentTypes": [
+    {
+     "componentTypes": [
+      {
+       "componentTypes": [
+        {
+         "name": "Disk"
+        }
+       ],
+       "name": "Shelf"
+      }
+     ],
+     "name": "Enclosure"
+    }
+   ],
+   "deviceType": {
+    "name": "ExampleNestedDevice"
+   },
+   "path": "Devices/Example",
+   "zPythonClass": "ExampleNestedComponent"
+  }
+ ],
+ "id": "ZenPacks.training.ExampleNestedComponent",
+ "organizers": [
+  {
+   "Type": "DeviceClass",
+   "name": "Devices/Example"
+  }
+ ]
+}
