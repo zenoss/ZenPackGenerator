@@ -57,6 +57,8 @@ class ZenPack(object):
                  deviceClasses=None,
                  relationships=None,
                  opts=None,
+                 *args,
+                 **kwargs,
                  ):
 
         self.id = id

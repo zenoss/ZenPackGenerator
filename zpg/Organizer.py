@@ -24,7 +24,9 @@ class Organizer(object):
                  zenpack,
                  name,
                  type_,
-                 properties=None
+                 properties=None,
+                 *args,
+                 **kwargs,
                  ):
         """Args:
             name: Organizer Name in the form of a Slash separated path.

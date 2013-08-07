@@ -27,7 +27,10 @@ class Property(object):
                  detailDisplay=True,
                  gridDisplay=True,
                  sortable=True,
-                 panelRenderer=None):
+                 panelRenderer=None,
+                 *args,
+                 **kwargs,
+                 ):
         """Args:
              name: Property name
              value: default value [None]
@@ -121,7 +124,7 @@ class Property(object):
         # Valid values can be implemented later.
         if value is not None and self.type_ == 'string':
             if not value.startswith('\''):
-                value = '\'' + value 
+                value = '\'' + value
                 if len(value) == 1:
                     value = value + '\''
             if not value.endswith('\''):

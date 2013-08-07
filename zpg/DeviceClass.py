@@ -24,7 +24,10 @@ class DeviceClass(object):
                  prefix='/zport/dmd',
                  zPythonClass='Products.ZenModel.Device.Device',
                  componentTypes=None,
-                 deviceType=None):
+                 deviceType=None,
+                 *args,
+                 **kwargs,
+                 ):
         '''Args:
                  path: Destination device class path (the prefix is
                         automatically prepended)

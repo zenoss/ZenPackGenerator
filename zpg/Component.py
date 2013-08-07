@@ -41,6 +41,8 @@ class Component(Template):
                  componentTypes=None,
                  impacts=None,
                  impactedBy=None,
+                 *args,
+                 **kwargs,
                  ):
         """Args:
                  name: Component Name
