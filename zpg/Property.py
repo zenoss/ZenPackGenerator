@@ -122,14 +122,10 @@ class Property(object):
     def value(self, value):
         """Input validation for the value"""
         # Valid values can be implemented later.
-        if value is not None and self.type_ == 'string':
-            if not value.startswith('\''):
-                value = '\'' + value
-                if len(value) == 1:
-                    value = value + '\''
-            if not value.endswith('\''):
-                value = value + '\''
-        self._value = 'None' if value is None else value
+        if self.type_ == 'string':
+            if not isinstance(value, str):
+                value = str(value)
+        self._value = str(value) if value is None else value
 
     def to_objects_xml(self):
         o = etree.Element("property")
