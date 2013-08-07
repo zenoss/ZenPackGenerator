@@ -371,9 +371,10 @@ class Component(Template):
                     Types['ToOne'] = 1
                 if 'M-' in relationship.type_:
                     Types['ToMany'] = 1
-        imports = "from Products.ZenRelations.RelSchema import %s" % ", ".join(
-            sorted(Types.keys()))
-        self.imports.append(imports)
+        if len(Types.keys()) > 0:
+            imports = "from Products.ZenRelations.RelSchema import %s" % ", ".join(
+                sorted(Types.keys()))
+            self.imports.append(imports)
 
         def f7(seq):
             seen = set()
