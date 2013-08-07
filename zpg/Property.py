@@ -122,12 +122,13 @@ class Property(object):
         self._value = 'None' if value is None else value
         if self.type_ == 'list' or self.type_ == 'lines':
             self._value = []
-            for item in value:
-                if isinstance(item, unicode):
-                    self._value.append(item.encode('utf-8'))
-                else:
-                    self._value.append(item)
-  
+            if value:
+                for item in value:
+                    if isinstance(item, unicode):
+                        self._value.append(item.encode('utf-8'))
+                    else:
+                        self._value.append(item)
+
     @property
     def quoted_value(self):
         value = self.value
