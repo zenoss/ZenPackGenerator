@@ -73,8 +73,9 @@ class Component(Template):
         self.logger = logger = logging.getLogger('ZenPack Generator')
         for key in kwargs:
             do_not_warn = False
-            layer = self.__class__.__name__
-            msg = "WARNING: JSON keyword ignored in layer '%s': '%s'"
+            clsname = self.__class__.__name__
+            layer = "%s:%s" % (clsname, name)
+            msg = "WARNING: [%s] unknown keyword ignored in file: '%s'"
             margs = (layer, key)
             if not do_not_warn:
                 warn(self.logger, yellow(msg) % margs)
