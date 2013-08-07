@@ -10,6 +10,7 @@
 
 import inflect
 from lxml import etree
+import re
 
 plural = inflect.engine().plural
 
@@ -48,7 +49,6 @@ class Property(object):
         self.name = name
         self.names = plural(name)
         self.mode = 'w'
-        self.value = value
         self.detailDisplay = detailDisplay
         self.gridDisplay = gridDisplay
         self.sortable = True
@@ -120,6 +120,27 @@ class Property(object):
         """Input validation for the value"""
         # Valid values can be implemented later.
         self._value = 'None' if value is None else value
+        if self.type_ == 'list' or self.type_ == 'lines':
+            self._value = []
+            for item in value:
+                if isinstance(item, unicode):
+                    self._value.append(item.encode('utf-8'))
+                else:
+                    self._value.append(item)
+  
+    @property
+    def quoted_value(self):
+        value = self.value
+        if value == 'None':
+            return value
+        if value is not None and self.type_ == 'string':
+            if not value.startswith('\''):
+                value = '\'' + value
+            if len(value) == 1:
+                value = value + '\''
+            if not value.endswith('\''):
+                value = value + '\''
+        return value
 
     def to_objects_xml(self):
         o = etree.Element("property")
