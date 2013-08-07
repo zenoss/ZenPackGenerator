@@ -70,11 +70,29 @@ class ZpgOptionParser(ArgumentParser):
                             help="Display version of %(prog)s")
 
 
+def replacer(match):
+    new_string = matched = match.group(0)
+    if matched.startswith('/') or matched.startswith("#"):
+        new_string = ''
+    return new_string
+
+
+def remove_comments(text):
+    """Removes the comments from a JSON, YAML or Python file
+    """
+    pattern = r'#.*?$|//.*?$|/\*.*?\*/|\'(?:\\.|[^\\\'])*\'|"(?:\\.|[^\\"])*"'
+    flags = re.DOTALL | re.MULTILINE
+    engine = re.compile(pattern, flags)
+    lines = re.sub(engine, replacer, text).split("\n")
+    return "\n".join(line for line in lines if line.strip())
+
+
 class TemplateJSONDecoder(json.JSONDecoder):
     def decode(self, json_string):
         """
         json_string is basically string that you give to json.loads method
         """
+        json_string = remove_comments(json_string)
         json_string = re.sub('"Contained"', '"contained"', json_string)
         json_string = re.sub('"Type"', '"type_"', json_string)
         json_string = re.sub('"type"', '"type_"', json_string)
