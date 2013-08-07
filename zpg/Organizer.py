@@ -25,7 +25,7 @@ class Organizer(object):
     def __init__(self,
                  zenpack,
                  name,
-                 type_,
+                 type_=None,
                  properties=None,
                  *args,
                  **kwargs
