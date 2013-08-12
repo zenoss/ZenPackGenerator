@@ -1,12 +1,18 @@
 $zenpack.license.header
 
-from Products.AdvancedQuery import Eq, Or
+import re
+
+from Products.AdvancedQuery import And, Eq, Or
+from ZODB.transact import transact
 
 from Products.ZenUtils.Utils import prepId
 from Products.Zuul.interfaces import ICatalogTool
 
 from zope.event import notify
 from Products.Zuul.catalog.events import IndexingEvent
+
+import logging
+LOG = logging.getLogger('${zenpack.id}.utils')
 
 
 def add_local_lib_path():
@@ -99,3 +105,55 @@ def updateToOne(relationship, root, type_, id_):
         new_obj.index_object()
 
     return
+
+@transact
+def schedule_remodel(dmd, device):
+    """Schedule the remodeling of device if not already scheduled."""
+    pattern = re.compile(r'zenmodeler .+ %s$' % device.id)
+
+    for job in dmd.JobManager.getUnfinishedJobs():
+        if pattern.search(job.job_description):
+            LOG.info('Model of %s already scheduled', device.id)
+            return
+
+    LOG.info('Scheduling model of %s', device.id)
+    device.collectDevice(setlog=False, background=True)
+
+
+def keyword_search(obj, keyword, types=(), meta_type=None):
+    """Generate objects with a matching serial number."""
+    keyword_query = Eq('searchKeywords', keyword)
+
+    query = None
+    if meta_type:
+        query = And(Eq('meta_type', meta_type), keyword_query)
+    else:
+        query = keyword_query
+
+    for brain in ICatalogTool(obj.dmd).search(types, query=query):
+        yield brain.getObject()
+
+
+def device_ip_search(obj, ip_address):
+    """Return a device given an IP address."""
+    device = obj.getDmdRoot('Devices').findDevice(ip_address)
+    if device:
+        return device
+
+    ip = obj.getDmdRoot('Networks').findIp(ip_address)
+    if ip:
+        return ip.device()
+
+
+def oid_to_string(oid):
+    return ''.join(map(chr, map(int, oid.split('.'))))
+
+
+def string_to_int(value):
+    """Convert value to integer for valid comparison."""
+    try:
+        i = int(value)
+    except (ValueError, TypeError):
+        i = value
+
+    return i
