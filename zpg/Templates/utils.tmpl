@@ -8,6 +8,8 @@ from Products.Zuul.interfaces import ICatalogTool
 from zope.event import notify
 from Products.Zuul.catalog.events import IndexingEvent
 
+import logging
+LOG = logging.getLogger('${zenpack.id}.utils')
 
 def add_local_lib_path():
     '''
