@@ -22,7 +22,7 @@ class DeviceClass(object):
                  ZenPack,
                  path,
                  prefix='/zport/dmd',
-                 zPythonClass='Products.ZenModel.Device.Device',
+                 zPythonClass='Products.ZenModel.Device',
                  componentTypes=None,
                  deviceType=None):
         '''Args:
@@ -31,7 +31,7 @@ class DeviceClass(object):
                  ZenPack: ZenPack Class Instance
                  prefix: Destination device class prefix [/zport/dmd]
                  zPythonClass: The zPythonClass this Device Class references.
-                               [Products.ZenModel.Device.Device]
+                               [Products.ZenModel.Device]
                  componentTypes: an array of dictionaries used to create
                                   components.
                  deviceType: a dictionary used to create a device component.
