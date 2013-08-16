@@ -88,16 +88,16 @@ class License(object):
 
         elif id_ in dflt_licenses:
             self.id = id_
-            self.header = load_header('Licenses', self.id)
-            self.license = load_license('Licenses', self.id)
+            self.header = load_header(tpath, self.id)
+            self.license = load_license(tpath, self.id)
         else:
             # Default GPlv2
             info(log,
                  red('Specified License [%s] not known. Defaulting to GPLv2.'
                      % id_))
             self.id = 'GPLv2'
-            self.header = load_header('Licenses', self.id)
-            self.license = load_license('Licenses', self.id)
+            self.header = load_header(tpath, self.id)
+            self.license = load_license(tpath, self.id)
 
     def header(self):
         return self.header
