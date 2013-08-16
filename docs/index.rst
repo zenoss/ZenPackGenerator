@@ -15,6 +15,7 @@ This is the documentation for the ZenPack Generator tool.
    usage
    jsonformat
    examples
+   use_cases
 
 
 Indices and tables

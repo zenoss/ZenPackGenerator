@@ -48,6 +48,7 @@ Prerequisites
 
 * Linux or Mac
 * Python 2.7
+* Python setuptools
 
 This tool does NOT require a zenoss server.
 
