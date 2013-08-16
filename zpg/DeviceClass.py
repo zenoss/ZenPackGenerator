@@ -22,7 +22,7 @@ class DeviceClass(object):
                  ZenPack,
                  path,
                  prefix='/zport/dmd',
-                 zPythonClass='Products.ZenModel.Device',
+                 zPythonClass='Products.ZenModel.Device.Device',
                  componentTypes=None,
                  deviceType=None):
         '''Args:
