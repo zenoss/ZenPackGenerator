@@ -210,12 +210,12 @@ Json Options for a ComponentType::
     
 .. _deviceType:
 
-deviceType []
+deviceType {}
 -------------
 
 Json Options for a DeviceType::
 
-    "deviceType": [{
+    "deviceType": {
         "name": "DeviceName",
         "names": "DeviceNames",
         "klasses": ['DeviceComponent'],
@@ -228,7 +228,7 @@ Json Options for a DeviceType::
         "componentTypes": [],
         "impacts": [],
         "impactedBy": []
-    }]
+    }
 
 * name: The Name of the Device Component, Used to define the Module and Class of a Component. [required]
 * names: The Plural Form of the Device Component Name. [optional]
