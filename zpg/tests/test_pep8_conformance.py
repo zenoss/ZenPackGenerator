@@ -20,7 +20,7 @@ class WriteTemplatesBase(unittest.TestCase):
 
     def test_pep8_conformance(self):
         """Test that we conform to PEP8."""
-        pep8style = pep8.StyleGuide(quiet=True)
+        pep8style = pep8.StyleGuide(show_source=True)
         # assume this file lives in git_repo/zpg/tests
         current_file = os.path.abspath(__file__)
         current_folder = os.path.dirname(current_file)
@@ -32,7 +32,7 @@ class WriteTemplatesBase(unittest.TestCase):
                  for f in files
                  if f[-3:] == ".py"
                  if f[:5] != "test_"))
-        results = pep8style.check_files(filepaths)
+        results = pep8style.check_files(sorted(filepaths))
         errors = str(results.total_errors)
         msgs = [
             "Found %s code style errors (and warnings)." % errors,
