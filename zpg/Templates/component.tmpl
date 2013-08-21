@@ -53,12 +53,6 @@ class ${shortklass}(#echo ', '.join($klassNames)#):
             },),
         },)
 
-##  # Query for events by id instead of name.
-##    event_key = "ComponentId"
-##
-##    def getIconPath(self):
-##        return '/++resource++cloudstack/img/cloudstack.png'
-##
     def device(self):
         '''
         Return device under which this component/device is contained.
@@ -76,6 +70,24 @@ class ${shortklass}(#echo ', '.join($klassNames)#):
                     'Unable to determine parent at %s (%s) '
                     'while getting device for %s' % (
                         obj, exc, self))
+
+#if not $device
+    def manage_deleteComponent(self, REQUEST=None):
+        """
+        Delete Component
+        """
+        try:
+            # Default to using built-in method in Zenoss >= 4.2.4.
+            return super(${shortklass}, self).manage_deleteComponent(REQUEST)
+        except AttributeError:
+            # Fall back to copying the Zenoss 4.2.4 implementation.
+            url = None
+            if REQUEST is not None:
+                url = self.device().absolute_url()
+            self.getPrimaryParent()._delObject(self.id)
+            if REQUEST is not None:
+                REQUEST['RESPONSE'].redirect(url)
+#end if
 #for $key in $updateComponents
 #if $key == '1'
 #for $c in $updateComponents['1']
@@ -142,7 +154,7 @@ class I${shortklass}Info(I${type_}Info):
 #if $properties.values()
 
 #for $prop in $properties.values()
-    $prop.id = schema.${prop.Schema}(title=_t(u'$prop.names'))
+    $prop.id = schema.${prop.Schema}(title=_t(u'$prop.names')$prop.detail_args)
 #end for
 #end if
 #end if

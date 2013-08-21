@@ -8,8 +8,11 @@
 #
 #
 
+import logging
+
 import inflect
 
+from .colors import error, warn, debug, info, green, red, yellow
 from ._defaults import Defaults
 from ._zenoss_utils import KlassExpand, zpDir
 from .Property import Property
@@ -41,6 +44,8 @@ class Component(Template):
                  componentTypes=None,
                  impacts=None,
                  impactedBy=None,
+                 *args,
+                 **kwargs
                  ):
         """Args:
                  name: Component Name
@@ -65,6 +70,15 @@ class Component(Template):
 
         """
         super(Component, self).__init__(zenpack)
+        self.logger = logger = logging.getLogger('ZenPack Generator')
+        for key in kwargs:
+            do_not_warn = False
+            clsname = self.__class__.__name__
+            layer = "%s:%s" % (clsname, name)
+            msg = "WARNING: [%s] unknown keyword ignored in file: '%s'"
+            margs = (layer, key)
+            if not do_not_warn:
+                warn(self.logger, yellow(msg) % margs)
         self.source_template = 'component.tmpl'
         self.name = name.split('.')[-1]
         self.names = names

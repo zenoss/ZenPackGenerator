@@ -8,12 +8,14 @@
     <!-- API: Info Adapters -->
 
 #for $c in sorted($components.values())
+#if $c.displayInfo
     <adapter
         provides=".${c.shortklass}.I${c.shortklass}Info"
         for=".${c.shortklass}.${c.shortklass}"
         factory=".${c.shortklass}.${c.shortklass}Info"
         />
 
+#end if
 #end for
 #end if
 

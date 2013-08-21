@@ -21,7 +21,7 @@ class ZenPackUI(Template):
         self.zenpack = ZenPack
         self.source_template = 'zenpackjs.tmpl'
         self.dest_file = "%s/resources/js/%s.js" % (
-            zpDir(self.zenpack), self.zenpack.id)
+            zpDir(self.zenpack), self.zenpack.prepname)
 
     def write(self):
         # Update the components just before we need them.

@@ -210,12 +210,12 @@ Json Options for a ComponentType::
     
 .. _deviceType:
 
-deviceType []
+deviceType {}
 -------------
 
 Json Options for a DeviceType::
 
-    "deviceType": [{
+    "deviceType": {
         "name": "DeviceName",
         "names": "DeviceNames",
         "klasses": ['DeviceComponent'],
@@ -228,7 +228,7 @@ Json Options for a DeviceType::
         "componentTypes": [],
         "impacts": [],
         "impactedBy": []
-    }]
+    }
 
 * name: The Name of the Device Component, Used to define the Module and Class of a Component. [required]
 * names: The Plural Form of the Device Component Name. [optional]
@@ -271,6 +271,10 @@ Json Options for a Property::
         "mode": 'w',
         "value": 10,
         "detailDisplay": True,
+        readonly=True,
+        detail_group=None,
+        detail_order=None,
+        addl_detail_args=None,
         "gridDisplay": True,
         "sortable": True,
         "width": 10,
@@ -291,6 +295,19 @@ Json Options for a Property::
         * True
         * False
     * Defaults to True
+* readonly: Allow the property to be modified from the detail pane.
+    * Valid Inputs:
+        * True
+        * False
+    * Defaults to True
+* detail_group: Group the property in the details pane.  [Currently unsupported in Zenoss]
+    * Valid Inputs:
+        * string
+* detail_order: Order the property in the details pane.  [Currently unsupported in Zenoss]
+    * Valid Inputs:
+        * positive or negative integer
+* addl_detail_args: A free form string to pass the details pane.
+        * A string
 * gridDisplay: Display the property in the Grid Component Panel section.
     * Valid Inputs:
         * True

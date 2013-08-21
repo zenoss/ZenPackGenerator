@@ -2,6 +2,9 @@
 Examples of JSON input files
 ==============================================================================
 
+Netbotz
+--------------------
+
 NetBotz II Example::
 
    {
@@ -41,6 +44,10 @@ NetBotz II Example::
        "zPythonClass": "NetBotzDevice"
        }]
    }
+
+
+Genbotz Generalization of Netbotz
+----------------------------------
 
 GenBotz Example with Organizers (DeviceClasses)::
 
@@ -100,6 +107,9 @@ GenBotz Example with Organizers (DeviceClasses)::
          ]
      }]
    }
+
+NetScalar
+--------------------
 
 NetScaler Example::
 
