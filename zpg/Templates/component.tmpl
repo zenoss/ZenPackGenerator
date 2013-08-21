@@ -154,7 +154,7 @@ class I${shortklass}Info(I${type_}Info):
 #if $properties.values()
 
 #for $prop in $properties.values()
-    $prop.id = schema.${prop.Schema}(title=_t(u'$prop.names'))
+    $prop.id = schema.${prop.Schema}(title=_t(u'$prop.names')$prop.detail_args)
 #end for
 #end if
 #end if

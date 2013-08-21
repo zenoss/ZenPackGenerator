@@ -32,6 +32,10 @@ class Property(object):
                  gridDisplay=True,
                  sortable=True,
                  panelRenderer=None,
+                 readonly=True,
+                 detail_group=None,
+                 detail_order=None,
+                 addl_detail_args=None,
                  *args,
                  **kwargs
                  ):
@@ -63,6 +67,10 @@ class Property(object):
         self.panelRenderer = panelRenderer
         self.type_ = type_ if type_ else value
         self.value = value
+        self.readonly= readonly
+        self.detail_group = detail_group
+        self.detail_order = detail_order
+        self.addl_detail_args = addl_detail_args
         self.logger = logger = logging.getLogger('ZenPack Generator')
         for key in kwargs:
             do_not_warn = False
@@ -91,6 +99,23 @@ class Property(object):
             return 'Bool'
         else:
             return 'TextLine'
+
+    @property
+    def detail_args(self):
+        """Return additional detail arguements"""
+
+        detail_args = ", readonly=%s" % self.readonly
+
+        if self.detail_group:
+            detail_args = ", group=u'%s'" % self.detail_group
+
+        if self.detail_order:
+            detail_args = ", order=%s" % self.detail_order
+
+        if self.addl_detail_args:
+            detail_args = ", %s" % self.addl_detail_args
+
+        return detail_args
 
     @property
     def type_(self):
