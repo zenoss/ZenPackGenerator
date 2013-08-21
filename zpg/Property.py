@@ -67,7 +67,7 @@ class Property(object):
         self.panelRenderer = panelRenderer
         self.type_ = type_ if type_ else value
         self.value = value
-        self.readonly= readonly
+        self.readonly = readonly
         self.detail_group = detail_group
         self.detail_order = detail_order
         self.addl_detail_args = addl_detail_args

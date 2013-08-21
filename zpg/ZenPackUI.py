@@ -11,6 +11,7 @@
 from .Template import Template
 from ._zenoss_utils import zpDir
 
+
 class ZenPackUI(Template):
 
     """Build the ZenPack global js file to register components."""
