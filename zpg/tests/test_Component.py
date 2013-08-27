@@ -301,19 +301,19 @@ class TestDisplayInfo(SimpleSetup):
 
     def test_properties(self):
         dc = self.zp.addDeviceClass('Device', zPythonClass='a.b.c.d.Device')
-        e = dc.addComponentType('a.Enclosure')
+        e = dc.addComponentType('Enclosure')
         e.addProperty('foo')
         self.assertEqual(e.displayInfo(), True)
 
     def test_trueManyRelationships(self):
         dc = self.zp.addDeviceClass('Device', zPythonClass='a.b.c.d.Device')
-        e2 = dc.addComponentType('a.Enclosure2')
+        e2 = dc.addComponentType('Enclosure2')
         e2.addComponentType('Drive2')
         self.assertEqual(e2.displayInfo(), True)
 
     def test_donotdisplayInfo(self):
         dc = self.zp.addDeviceClass('Device', zPythonClass='a.b.c.d.Device')
-        e = dc.addComponentType('a.Enclosure')
+        e = dc.addComponentType('Enclosure3')
         self.assertEqual(e.displayInfo(), False)
 
 
@@ -321,19 +321,19 @@ class TestDisplayIInfo(SimpleSetup):
 
     def test_properties(self):
         dc = self.zp.addDeviceClass('Device', zPythonClass='a.b.c.d.Device')
-        e = dc.addComponentType('a.Enclosure')
+        e = dc.addComponentType('Enclosure')
         e.addProperty('foo')
         self.assertEqual(e.displayIInfo(), True)
 
     def test_trueManyRelationships(self):
         dc = self.zp.addDeviceClass('Device', zPythonClass='a.b.c.d.Device')
-        e2 = dc.addComponentType('a.Enclosure2')
+        e2 = dc.addComponentType('Enclosure2')
         e2.addComponentType('Drive2')
         self.assertEqual(e2.displayIInfo(), True)
 
     def test_donotdisplayIInfo(self):
         dc = self.zp.addDeviceClass('Device', zPythonClass='a.b.c.d.Device')
-        e = dc.addComponentType('a.Enclosure')
+        e = dc.addComponentType('Enclosure3')
         self.assertEqual(e.displayIInfo(), False)
 
 
