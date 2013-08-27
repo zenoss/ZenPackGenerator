@@ -38,8 +38,11 @@ class memoize(object):
             cache = obj.__cache
         except AttributeError:
             cache = obj.__cache = {}
-        key = (self.func, args[1:])
-
+        kwitems = [item
+                   for item in kw.items() if isinstance(item[1],
+                                                        basestring)]
+        key = (self.func, args[1:], str(frozenset(kwitems)))
+        #key = (self.func, args[1:])
         try:
             res = cache[key]
             # print "Using Memoized %s = %s" % (key,res)
