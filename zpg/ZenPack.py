@@ -147,7 +147,8 @@ class ZenPack(object):
         o = Organizer(self, *args, **kwargs)
         return o
 
-    def addZProperty(self, name, type_='string', default='', Category=None):
+    def addZProperty(self, name, type_='string', default='',
+                     Category=None, **kwargs):
         if type_ == 'string':
             if not default.startswith('\''):
                 default = '\'' + default
@@ -155,6 +156,23 @@ class ZenPack(object):
                     default = default + '\''
             if not default.endswith('\''):
                 default = default + '\''
+
+        for key in kwargs:
+            do_not_warn = False
+            layer = self.__class__.__name__
+            msg = "WARNING: JSON keyword ignored in layer '%s': '%s'"
+            margs = (layer, key)
+            if key == "Type":
+                msg = "WARNING: JSON keyword deprecated in '%s' layer. "\
+                      "'%s' is now '%s'."
+                margs = (layer, key, key.lower())
+                self.type_ = kwargs[key]
+            elif key == "type":
+                self.type_ = type_ = kwargs[key]
+                do_not_warn = True
+            if not do_not_warn:
+                warn(self.logger, yellow(msg) % margs)
+
         self.zproperties[name] = (name, default, type_, Category)
 
     def registerComponent(self, component):
