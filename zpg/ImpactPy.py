@@ -50,8 +50,17 @@ class ImpactPy(Template):
             if istring not in self.imports:
                 self.imports.append(istring)
 
+    def impactAdapters(self):
+        '''Return true if there are any impact relationships'''
+        for c in self.components.values():
+            if c.hasImpact():
+                return True
+        return False
+
     def write(self):
         '''Write the impact file'''
 
         self.updateImports()
-        self.processTemplate()
+
+        if self.impactAdapters():
+            self.processTemplate()

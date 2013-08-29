@@ -29,8 +29,16 @@ class ImpactZcml(Template):
 
         self.dest_file = "%s/impact.zcml" % zpDir(zenpack)
 
+    def impactAdapters(self):
+        '''Return true if there are any impact relationships'''
+        for c in self.components.values():
+            if c.hasImpact():
+                return True
+        return False
+
     def write(self):
         '''Write the impact file'''
 
         #self.updateImports()
-        self.processTemplate()
+        if self.impactAdapters():
+            self.processTemplate()
