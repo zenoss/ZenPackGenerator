@@ -47,7 +47,6 @@ class Configure(Template):
         if self.zenpack.discoveryMappings:
             return True
         return False
-        
 
 # TODO
 # Router and facade
