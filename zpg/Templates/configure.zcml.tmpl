@@ -81,4 +81,11 @@
     -->
 
 #end if
+#if $discoveryMappings
+    <include
+        file="autoclassification.zcml"
+        xmlns:zcml="http://namespaces.zope.org/zcml"
+        zcml:condition="installed ZenPacks.zenoss.DiscoveryMapping"
+        />
+#end if
 </configure>

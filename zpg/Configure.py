@@ -43,6 +43,12 @@ class Configure(Template):
                 return True
         return False
 
+    def discoveryMappings(self):
+        if self.zenpack.discoveryMappings:
+            return True
+        return False
+        
+
 # TODO
 # Router and facade
 # custom device loaders
