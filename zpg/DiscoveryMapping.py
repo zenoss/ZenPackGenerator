@@ -24,9 +24,9 @@ class DiscoveryMapping(object):
                  **kwargs
                  ):
         """Args:
-             zenpack:
-             oid: 
-             deviceClass: 
+             zenpack: the containing zenpack
+             oid:  a devices snmpoid to match
+             deviceClass: destination device class to move the discovered device to
         """
         self.zenpack = zenpack
         self.oid = oid
