@@ -47,6 +47,7 @@ requires = [
     'Mock',
     'nose',
     'pep8',
+    'argparse'
 ]
 
 
