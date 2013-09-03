@@ -165,13 +165,6 @@ class ZenPack(object):
 
     def addZProperty(self, name, type_='string', default='',
                      Category=None, **kwargs):
-        if type_ == 'string':
-            if not default.startswith('\''):
-                default = '\'' + default
-                if len(default) == 1:
-                    default = default + '\''
-            if not default.endswith('\''):
-                default = default + '\''
 
         for key in kwargs:
             do_not_warn = False
@@ -188,6 +181,14 @@ class ZenPack(object):
                 do_not_warn = True
             if not do_not_warn:
                 warn(self.logger, yellow(msg) % margs)
+
+        if type_ == 'string':
+            if not default.startswith('\''):
+                default = '\'' + default
+                if len(default) == 1:
+                    default = default + '\''
+            if not default.endswith('\''):
+                default = default + '\''
 
         self.zproperties[name] = (name, default, type_, Category)
 
