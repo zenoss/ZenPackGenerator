@@ -8,37 +8,37 @@
 #
 ##############################################################################
 
+from ._defaults import Defaults
 from ._zenoss_utils import KlassExpand, zpDir
 from .Template import Template
+defaults = Defaults()
 
 
-class ImpactZcml(Template):
-    """Build the impact object"""
+class AutoClassificationZcml(Template):
+    """Build the autoclassification.zcml file"""
 
     def __init__(self,
                  zenpack,
                  ):
         '''Args:
                  zenpack: ZenPack class instance
+
         '''
 
-        super(ImpactZcml, self).__init__(zenpack)
-        self.source_template = 'impact.zcml.tmpl'
+        super(AutoClassificationZcml, self).__init__(zenpack)
+        self.source_template = 'autoclassification.zcml.tmpl'
         self.zenpack = zenpack
         self.components = zenpack.components
 
-        self.dest_file = "%s/impact.zcml" % zpDir(zenpack)
+        self.dest_file = "%s/autoclassification.zcml" % zpDir(zenpack)
 
-    def impactAdapters(self):
-        '''Return true if there are any impact relationships'''
-        for c in self.components.values():
-            if c.hasImpact():
-                return True
+    def discoveryMappings(self):
+        if self.zenpack.discoveryMappings:
+            return True
         return False
 
     def write(self):
-        '''Write the impact file'''
+        '''Write the file'''
 
-        #self.updateImports()
-        if self.impactAdapters():
+        if self.discoveryMappings():
             self.processTemplate()

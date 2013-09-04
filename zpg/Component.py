@@ -312,12 +312,13 @@ class Component(Template):
             imports = "from Products.Zuul.infos.device import DeviceInfo"
         else:
             imports = "from Products.Zuul.infos.component import ComponentInfo"
-        if self.properties:
-            self.imports.append(imports)
-            return True
-        if self.ManyRelationships():
-            self.imports.append(imports)
-            return True
+        if self.componentInZenPackNameSpace():
+            if self.properties:
+                self.imports.append(imports)
+                return True
+            if self.ManyRelationships():
+                self.imports.append(imports)
+                return True
         return False
 
     def displayIInfo(self):
@@ -327,13 +328,14 @@ class Component(Template):
             imports = "from %s import IDeviceInfo" % name
         else:
             imports = "from %s.component import IComponentInfo" % name
-        for p in self.properties.values():
-            if p.detailDisplay:
+        if self.componentInZenPackNameSpace():
+            for p in self.properties.values():
+                if p.detailDisplay:
+                    self.imports.append(imports)
+                    return True
+            if self.ManyRelationships():
                 self.imports.append(imports)
                 return True
-        if self.ManyRelationships():
-            self.imports.append(imports)
-            return True
         return False
 
     @classmethod
@@ -445,9 +447,16 @@ class Component(Template):
                 return True
         return False
 
+    def componentInZenPackNameSpace(self):
+        'return true if the component id startswith the zenpack id'
+        return self.id.startswith(self.zenpack.id)
+
     def write(self):
         """Write the component files"""
         self.updateImports()
         self.findUpdateComponents()
         self.convertImpactStringsToRealComponents()
-        self.processTemplate()
+
+        # Only write components that are prefixed in this zenpacks namespace.
+        if self.componentInZenPackNameSpace():
+            self.processTemplate()

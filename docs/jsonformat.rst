@@ -24,7 +24,8 @@ Json Options for a ZenPack::
       "organizers": [],
       "zProperties": [],
       "deviceClasses": [],
-      "relationships": []
+      "relationships": [].
+      "discoveryMappings": []
     }
 
 * id: A string defining the unique name of your Zenpack. [required]
@@ -39,6 +40,7 @@ Json Options for a ZenPack::
 * zproperties: An Array of :ref:`zproperty` elements. [optional]
 * deviceClasses: An Array of :ref:`deviceClass` elements. [optional]
 * relationships: An Array of :ref:`relationship` elements. [optional]
+* discoveryMappings: An Array of :ref:`discoveryMapping` elements. [optional]
 * organizers: An Array of :ref:`organizer` elements. [optional]
 
 .. _zproperties:
@@ -257,6 +259,21 @@ Json Options for a DeviceType::
     * The component can be in :ref:`shorthand` notation.
 * impactedBy: An Array of components that this component is impactedBy.
     * The component can be in :ref:`shorthand` notation.
+
+.. _discoveryMapping:
+
+discoveryMapping {}
+-------------------
+
+Json Options for a DiscoveryMapping::
+
+    "discoveryMappings": [{
+        "oid": '1.3.6.1.5',
+        "deviceClass": 'Network/Switch/Cisco/Foo'
+    }]
+
+* oid: a devices SnmpOid to match
+* deviceClass: The destination device Class
 
 .. _properties:
 
