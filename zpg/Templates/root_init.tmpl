@@ -27,7 +27,9 @@ ZENPACK_NAME = '${zenpack.id}'
 # bidirectional integrity of defined relationships.
 productNames = (
 #for $c in $components
+#if $c.componentInZenPackNameSpace
     '${c.shortklass}',
+#end if
 #end for
     )
 #end if
