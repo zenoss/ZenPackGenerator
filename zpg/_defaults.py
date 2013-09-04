@@ -26,7 +26,7 @@ defaults = {
     'author': 'ZenossLabs <labs@zenoss.com>',
     'author_email': 'labs@zenoss.com',
     'description': 'A tool to assist building zenpacks.',
-    'version': '1.0.12',
+    'version': '1.0.13',
     'license': 'GPLv2',
     'component_classes': [
         'Products.ZenModel.DeviceComponent.DeviceComponent',
