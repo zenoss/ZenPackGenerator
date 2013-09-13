@@ -34,7 +34,7 @@ Ext.apply(Zenoss.render, {
 });
 
 #for $c in $components
-ZC.${c.unique_name}Panel = Ext.extend(ZC.${name}ComponentGridPanel, {
+ZC.${c.unique_name}Panel = Ext.extend(ZC.ComponentGridPanel, {
     constructor: function(config) {
         config = Ext.applyIf(config||{}, {
             componentType: '${c.unique_name}',
