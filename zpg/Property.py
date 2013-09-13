@@ -95,7 +95,7 @@ class Property(object):
             return 'Int'
         elif self.type_.lower() in ['string', 'text', 'list']:
             return 'TextLine'
-        elif self.type_.lower() in ['bool']:
+        elif self.type_.lower() in ['bool', 'boolean']:
             return 'Bool'
         else:
             return 'TextLine'
