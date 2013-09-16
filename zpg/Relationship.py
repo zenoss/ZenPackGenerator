@@ -41,19 +41,9 @@ class Relationship(object):
         self.logger = logger = logging.getLogger('ZenPack Generator')
         name = "-".join([componentA, componentB])
         layer = "%s:%s" % (self.__class__.__name__, name)
-        if type_ not in self.valid_relationship_types:
-            msg = "WARNING: [%s] unknown type: '%s'.  Defaulted to '%s'. "
-            layer = "%s:%s" % (self.__class__.__name__, name)
-            margs = (layer, type, '1-M')
-            if type_ == 'M-1':
-                a_b = (componentA, componentB)
-                msg += "Reversed '%s' and '%s'." % a_b
-                swap = componentB
-                componentB = componentA
-                componentA = swap
-            if type_ is not None:
-                warn(self.logger, yellow(msg) % margs)
-            type_ = '1-M'
+
+        self.type_ = type_
+        self.contained = contained
         for key in kwargs:
             do_not_warn = False
             msg = "WARNING: [%s] unknown keyword ignored in file: '%s'"
@@ -74,12 +64,24 @@ class Relationship(object):
             if not do_not_warn:
                 warn(self.logger, yellow(msg) % margs)
 
+        if type_ not in self.valid_relationship_types:
+            msg = "WARNING: [%s] unknown type: '%s'.  Defaulted to '%s'. "
+            layer = "%s:%s" % (self.__class__.__name__, name)
+            margs = (layer, type, '1-M')
+            if type_ == 'M-1':
+                a_b = (componentA, componentB)
+                msg += "Reversed '%s' and '%s'." % a_b
+                swap = componentB
+                componentB = componentA
+                componentA = swap
+            if type_ is not None:
+                warn(self.logger, yellow(msg) % margs)
+            type_ = '1-M'
+
         lookup = Component.lookup
         self.components = lookup(
             ZenPack, componentA), lookup(ZenPack, componentB)
         self.id = '%s %s' % (self.components[0].id, self.components[1].id)
-        self.type_ = type_
-        self.contained = contained
 
         # Register the relationship on a zenpack so we can find it later.
         self.ZenPack.registerRelationship(self)
@@ -145,6 +147,23 @@ class Relationship(object):
     def child(self):
         '''Return the child component.'''
         return self.components[1]
+
+    def relname(self, component):
+        '''Return the singular or plural form of the relname based on the
+        component as the frame of reference'''
+
+        typeTuple = self.type_.split('-')
+
+        if self.first(component):
+            type_ = typeTuple[0]
+        else:
+            type_ = typeTuple[1]
+
+        if type_ == '1':
+            return component.relname
+        else:
+            return component.relnames
+
 
     def toString(self, component):
         '''Write the relationship into a string format based on the component

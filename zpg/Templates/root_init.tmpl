@@ -36,13 +36,13 @@ productNames = (
 
 # Define new device relations.
 NEW_DEVICE_RELATIONS = (
-#for $c in $devChildren
-    ('${c.relname}', '${c.unique_name}'),
+#for $c in $devChildren.keys
+    ('$devChildren[$c].relname($c)', '${c.unique_name}'),
 #end for
     )
 
 NEW_COMPONENT_TYPES = (
-#for $c in $devChildren
+#for $c in $devChildren.keys
     '${c.id}.${c.klass}',
 #end for
     )

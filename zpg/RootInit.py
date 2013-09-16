@@ -32,13 +32,13 @@ class RootInit(Template):
         """Write __init__.py"""
         self.components = self.zenpack.components.values()
 
-        devChildren = []
+        devChildren = {}
 
         # Search for any components contained inside the Device Component.
         dc = Component(self.zenpack, 'Products.ZenModel.Device.Device')
         rels = find(dc)
         for rel in rels:
             component = rel.components[1]
-            devChildren.append(component)
+            devChildren[component] = rel
         self.devChildren = devChildren
         self.processTemplate()
