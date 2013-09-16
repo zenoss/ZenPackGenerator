@@ -34,6 +34,8 @@ from .UtilsTemplate import UtilsTemplate
 from .ZenPackUI import ZenPackUI
 from .ImpactPy import ImpactPy
 from .ImpactZcml import ImpactZcml
+from .Enum import Enum
+from .Enumspy import Enumspy
 from .AutoClassificationZcml import AutoClassificationZcml
 
 defaults = Defaults()
@@ -61,6 +63,7 @@ class ZenPack(object):
                  deviceClasses=None,
                  relationships=None,
                  discoveryMappings=None,
+                 enums=None,
                  opts=None,
                  *args,
                  **kwargs
@@ -72,6 +75,7 @@ class ZenPack(object):
         self.namespace = id
         self.deviceClasses = {}
         self.components = {}
+        self.enums = {}
         self.relationships = {}
         self.discoveryMappings = {}
         self.organizers = {}
@@ -111,6 +115,7 @@ class ZenPack(object):
         self.zenpackUI = ZenPackUI(self)
         self.objects_xml = ObjectsXml(self)
         self.impact_zcml = ImpactZcml(self)
+        self.enumspy = Enumspy(self)
         self.autoclassification_zcml = AutoClassificationZcml(self)
         self.impact = ImpactPy(self)
         if zProperties:
@@ -128,6 +133,10 @@ class ZenPack(object):
         if discoveryMappings:
             for mapping in discoveryMappings:
                 self.addDiscoveryMapping(**mapping)
+
+        if enums:
+            for enum in enums:
+                self.addEnum(**enum)
 
         # Make sure we create the organizers after the deviceClasses
         # because we look up the zPythonClasses out of the deviceClasses
@@ -162,6 +171,10 @@ class ZenPack(object):
     def addOrganizer(self, *args, **kwargs):
         o = Organizer(self, *args, **kwargs)
         return o
+
+    def addEnum(self, *args, **kwargs):
+        r = Enum(self, *args, **kwargs)
+        return r
 
     def addZProperty(self, name, type_='string', default='',
                      Category=None, **kwargs):
@@ -209,6 +222,9 @@ class ZenPack(object):
 
     def registerDiscoveryMapping(self, discoveryMapping):
         self.discoveryMappings[discoveryMapping.oid] = discoveryMapping
+
+    def registerEnum(self, enum):
+        self.enums[enum.id] = enum
 
     def __repr__(self):
         return "%s \n\tAUTHOR: %s\n\tVERSION: %s\n\tLICENSE: %s" \
@@ -263,6 +279,9 @@ class ZenPack(object):
 
         # Create the impact.py
         self.impact.write()
+
+        # Create the enum.py
+        self.enumspy.write()
 
         # Create the autoclassification.zcml
         self.autoclassification_zcml.write()

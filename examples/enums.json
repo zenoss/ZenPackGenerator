@@ -1,0 +1,20 @@
+{
+ "id": "ZenPacks.training.Enumerations",
+ "deviceClasses": [ {
+   "path": "Device"
+   }
+ ],
+"enums": [ { "name": "powersupplytype",
+             "values": [[ 0, "" ],
+                        [ 1, "other" ],
+                        [ 2, "online" ]]
+           },
+           { "name": "powersupplystatus",
+             "values": [[ 1, "other" ],
+                        [ 2, "online" ]]
+           },
+           { "name": "interfaceState",
+             "values": ["Up", "Down", "Ready" ]
+           }
+         ]
+}

@@ -25,7 +25,8 @@ Json Options for a ZenPack::
       "zProperties": [],
       "deviceClasses": [],
       "relationships": [].
-      "discoveryMappings": []
+      "discoveryMappings": [],
+      "enums": []
     }
 
 * id: A string defining the unique name of your Zenpack. [required]
@@ -41,6 +42,7 @@ Json Options for a ZenPack::
 * deviceClasses: An Array of :ref:`deviceClass` elements. [optional]
 * relationships: An Array of :ref:`relationship` elements. [optional]
 * discoveryMappings: An Array of :ref:`discoveryMapping` elements. [optional]
+* enums: An Array of :ref:`enumeration` elements. [optional]
 * organizers: An Array of :ref:`organizer` elements. [optional]
 
 .. _zproperties:
@@ -274,6 +276,39 @@ Json Options for a DiscoveryMapping::
 
 * oid: a devices SnmpOid to match
 * deviceClass: The destination device Class
+
+.. _enumeration:
+
+Enumeration {}
+-------------------
+
+Json Options for a enumeration::
+
+    "enums": [ { "name": "interfaceState",
+                 "values": ["Up", "Down", "Ready" ]
+               }
+             ]
+
+    or
+    
+    "enums": [ { "name": "powersupplystatus",
+                 "values": [[ 1, "other" ],
+                            [ 2, "online" ]]
+               }
+             ]
+
+* name:  The name of the enumeration dictionary
+* values:  An Array of elements for the enumeration or
+           an Array of Array Elements where the first column is the
+           location in the enumeration and the second element is the
+           value of the enumeration.
+
+This turns on a special enumerations helper file that can then be imported
+in your zenpack wherever you need to lookup that enumeration.
+
+    from utils import lookup_enum
+    from enums import interfaceState
+    lookup_enum(interfaceState,0)
 
 .. _properties:
 

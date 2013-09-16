@@ -200,3 +200,8 @@ def require_zenpack(zenpack_name, default=None):
         return wrapper
 
     return wrap
+
+def lookup_enum(enum_obj,key, default='unknown'):
+    '''Take an enumeration dictionary and lookup the value given a key'''
+
+    return enum_obj.get(string_to_int(key), default)
