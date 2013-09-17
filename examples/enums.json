@@ -15,6 +15,13 @@
            },
            { "name": "interfaceState",
              "values": ["Up", "Down", "Ready" ]
+           },
+           { "name": "PipeStatus",
+             "values": {"1": "Open", 
+                        "2": "Closed",
+                        "3": "Available",
+                        "4": "UnAvailable"
+                       }
            }
          ]
 }

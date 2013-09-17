@@ -296,12 +296,23 @@ Json Options for a enumeration::
                             [ 2, "online" ]]
                }
              ]
+    
+    or 
+    
+    "enums": [ { "name": "powersupplystatus",
+                 "values": {"1": "other",
+                            "2": "online"
+                            }
+               }
+             ]
 
 * name:  The name of the enumeration dictionary
 * values:  An Array of elements for the enumeration or
            an Array of Array Elements where the first column is the
            location in the enumeration and the second element is the
            value of the enumeration.
+           The values field can also be a dictionary where the key is the
+           location of the enumeration and the value is provided.
 
 This turns on a special enumerations helper file that can then be imported
 in your zenpack wherever you need to lookup that enumeration.

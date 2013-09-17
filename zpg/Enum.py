@@ -39,12 +39,16 @@ class Enum(object):
         self.id = name
         self.values = {}
 
-        if isinstance(values[0], list):
-            for value in values:
-                self.values[value[0]] = str(value[1])
-        else:
-            for i,value in enumerate(values):
-                self.values[i] = str(value)
+        if isinstance(values, list):
+            if isinstance(values[0], list):
+                for value in values:
+                    self.values[value[0]] = str(value[1])
+            else:
+                for i,value in enumerate(values):
+                    self.values[i+1] = str(value)
+
+        elif isinstance(values, dict):
+            self.values = values
 
         # Create a string representation
         self.value = "%s = {}\n" % self.id
