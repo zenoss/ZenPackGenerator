@@ -36,7 +36,7 @@ NetBotz II Example::
                "name": "NetBotzDevice",
                "properties":
                [{
-                   "Type": "int",
+                   "type": "int",
                    "name": "temp_sensor_count"
                }]
            },

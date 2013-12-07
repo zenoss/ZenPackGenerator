@@ -17,7 +17,7 @@ NetBotz Example JSON::
                "name": "NetBotzDevice",
                "properties": 
                    [{ 
-                      "Type": "int",
+                      "type": "int",
                       "name": "temp_sensor_count" } 
                    ]},
             "path": "Device/Snmp",
