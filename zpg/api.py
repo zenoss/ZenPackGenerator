@@ -55,7 +55,10 @@ class ZpgOptionParser(ArgumentParser):
                             help="Zenoss version compatability [%(default)s]")
         group1.add_argument('-s', "--skip", action='store_true',
                             dest="skip", default=False,
-                            help="Do Not use cached Templates.")
+                            help="Do not use cached Templates.")
+        group1.add_argument('-ng', "--no-git", action='store_false',
+                            dest="git", default=True,
+                            help="Do not great/update git repo.")
         group1.add_argument("-C", "--no-color", action='store_false',
                             dest="color", default=True,
                             help="Remove color from standard output")

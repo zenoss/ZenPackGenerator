@@ -291,4 +291,5 @@ class ZenPack(object):
         # Create the autoclassification.zcml
         self.autoclassification_zcml.write()
 
-        self.updateGitTemplates()
+        if self.opts.git:
+            self.updateGitTemplates()
