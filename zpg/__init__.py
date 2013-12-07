@@ -58,6 +58,10 @@ from .Template import Template
 from .UtilsTemplate import UtilsTemplate
 from .ZenPack import ZenPack, Opts
 
+import warnings
+# Ignore the cheetah warnings .. we don't care if we are a bit slower.
+warnings.simplefilter("ignore")
+
 __all__ = [
     "defaults",
     "generate",
