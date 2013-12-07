@@ -72,7 +72,6 @@ ZC.${c.unique_name}Panel = Ext.extend(ZC.ComponentGridPanel, {
                 id: 'name',
                 dataIndex: 'name',
                 header: _t('Name'),
-                renderer: Zenoss.render.NetBotz_entityLinkFromGrid,
                 sortable: true
 #for $property in sorted($c.properties.values)
 #if $property.gridDisplay
