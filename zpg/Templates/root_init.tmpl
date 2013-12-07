@@ -16,10 +16,6 @@ from Products.ZenUtils.Utils import unused, zenPath
 
 unused(Globals)
 
-skinsDir = os.path.join(os.path.dirname(__file__), 'skins')
-if os.path.isdir(skinsDir):
-    registerDirectory(skinsDir, globals())
-
 ZENPACK_NAME = '${zenpack.id}'
 #if $components
 
