@@ -132,5 +132,6 @@ class ZenPack(ZenPackBase):
         super(ZenPack, self).remove(app, leaveObjects=leaveObjects)
 
     def _buildDeviceRelations(self):
-        for d in self.dmd.Devices.getSubDevicesGen():
-            d.buildRelations()
+        if len(NEW_DEVICE_RELATIONS) > 0:
+            for d in self.dmd.Devices.getSubDevicesGen():
+                d.buildRelations()
