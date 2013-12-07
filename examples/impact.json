@@ -31,7 +31,7 @@
  "id": "ZenPacks.training.ExampleImpact",
  "organizers": [
   {
-   "Type": "DeviceClass",
+   "type": "DeviceClass",
    "name": "Devices/Example"
   }
  ],

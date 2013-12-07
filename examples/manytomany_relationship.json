@@ -11,6 +11,6 @@
    "path": "Device/Snmp",
    "zPythonClass": "NetBotzDevice" }
  ],
- "relationships": [ {"componentA": "Enclosure", "componentB": "TemperatureSensor", "Type": "M-M", "Contained": false} ],
+ "relationships": [ {"componentA": "Enclosure", "componentB": "TemperatureSensor", "type": "M-M", "Contained": false} ],
  "id": "ZenPacks.training.ManyManyRel"
 }

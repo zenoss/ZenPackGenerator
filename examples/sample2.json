@@ -12,7 +12,7 @@
                          "properties": [ { "name": "type" } ] }
                      ],
    "deviceType": { "name": "Products.ZenMode.Device.Device",
-                   "properties": [ { "Type": "int",
+                   "properties": [ { "type": "int",
                                      "name": "temp_sensor_count" } ] },
    "path": "Device/Snmp"} ],
  "relationships": [ {"ComponentA": "Enclosure",

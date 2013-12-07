@@ -3,15 +3,15 @@
    "deviceType": 
      { "name": "ExampleDevice",
        "properties": [ 
-         { "Type": "list",
+         { "type": "list",
            "name": "array_param",
            "value": ["a","b"] 
          }, 
-         { "Type": "int",
+         { "type": "int",
            "name": "int_param",
            "value": 4 
          }, 
-         { "Type": "boolean",
+         { "type": "boolean",
            "name": "bool_param",
            "value": true
          }, 

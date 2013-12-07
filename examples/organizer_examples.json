@@ -11,7 +11,7 @@
  "id": "ZenPacks.training.ExampleOrganizer",
  "organizers": [
   {
-   "Type": "DeviceClass",
+   "type": "DeviceClass",
    "name": "Devices/Example",
    "properties": [
     {
