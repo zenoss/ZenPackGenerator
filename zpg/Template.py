@@ -41,13 +41,15 @@ class Template(object):
         """Store the template into the cache."""
         cacheTemplateFile = self.TemplateCacheLocation()
         cache_directory = os.path.dirname(cacheTemplateFile)
-        if not os.path.exists(cache_directory):
-            os.makedirs(cache_directory)
-        if not os.path.exists(cacheTemplateFile):
-            with open(os.path.join(self.tfile), 'r') as tf:
-                with open(os.path.join(cacheTemplateFile), 'w') as dtf:
-                    dtf.write('## Source Template %s \n' % self.tfile)
-                    dtf.write(tf.read())
+        if not self.zenpack.opts.skip:
+            import pdb;pdb.set_trace()
+            if not os.path.exists(cache_directory):
+                os.makedirs(cache_directory)
+            if not os.path.exists(cacheTemplateFile):
+                with open(os.path.join(self.tfile), 'r') as tf:
+                    with open(os.path.join(cacheTemplateFile), 'w') as dtf:
+                        dtf.write('## Source Template %s \n' % self.tfile)
+                        dtf.write(tf.read())
 
     def findTemplate(self):
         """Find the template and save its location."""
