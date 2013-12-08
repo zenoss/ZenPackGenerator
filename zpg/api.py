@@ -192,8 +192,17 @@ def generate(filename=None):
     with open(filename, 'r') as f:
         debug(logger, 'Loading input file: %s...' % filename)
         if filetype == 'json':
-            jsi = json.load(f, cls=TemplateJSONDecoder)
-            jsi['opts'] = opts
+            try:
+                jsi = json.load(f, cls=TemplateJSONDecoder)
+                jsi['opts'] = opts
+            except Exception as e:
+                warn(logger, 'Failed to parse input json.')
+                warn(logger, e.message)
+                warn(logger, 'Common problems include: ')
+                warn(logger, '\t 1. Using single ticks (rather than quotes)')
+                warn(logger, '\t 2. An extra comma after the last item of a series of entries.')
+                sys.exit(1)
+               
         else:
             err_msg = "File Type not supported: %s" % filename
             error(logger, err_msg)
