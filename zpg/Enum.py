@@ -44,7 +44,7 @@ class Enum(object):
                 for value in values:
                     self.values[value[0]] = str(value[1])
             else:
-                for i,value in enumerate(values):
+                for i, value in enumerate(values):
                     self.values[i+1] = str(value)
 
         elif isinstance(values, dict):

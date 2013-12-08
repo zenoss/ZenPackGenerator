@@ -42,7 +42,6 @@ class Template(object):
         cacheTemplateFile = self.TemplateCacheLocation()
         cache_directory = os.path.dirname(cacheTemplateFile)
         if not self.zenpack.opts.skip:
-            import pdb;pdb.set_trace()
             if not os.path.exists(cache_directory):
                 os.makedirs(cache_directory)
             if not os.path.exists(cacheTemplateFile):

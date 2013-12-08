@@ -200,9 +200,9 @@ def generate(filename=None):
                 warn(logger, e.message)
                 warn(logger, 'Common problems include: ')
                 warn(logger, '\t 1. Using single ticks (rather than quotes)')
-                warn(logger, '\t 2. An extra comma after the last item of a series of entries.')
+                warn(logger, '\t 2. An extra comma after the last item of ' +
+                             'a series of entries.')
                 sys.exit(1)
-               
         else:
             err_msg = "File Type not supported: %s" % filename
             error(logger, err_msg)

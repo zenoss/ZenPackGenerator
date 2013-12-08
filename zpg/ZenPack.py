@@ -237,13 +237,14 @@ class ZenPack(object):
             try:
                 repo.commit()
             except Exception:
-                repo.index.commit('Initial Commit from zpg (%s)' % self.version)
+                repo.index.commit('Initial Commit from zpg (%s)'
+                                  % self.version)
 
             # Update the repo
             repo.index.add([self.destdir.path + '/Templates'])
             if repo.is_dirty():
                 repo.index.commit('zpg: Committed Template changes (%s)'
-                                   % self.version)
+                                  % self.version)
         except OSError:
             logger = logging.getLogger('ZenPack Generator')
             debug(logger, yellow('git binary not found.  skipping.'))

@@ -164,7 +164,6 @@ class Relationship(object):
         else:
             return component.relnames
 
-
     def toString(self, component):
         '''Write the relationship into a string format based on the component
            as a frame of reference. This is a 3.X and 4.X string format.'''
