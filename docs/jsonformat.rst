@@ -24,7 +24,7 @@ Json Options for a ZenPack::
       "organizers": [],
       "zProperties": [],
       "deviceClasses": [],
-      "relationships": [].
+      "relationships": [],
       "discoveryMappings": [],
       "enums": []
     }
@@ -38,7 +38,7 @@ Json Options for a ZenPack::
 * compat_zenoss_vers: A String representing the zenoss versions this zenpack is compatible with. [optional]
     * eg "compat_zenoss_vers": ">=4.2"
 * prev_zenpack_name: A String representing previous zenpack names. [optional]
-* zproperties: An Array of :ref:`zproperty` elements. [optional]
+* zProperties: An Array of :ref:`zproperty` elements. [optional]
 * deviceClasses: An Array of :ref:`deviceClass` elements. [optional]
 * relationships: An Array of :ref:`relationship` elements. [optional]
 * discoveryMappings: An Array of :ref:`discoveryMapping` elements. [optional]
@@ -81,7 +81,7 @@ Json Options for a deviceClass::
     }]
 
 
-* path: A Path within the device class hierarchy. [required]
+* path: An Path within the device organizer hierarchy.  If this is not a guaranteed pre-existing organizer, it must also be specified in the :ref:`organizers` section. [required]
 * prefix: A prefix that combined with the path will give the final path to the device class. [optional]
     * You will almost never need to change this.
 
@@ -103,7 +103,7 @@ Json Options for a Organizer::
         "properties": [{
             "name": "zPingMonitorIgnore", 
             "type": "boolean", 
-            "value": "True"
+            "value": True
         }, {
             "name": "zDeviceTemplates", 
             "type": "lines", 
@@ -132,7 +132,7 @@ Json Options for a Relationship::
         "componentA": "VirtualServer",
         "componentB": "Service",
         "type": "M-M",
-        "contained": false
+        "contained": False
     }, {
         "componentA": "HardDrive",
         "componentB": "TemperatureSensor",
@@ -169,7 +169,7 @@ Json Options for a ComponentType::
         "panelSortDirection": "asc",
         "device": False,
         "type": "1-M",
-        "contained": "False",
+        "contained": False,
         "properties": [],
         "componentTypes": [],
         "impacts": [],
