@@ -37,6 +37,7 @@ class Component(Template):
                  names=None,
                  meta_type=None,
                  device=False,
+                 abstract=False,
                  namespace=None,
                  panelSort='name',
                  panelSortDirection='asc',
@@ -55,6 +56,9 @@ class Component(Template):
                  imports: list of imports for this component [None]
                  meta_type: the component meta_type
                  device: Device Component is True or False [False]
+                 abstract: Component is abstract base class for other components,
+                           not meant to be instantiated directly, and not shown
+                           in the UI [False]
                  namespace: python search namespace [None]
                             This will default to the zenpack id
                  panelSort: the default property to sort by
@@ -86,6 +90,7 @@ class Component(Template):
         self.zenpack = zenpack
         self.id = KlassExpand(self.zenpack, name)
         self.device = device
+        self.abstract = abstract
         self.panelSort = panelSort
         self.panelSortDirection = panelSortDirection
         if not imports:
@@ -308,6 +313,10 @@ class Component(Template):
         """return True if we should build the Info Class"""
         # TODO improve this method to include scenarios when
         # we are adding one to many non-container relationships etc.
+
+        if self.abstract:
+            return False
+
         if self.device:
             imports = "from Products.Zuul.infos.device import DeviceInfo"
         else:
@@ -324,6 +333,10 @@ class Component(Template):
     def displayIInfo(self):
         """return True if we should build the IInfo Class"""
         name = "Products.Zuul.interfaces"
+
+        if self.abstract:
+            return False
+
         if self.device:
             imports = "from %s import IDeviceInfo" % name
         else:

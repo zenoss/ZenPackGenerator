@@ -44,6 +44,7 @@ class ${shortklass}(#echo ', '.join($klassNames)#):
         )
 
 #end if
+#if not $abstract
     factory_type_information = ({
         'actions': ({
             'id': 'perfConf',
@@ -53,10 +54,14 @@ class ${shortklass}(#echo ', '.join($klassNames)#):
             },),
         },)
 
+#end if
     def device(self):
         '''
         Return device under which this component/device is contained.
         '''
+#if $device
+        return self
+#else
         obj = self
 
         for i in range(200):
@@ -70,8 +75,9 @@ class ${shortklass}(#echo ', '.join($klassNames)#):
                     'Unable to determine parent at %s (%s) '
                     'while getting device for %s' % (
                         obj, exc, self))
+#end if                        
 
-#if not $device
+#if not $device and not $abstract
     def manage_deleteComponent(self, REQUEST=None):
         """
         Delete Component
