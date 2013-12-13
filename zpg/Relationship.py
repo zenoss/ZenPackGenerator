@@ -23,6 +23,8 @@ class Relationship(object):
                  ZenPack,
                  componentA,
                  componentB,
+                 relnameA=None,
+                 relnameB=None,
                  type_=None,
                  contained=True,
                  *args,
@@ -32,6 +34,10 @@ class Relationship(object):
                 ZenPack:  A ZenPack Class instance
                 componentA: Parent component string id
                 componentB: Child component string id
+                relnameA: Name of relationship from parent to child (default is based 
+                          upon componentB)
+                relnameB: Name of relationship from child to parent (default is based 
+                          upon componentA)
                 type_: Relationship type_.  Valid inputs [1-1, 1-M, M-M]
                 contained: ComponentA contains ComponentB True or False
         """
@@ -82,6 +88,13 @@ class Relationship(object):
         self.components = lookup(
             ZenPack, componentA), lookup(ZenPack, componentB)
         self.id = '%s %s' % (self.components[0].id, self.components[1].id)
+
+        if relnameA is None:
+            relnameA = self.relname(lookup(ZenPack, componentB))
+        if relnameB is None:
+            relnameB = self.relname(lookup(ZenPack, componentA))
+
+        self.relnames = (relnameB, relnameA)
 
         # Register the relationship on a zenpack so we can find it later.
         self.ZenPack.registerRelationship(self)
@@ -170,10 +183,14 @@ class Relationship(object):
 
         if self.first(component):
             compA = self.components[1]
+            relnameB = self.relnames[1]
             compB = self.components[0]
+            relnameA = self.relnames[0]
         else:
             compA = self.components[0]
+            relnameB = self.relnames[0]
             compB = self.components[1]
+            relnameA = self.relnames[1]            
 
         if self.contained:
             contained = 'Cont'
@@ -182,23 +199,23 @@ class Relationship(object):
 
         if self.type_ == '1-1':
             direction = 'ToOne(ToOne'
-            return "('{0}', {1}, '{2}', '{3}',)),".format(compA.relname,
+            return "('{0}', {1}, '{2}', '{3}',)),".format(relnameB,
                                                           direction,
                                                           compA.id,
-                                                          compB.relname)
+                                                          relnameA)
         elif self.type_ == '1-M':
             if self.first(component):
                 direction = 'ToMany{0}(ToOne'.format(contained)
-                return "('{0}', {1}, '{2}', '{3}',)),".format(compA.relnames,
+                return "('{0}', {1}, '{2}', '{3}',)),".format(relnameB,
                                                               direction,
                                                               compA.id,
-                                                              compB.relname)
+                                                              relnameA)
             else:
                 direction = 'ToOne(ToMany{0}'.format(contained)
-                return "('{0}', {1}, '{2}', '{3}',)),".format(compA.relname,
+                return "('{0}', {1}, '{2}', '{3}',)),".format(relnameB,
                                                               direction,
                                                               compA.id,
-                                                              compB.relnames)
+                                                              relnameA)
         elif self.type_ == 'M-M':
             if self.first(component):
                 direction = 'ToMany(ToMany{0}'.format(contained)
@@ -206,7 +223,7 @@ class Relationship(object):
             else:
                 direction = 'ToMany{0}(ToMany'.format(contained)
 
-            return "('{0}', {1}, '{2}', '{3}',)),".format(compA.relnames,
+            return "('{0}', {1}, '{2}', '{3}',)),".format(relnameB,
                                                           direction,
                                                           compA.id,
-                                                          compB.relnames)
+                                                          relnameA)
