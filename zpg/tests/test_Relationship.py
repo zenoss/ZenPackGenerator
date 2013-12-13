@@ -92,18 +92,18 @@ class TestRelationship_stringoutput(SimpleSetup):
         c = Component(self.zp, 'Component')
         r = Relationship(self.zp, 'Device', 'Component')
         self.assertEqual(
-            "('components', ToManyCont(ToOne, 'a.b.c.Component', 'device',)),", r.toString(d))
+            "('components', ToManyCont(\n    ToOne, 'a.b.c.Component', 'device',\n)),", r.toString(d))
         self.assertEqual(
-            "('device', ToOne(ToManyCont, 'a.b.c.Device', 'components',)),", r.toString(c))
+            "('device', ToOne(\n    ToManyCont, 'a.b.c.Device', 'components',\n)),", r.toString(c))
 
     def test_returnsOneToMany(self):
         d2 = Component(self.zp, 'Device2')
         c2 = Component(self.zp, 'Component2')
         r2 = Relationship(self.zp, 'Device2', 'Component2', contained=False)
         self.assertEqual(
-            "('component2s', ToMany(ToOne, 'a.b.c.Component2', 'device2',)),", r2.toString(d2))
+            "('component2s', ToMany(\n    ToOne, 'a.b.c.Component2', 'device2',\n)),", r2.toString(d2))
         self.assertEqual(
-            "('device2', ToOne(ToMany, 'a.b.c.Device2', 'component2s',)),", r2.toString(c2))
+            "('device2', ToOne(\n    ToMany, 'a.b.c.Device2', 'component2s',\n)),", r2.toString(c2))
 
     def test_returnsOneToOne(self):
         d3 = Component(self.zp, 'Device3')
@@ -111,18 +111,18 @@ class TestRelationship_stringoutput(SimpleSetup):
         r3 = Relationship(
             self.zp, 'Device3', 'Component3', contained=False, type_='1-1')
         self.assertEqual(
-            "('component3', ToOne(ToOne, 'a.b.c.Component3', 'device3',)),", r3.toString(d3))
+            "('component3', ToOne(\n    ToOne, 'a.b.c.Component3', 'device3',\n)),", r3.toString(d3))
         self.assertEqual(
-            "('device3', ToOne(ToOne, 'a.b.c.Device3', 'component3',)),", r3.toString(c3))
+            "('device3', ToOne(\n    ToOne, 'a.b.c.Device3', 'component3',\n)),", r3.toString(c3))
 
     def test_returnsManyToManyCont(self):
         d4 = Component(self.zp, 'Device4')
         c4 = Component(self.zp, 'Component4')
         r4 = Relationship(self.zp, 'Device4', 'Component4', type_='M-M')
         self.assertEqual(
-            "('component4s', ToMany(ToManyCont, 'a.b.c.Component4', 'device4s',)),", r4.toString(d4))
+            "('component4s', ToMany(\n    ToManyCont, 'a.b.c.Component4', 'device4s',\n)),", r4.toString(d4))
         self.assertEqual(
-            "('device4s', ToManyCont(ToMany, 'a.b.c.Device4', 'component4s',)),", r4.toString(c4))
+            "('device4s', ToManyCont(\n    ToMany, 'a.b.c.Device4', 'component4s',\n)),", r4.toString(c4))
 
     def test_returnsManyToMany(self):
         d5 = Component(self.zp, 'Device5')
@@ -130,9 +130,9 @@ class TestRelationship_stringoutput(SimpleSetup):
         r5 = Relationship(
             self.zp, 'Device5', 'Component5', contained=False, type_='M-M')
         self.assertEqual(
-            "('component5s', ToMany(ToMany, 'a.b.c.Component5', 'device5s',)),", r5.toString(d5))
+            "('component5s', ToMany(\n    ToMany, 'a.b.c.Component5', 'device5s',\n)),", r5.toString(d5))
         self.assertEqual(
-            "('device5s', ToMany(ToMany, 'a.b.c.Device5', 'component5s',)),", r5.toString(c5))
+            "('device5s', ToMany(\n    ToMany, 'a.b.c.Device5', 'component5s',\n)),", r5.toString(c5))
 
 if __name__ == '__main__':
     unittest.main()

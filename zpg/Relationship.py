@@ -197,32 +197,32 @@ class Relationship(object):
             contained = ''
 
         if self.type_ == '1-1':
-            direction = 'ToOne(ToOne'
-            return "('{0}', {1}, '{2}', '{3}',)),".format(relnameB,
-                                                          direction,
-                                                          compA.id,
-                                                          relnameA)
+            direction = 'ToOne(\n    ToOne'
+            return "('{0}', {1}, '{2}', '{3}',\n)),".format(relnameB,
+                                                            direction,
+                                                            compA.id,
+                                                            relnameA)
         elif self.type_ == '1-M':
             if self.first(component):
-                direction = 'ToMany{0}(ToOne'.format(contained)
-                return "('{0}', {1}, '{2}', '{3}',)),".format(relnameB,
-                                                              direction,
-                                                              compA.id,
-                                                              relnameA)
+                direction = 'ToMany{0}(\n    ToOne'.format(contained)
+                return "('{0}', {1}, '{2}', '{3}',\n)),".format(relnameB,
+                                                                direction,
+                                                                compA.id,
+                                                                relnameA)
             else:
-                direction = 'ToOne(ToMany{0}'.format(contained)
-                return "('{0}', {1}, '{2}', '{3}',)),".format(relnameB,
-                                                              direction,
-                                                              compA.id,
-                                                              relnameA)
+                direction = 'ToOne(\n    ToMany{0}'.format(contained)
+                return "('{0}', {1}, '{2}', '{3}',\n)),".format(relnameB,
+                                                                direction,
+                                                                compA.id,
+                                                                relnameA)
         elif self.type_ == 'M-M':
             if self.first(component):
-                direction = 'ToMany(ToMany{0}'.format(contained)
+                direction = 'ToMany(\n    ToMany{0}'.format(contained)
 
             else:
-                direction = 'ToMany{0}(ToMany'.format(contained)
+                direction = 'ToMany{0}(\n    ToMany'.format(contained)
 
-            return "('{0}', {1}, '{2}', '{3}',)),".format(relnameB,
-                                                          direction,
-                                                          compA.id,
-                                                          relnameA)
+            return "('{0}', {1}, '{2}', '{3}',\n)),".format(relnameB,
+                                                            direction,
+                                                            compA.id,
+                                                            relnameA)

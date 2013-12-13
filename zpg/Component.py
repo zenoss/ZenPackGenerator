@@ -302,11 +302,13 @@ class Component(Template):
         rels = Relationship.find(self, first=True, types=['1-M', 'M-M'])
         return rels
 
-    def relationstoArrayofStrings(self):
+    def relationstoArrayofStrings(self, indent=""):
         """return an array of relationship strings"""
         rels = []
         for rel in self.relations():
-            rels.append(rel.toString(self))
+            relString = "\n".join([indent + x for x in
+                        rel.toString(self).split("\n")])
+            rels.append(relString)
         return sorted(rels)
 
     def displayInfo(self):

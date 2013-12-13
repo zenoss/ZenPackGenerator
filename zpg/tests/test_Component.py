@@ -345,7 +345,8 @@ class TestRelationshipsToStrings(SimpleSetup):
         e.addComponentType('Drive')
         self.maxDiff = None
         self.assertEqual(e.relationstoArrayofStrings(), [
-                         "('device', ToOne(ToManyCont, 'a.b.c.d.Device', 'enclosures',)),", "('drives', ToManyCont(ToOne, 'a.b.c.Drive', 'enclosure',)),"])
+                         "('device', ToOne(\n    ToManyCont, 'a.b.c.d.Device', 'enclosures',\n)),",
+                         "('drives', ToManyCont(\n    ToOne, 'a.b.c.Drive', 'enclosure',\n)),"])
 
 
 class TestUpdatedImports(SimpleSetup):

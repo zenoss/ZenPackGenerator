@@ -38,10 +38,10 @@ class ${shortklass}(#echo ', '.join($klassNames)#):
         _relations = _relations + getattr(Klass, '_relations', ())
 
     _relations = _relations + (
-#for $rel in $relationstoArrayofStrings()
-        $rel
+#for $rel in $relationstoArrayofStrings(indent="        ")
+$rel
 #end for
-        )
+    )
 
 #end if
 #if not $abstract
