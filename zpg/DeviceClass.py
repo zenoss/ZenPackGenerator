@@ -110,17 +110,18 @@ class DeviceClass(object):
         '''Return the component types defined inside this deviceClass.
            Including child components.
         '''
-
+ 
         def ComponentFind(child=None):
             components = []
             if child:
-                rels = find(child, first=True)
+                rels = find(child, first=True)                
                 for rel in rels:
                     newchild = rel.child()
                     components.append(newchild)
-                    rval = ComponentFind(newchild)
-                    if rval:
-                        components = components + rval
+                    if newchild != child:
+                        rval = ComponentFind(newchild)
+                        if rval:
+                            components = components + rval
             return components
         components = ComponentFind(self.deviceType)
         return sorted(components)
