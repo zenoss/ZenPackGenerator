@@ -81,7 +81,7 @@ class Relationship(object):
                 componentA = swap
             if type_ is not None:
                 warn(self.logger, yellow(msg) % margs)
-            type_ = '1-M'
+            self.type_ = type_ = '1-M'
 
         lookup = Component.lookup
         self.components = lookup(
@@ -189,7 +189,7 @@ class Relationship(object):
             compA = self.components[0]
             relnameB = self.relnames[0]
             compB = self.components[1]
-            relnameA = self.relnames[1]            
+            relnameA = self.relnames[1]
 
         if self.contained:
             contained = 'Cont'
