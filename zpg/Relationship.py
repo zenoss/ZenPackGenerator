@@ -34,10 +34,10 @@ class Relationship(object):
                 ZenPack:  A ZenPack Class instance
                 componentA: Parent component string id
                 componentB: Child component string id
-                relnameA: Name of relationship from parent to child (default is based 
-                          upon componentB)
-                relnameB: Name of relationship from child to parent (default is based 
-                          upon componentA)
+                relnameA: Name of relationship from parent to child (default is
+                          based upon componentB)
+                relnameB: Name of relationship from child to parent (default is
+                          based upon componentA)
                 type_: Relationship type_.  Valid inputs [1-1, 1-M, M-M]
                 contained: ComponentA contains ComponentB True or False
         """
@@ -69,7 +69,6 @@ class Relationship(object):
                 self.contained = kwargs[key]
             if not do_not_warn:
                 warn(self.logger, yellow(msg) % margs)
-
         if type_ not in self.valid_relationship_types:
             msg = "WARNING: [%s] unknown type: '%s'.  Defaulted to '%s'. "
             layer = "%s:%s" % (self.__class__.__name__, name)

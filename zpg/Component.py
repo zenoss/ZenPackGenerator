@@ -56,9 +56,9 @@ class Component(Template):
                  imports: list of imports for this component [None]
                  meta_type: the component meta_type
                  device: Device Component is True or False [False]
-                 abstract: Component is abstract base class for other components,
-                           not meant to be instantiated directly, and not shown
-                           in the UI [False]
+                 abstract: Component is abstract base class for other
+                           components, not meant to be instantiated directly,
+                           and not shown in the UI [False]
                  namespace: python search namespace [None]
                             This will default to the zenpack id
                  panelSort: the default property to sort by

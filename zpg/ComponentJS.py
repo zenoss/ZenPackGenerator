@@ -48,7 +48,8 @@ class ComponentJS(Template):
         '''Write the component javascript file.'''
 
         # Update the components just before we need them.
-        self.components = [ c for c in self.deviceClass.componentTypes if not c.abstract ]
+        self.components = [c for c in self.deviceClass.componentTypes
+                           if not c.abstract]
         if self.components:
             # Todo property sorting options
             self.processTemplate()
