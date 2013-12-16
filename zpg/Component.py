@@ -381,8 +381,22 @@ class Component(Template):
             del(kwargs['contained'])
         c = Component(self.zenpack, *args, **kwargs)
         self.components[c.id] = c
-        Relationship(self.zenpack, self.id, c.id, type_=type_,
-                     contained=contained)
+
+        # Components are noramlly implicitly made contained by the top-level
+        # device.  This is fine, except when those components are actually
+        # subclasses, for instance of an abstract component type that is also
+        # defined in this zenpack.
+        #
+        # In that case, we only want to put the implicit containment
+        # relationship on "top level" component classes, that is, ones
+        # without a custom "klasses" attribute.
+        #
+        # The subclasses will inherit these relationships, so we don't want to
+        # duplicate them for no reason.
+        if contained and not c.device and "DeviceComponent" in c.klassNames():
+            Relationship(self.zenpack, self.id, c.id, type_=type_,
+                         contained=contained)
+
         return c
 
     def updateImports(self):
