@@ -377,7 +377,7 @@ class Component(Template):
             type_ = kwargs['type_']
             del(kwargs['type_'])
         if 'contained' in kwargs:
-            type_ = kwargs['contained']
+            contained = kwargs['contained']
             del(kwargs['contained'])
         c = Component(self.zenpack, *args, **kwargs)
         self.components[c.id] = c
