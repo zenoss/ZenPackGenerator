@@ -94,10 +94,11 @@ class Component(Template):
         self.panelSort = panelSort
         self.panelSortDirection = panelSortDirection
         if not imports:
+            self.imports = []
             if not device:
-                self.imports = defaults.get('component_imports')
+                self.imports.extend(defaults.get('component_imports'))
             else:
-                self.imports = defaults.get('device_imports')
+                self.imports.extend(defaults.get('device_imports'))
         elif isinstance(imports, basestring):
             self.imports = [imports]
         else:
