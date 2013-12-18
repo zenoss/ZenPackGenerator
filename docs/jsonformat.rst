@@ -333,6 +333,7 @@ Json Options for a Property::
         "names": "PropertyNames",
         "mode": 'w',
         "value": 10,
+        "comment": "sample value for propertyName",
         "detailDisplay": True,
         readonly=True,
         detail_group=None,
@@ -352,6 +353,8 @@ Json Options for a Property::
         * w
     * Defaults to w
 * value: The default Value for a property.
+    * Defaults to None
+* comment: a string to include in a comment with the property declaration in the generated code.
     * Defaults to None
 * detailDisplay: Display the property in the details section.
     * Valid Inputs:

@@ -28,6 +28,7 @@ class Property(object):
                  value=None,
                  type_=None,
                  width=10,
+                 comment=None,
                  detailDisplay=True,
                  gridDisplay=True,
                  sortable=True,
@@ -49,6 +50,8 @@ class Property(object):
                    If a value is set and no type is set the type will be
                    determined from the value'
              width: pixel width of the column in the ui
+             comment: A sample value to insert in the generated code 
+                      (as a comment)
              detailDisplay: Show this property in the details section of
                             the UI [True/False]
              gridDisplay: Show this property in the grid section of the
@@ -60,6 +63,7 @@ class Property(object):
         self.name = name
         self.names = plural(name)
         self.mode = 'w'
+        self.comment = comment
         self.detailDisplay = detailDisplay
         self.gridDisplay = gridDisplay
         self.sortable = True
@@ -191,6 +195,13 @@ class Property(object):
             if not value.endswith('\''):
                 value = value + '\''
         return value
+
+    def to_assignment(self):
+        assignment = "%s = %s" % (self.id, self.quoted_value)        
+        if self.comment:
+            return "%-30s # %s" % (assignment, self.comment)
+        else:
+            return assignment
 
     def to_objects_xml(self):
         o = etree.Element("property")
