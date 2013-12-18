@@ -211,7 +211,7 @@ class Component(Template):
             if len(Klass.split('.')) == 1:
                 results = self.lookup(self.zenpack, Klass, create=False)
                 if results:
-                    Klass = results.id
+                    Klass = '%s.%s' % (results.id, results.shortklass)
                 else:
                     Klass = 'Products.ZenModel.{0}.{0}'.format(Klass)
             classes.append(Klass)

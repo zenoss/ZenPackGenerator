@@ -109,7 +109,7 @@ class TestComponentClasses(SimpleSetup):
     def test_classes_zenpack_namespace(self):
         Component(self.zp, 'Test')
         c = Component(self.zp, 'Component', klasses=['Test'])
-        self.assertEqual(c.klasses, ['a.b.c.Test'])
+        self.assertEqual(c.klasses, ['a.b.c.Test.Test'])
 
     def test_classes_zenpack_outside_namespace(self):
         c = Component(self.zp, 'Component', klasses=['OperatingSystem'])
