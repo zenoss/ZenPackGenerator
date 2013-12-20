@@ -291,14 +291,18 @@ class Component(Template):
             self.imports.append('from %s.utils import %s' %
                                 (self.zenpack.id, ",".join(sorted(imports))))
 
-        # Add an uppercase, singular version of the relationship name for get/set methods.
+        # Add a singular version (srelname) and an uppercase, singular
+        # version (ucrelname)of the relationship name for get/set methods.
         for m in results:
             for c in results[m]:
-                ucrelname = c['relname'][0].upper() + c['relname'][1:]
+                relname = c['relname']
+                ucrelname = relname[0].upper() + relname[1:]
                 if ucrelname.endswith('s'):
                     c['ucrelname'] = ucrelname[:-1]
+                    c['srelname'] = relname[:-1]
                 else:
                     c['ucrelname'] = ucrelname
+                    c['srelname'] = relname
 
         self.updateComponents = results
 

@@ -132,7 +132,7 @@ $rel
         Used by modeling.
         '''
 
-        return sorted([${c.relname}.id for ${c.relname} in self.${c.relname}.objectValuesGen()])
+        return sorted([${c.srelname}.id for ${c.srelname} in self.${c.relname}.objectValuesGen()])
 
     def set${c.ucrelname}Ids(self, ids):
         '''
