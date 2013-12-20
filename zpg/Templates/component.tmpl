@@ -98,7 +98,7 @@ $rel
 #if $key == '1'
 #for $c in $updateComponents['1']
 
-    def get${c.relname}Id(self):
+    def get${c.ucrelname}Id(self):
         '''
         Return ${c.relname} id or None.
 
@@ -108,7 +108,7 @@ $rel
         if obj:
             return obj.id
 
-    def set${c.relname}Id(self, id_):
+    def set${c.ucrelname}Id(self, id_):
         '''
         Set ${c.relname} by id.
 
@@ -117,33 +117,33 @@ $rel
         updateToOne(
             relationship=self.${c.relname},
             root=self.device(),
-            type_='${c.id}',
+            type_='${c.type}',
             id_=id_)
 #end for
 #end if
 #if $key == 'M'
 #for $c in $updateComponents['M']
 
-    def get${c.name}Ids(self):
+    def get${c.ucrelname}Ids(self):
         '''
-        Return a sorted list of each ${c.relname} id related to this
+        Return a sorted list of each id from the ${c.relname} relationship
         Aggregate.
 
         Used by modeling.
         '''
 
-        return sorted([${c.relname}.id for ${c.relname} in self.${c.relnames}.objectValuesGen()])
+        return sorted([${c.relname}.id for ${c.relname} in self.${c.relname}.objectValuesGen()])
 
-    def set${c.name}Ids(self, ids):
+    def set${c.ucrelname}Ids(self, ids):
         '''
-        Update ${c.name} relationship given ids.
+        Update ${c.relname} relationship given ids.
 
         Used by modeling.
         '''
         updateToMany(
-            relationship=self.${c.relnames},
+            relationship=self.${c.relname},
             root=self.device(),
-            type_='${c.id}',
+            type_='${c.type}',
             ids=ids)
 #end for
 #end if

@@ -269,15 +269,19 @@ class Component(Template):
         rels = Relationship.find(self, contained=False)
         for rel in rels:
             if rel.components[0].id != self.id:
+                relname = rel.relnames[0]                
                 component = rel.components[0]
                 type_ = rel.type_.split('-')[0]
             else:
+                relname = rel.relnames[1]
                 component = rel.components[1]
                 type_ = rel.type_.split('-')[1]
             if type_ in results:
-                results[type_].append(component)
+                results[type_].append({'relname': relname,
+                                       'type': component.id})
             else:
-                results[type_] = [component]
+                results[type_] = [{'relname': relname,
+                                   'type': component.id}]
         imports = []
         if '1' in results:
             imports.append('updateToOne')
@@ -286,6 +290,16 @@ class Component(Template):
         if results:
             self.imports.append('from %s.utils import %s' %
                                 (self.zenpack.id, ",".join(sorted(imports))))
+
+        # Add an uppercase, singular version of the relationship name for get/set methods.
+        for m in results:
+            for c in results[m]:
+                ucrelname = c['relname'][0].upper() + c['relname'][1:]
+                if ucrelname.endswith('s'):
+                    c['ucrelname'] = ucrelname[:-1]
+                else:
+                    c['ucrelname'] = ucrelname
+
         self.updateComponents = results
 
     def dropdowncomponents(self):
