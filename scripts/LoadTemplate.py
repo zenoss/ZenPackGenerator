@@ -342,6 +342,7 @@ def add_threshold(dmd, device_class, template, id_, cfg):
 
 class ImportTemplate(ZenScriptBase):
 
+
     def buildOptions(self):
         ZenScriptBase.buildOptions(self)
         self.parser.add_option("-z", "--zenpack", dest="zenpack",
@@ -364,20 +365,24 @@ class ImportTemplate(ZenScriptBase):
                 print "%s is not a valid Zenpack. Exiting...." % self.options.zenpack
                 sys.exit(1)
 
+
         if not self.options.ftype:
             print "Missing file Type"
             print self.parser.get_usage()
             sys.exit(1)
 
         if not self.args:
-            print "Missing Output File"
+            print "Missing Input File"
             print self.parser.get_usage()
             sys.exit(1)
 
-        if (self.options.ftype == json):
+
+        print " Filetype: ", self.options.ftype
+
+        if (self.options.ftype == "json"):
             print "Reading Templates from %s" % self.args[0]
             JSONFileToTemplates(self.dmd, self.args[0], self.zenpack)
-        elif (self.options.ftype == yaml):
+        elif (self.options.ftype == "yaml"):
             print "Reading Templates from %s" % self.args[0]
             YAMLFileToTemplates(self.dmd, self.args[0], self.zenpack)
                
