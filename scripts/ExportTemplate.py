@@ -128,7 +128,7 @@ class ExportTemplate(ZenScriptBase):
 
     def buildOptions(self):
         ZenScriptBase.buildOptions(self)
-        self.parser.add_option("-f", "--file", dest="filename",
+        self.parser.add_option("-o", "--output", dest="outfile",
                                help="Output file", metavar="FILE")
         self.parser.add_option("-t", "--type", dest="ftype",
                 help="Output type: yaml or json", metavar="TYPE")
@@ -142,7 +142,7 @@ class ExportTemplate(ZenScriptBase):
             print "Required option Type is missing. Exiting..."
 
             sys.exit(1)
-        if not self.options.filename:
+        if not self.options.outfile:
             print "Required option output file is missing. Exiting..."
             sys.exit(1)
 
@@ -179,7 +179,7 @@ class ExportTemplate(ZenScriptBase):
                 rrdTemplates.append(packable)
         TemplatesToFile(self.dmd, 
                             rrdTemplates, 
-                            self.options.filename,
+                            self.options.outfile,
                             self.options.ftype)
 
 if __name__ == "__main__":
