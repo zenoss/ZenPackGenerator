@@ -67,7 +67,7 @@ class Template(object):
         self.findTemplate()
         self.cacheTemplate()
         with open(self.tfile, 'r') as tf:
-            t = cTemplate(file=tf, searchList=[self])
+            t = cTemplate(file=tf, searchList=[self, {'obj': self}])
         # print t.respond()
         dfile = os.path.join(self.base_destdir, self.dest_file)
 

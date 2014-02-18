@@ -79,6 +79,7 @@ class ${zenpack.prepname}_${c.shortklass}RelationsProvider(BaseRelationsProvider
 #for $impactedBy in $c.impactedBy
         # Impacted by ${impactedBy.shortklass}
 #if $c.impactedBySingle($impactedBy)
+XXX FIX
         obj = self._object.${impactedBy.relname}()
         if obj:
             yield ImpactEdge(GUID(obj), my_guid, RP)

@@ -24,8 +24,8 @@ class ComponentJS(Template):
         self.zenpack = self.deviceClass.zenpack
         self.zPythonClass = self.deviceClass.zPythonClass
         # self.ConfigureComponent = self.zPythonClass
-        self.ConfigureComponent = "%s.%s" % (
-           self.zPythonClass, self.zPythonClass.split('.')[-1])
+        self.ConfigureComponent = "%s.%s" % (self.zPythonClass,
+                                             self.zPythonClass.split('.')[-1])
 
         self.source_template = 'component.js.tmpl'
         self.dest_file = "%s/resources/js/%s.js" % (
@@ -48,8 +48,8 @@ class ComponentJS(Template):
         '''Write the component javascript file.'''
 
         # Update the components just before we need them.
-        self.components = [c for c in self.deviceClass.componentTypes
-                           if not c.abstract]
+        self.components = [c for c in self.deviceClass.componentTypes]
+
         if self.components:
             # Todo property sorting options
             self.processTemplate()

@@ -33,7 +33,7 @@ productNames = (
 # Define new device relations.
 NEW_DEVICE_RELATIONS = (
 #for $c in $devChildren.keys
-    ('$devChildren[$c].relname($c)', '${c.unique_name}'),
+    ('$devChildren[$c].relname_from_component($c)', '${c.unique_name}'),
 #end for
     )
 

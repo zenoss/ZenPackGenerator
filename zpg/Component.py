@@ -109,8 +109,7 @@ class Component(Template):
         else:
             self.namespace = self.zenpack.namespace
         self.shortklass = self.id.split('.')[-1]
-        self.relname = self.shortklass.lower()
-        self.relnames = plural(self.relname)
+        self.shortklassplural = plural(self.shortklass)
         self.unique_name = meta_type
         self.dest_file = "%s/%s.py" % (zpDir(zenpack), self.shortklass)
         if not klasses:
@@ -226,6 +225,21 @@ class Component(Template):
         """short version of the classes in an array."""
         return [c.split('.')[-1] for c in self.klasses]
 
+    def parent_components(self):
+        """Finds parent component objects, based on the classes listed in
+        self.klasses"""
+
+        parents = []
+        for klass in self.klasses:
+            class_id = '.'.join(klass.split('.')[:-1])
+            parent = self.lookup(self.zenpack, class_id, create=False)
+
+            if parent:
+                parents.append(parent)
+                parents.extend(parent.parent_components())
+
+        return parents
+
     def addProperty(self, *args, **kwargs):
         prop = Property(*args, **kwargs)
         self.properties[prop.id] = prop
@@ -239,19 +253,25 @@ class Component(Template):
         """for non-contained child components return a dict
            {Type: component, parent component of the parent components}
         """
-        custompaths = {}
+        custompaths = []
         rels = Relationship.find(self, contained=False, first=False)
+
         for rel in rels:
             for component in rel.components:
                 if component == self:
                     continue
                 prel = Relationship.find(
-                    component, contained=True, first=False)
+                    component, contained=True, first=False, inherited=True)
+
                 if prel:
                     prel = prel[0]
-                    if not rel.type_ in custompaths.keys():
-                        custompaths[rel.type_] = [
-                            (component, prel.components[0])]
+                    custompaths.append(
+                        (component,
+                         rel.relname_from_component(component),
+                         prel.components[0],
+                         prel.relname_from_component(prel.components[0])
+                         ))
+
         if custompaths:
             imports = "from Products.Zuul.catalog.paths "
             imports += "import DefaultPathReporter, relPath"
@@ -260,6 +280,7 @@ class Component(Template):
             paths = "Products.Zuul.catalog.paths"
             imports = "from %s import DefaultPathReporter, relPath" % paths
             self.imports.append(imports)
+
         return custompaths
 
     def findUpdateComponents(self):
@@ -269,13 +290,13 @@ class Component(Template):
         rels = Relationship.find(self, contained=False)
         for rel in rels:
             if rel.components[0].id != self.id:
-                relname = rel.relnames[0]                
                 component = rel.components[0]
                 type_ = rel.type_.split('-')[0]
             else:
-                relname = rel.relnames[1]
                 component = rel.components[1]
                 type_ = rel.type_.split('-')[1]
+            relname = rel.relname_to_component(component)
+
             if type_ in results:
                 results[type_].append({'relname': relname,
                                        'type': component.id})
@@ -310,10 +331,9 @@ class Component(Template):
         """return the component objects that this should contain a
         dropdown link to this component."""
         results = []
-        custompaths = self.custompaths()
-        for values in custompaths.values():
-            for path in values:
-                results.append(path[0])
+        for path in self.custompaths():
+            results.append(path[0])
+
         return results
 
     def ManyRelationships(self):

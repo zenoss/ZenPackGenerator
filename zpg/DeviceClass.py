@@ -108,9 +108,8 @@ class DeviceClass(object):
     @property
     def componentTypes(self):
         '''Return the component types defined inside this deviceClass.
-           Including child components.
+           Including child components and their subclasses.
         '''
-
         def ComponentFind(child=None):
             components = []
             if child:
@@ -124,4 +123,12 @@ class DeviceClass(object):
                             components = components + rval
             return components
         components = ComponentFind(self.deviceType)
+        component_ids = [c.id for c in components]
+
+        # add any subclasses of these components as well.
+        for c in self.zenpack.components.values():
+            for pc in c.parent_components():
+                if pc.id in component_ids:
+                    components.append(c)
+
         return sorted(components)

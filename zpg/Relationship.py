@@ -10,7 +10,11 @@
 
 import logging
 
+import inflect
+
 from .colors import error, warn, debug, info, green, red, yellow
+
+plural = inflect.engine().plural
 
 
 class Relationship(object):
@@ -86,14 +90,16 @@ class Relationship(object):
         lookup = Component.lookup
         self.components = lookup(
             ZenPack, componentA), lookup(ZenPack, componentB)
-        self.id = '%s %s' % (self.components[0].id, self.components[1].id)
+        self.custom_relnames = (relnameA, relnameB)
 
-        if relnameA is None:
-            relnameA = self.relname(lookup(ZenPack, componentB))
-        if relnameB is None:
-            relnameB = self.relname(lookup(ZenPack, componentA))
+        # self.id = '%s[%s] <-> %s[%s]' % (
+        #     self.components[0].id,
+        #     self.relname_from_component(self.components[0]),
+        #     self.components[1].id,
+        #     self.relname_from_component(self.components[1]))
 
-        self.relnames = (relnameB, relnameA)
+        self.id = '%s %s' % (self.components[0].id,
+                             self.components[1].id)
 
         # Register the relationship on a zenpack so we can find it later.
         self.ZenPack.registerRelationship(self)
@@ -115,12 +121,15 @@ class Relationship(object):
         return False
 
     @classmethod
-    def find(self, component, contained=None, first=None, types=None):
+    def find(self, component, contained=None, inherited=False, first=None,
+             types=None):
         '''return all the relationships that match the input request.
 
            Args:
               component: A parent or child component in this relationship
               contained: True/False containment relationship
+              inherited: (False) find inherited relationships (parent klasses)
+                         as well as those defined directly for this component
               first: True/False  True if we are searching for the Parent
                                  Component in the relationship.
 
@@ -130,24 +139,31 @@ class Relationship(object):
                      M-M: Many to Many
         '''
 
+        # Search includes relationships inherited from parent components
+        # as well.
+        components = [component]
+        if inherited:
+            components.extend(component.parent_components())
+
         rels = []
         for rel in Relationship.relationships.values():
-            if rel.hasComponent(component):
-                if not contained is None:
-                    if not rel.contained == contained:
-                        continue
-                if not first is None:
-                    if not rel.first(component) == first:
-                        continue
-                if not types is None:
-                    if isinstance(types, basestring):
-                        if rel.type_ == types:
+            for component in components:
+                if rel.hasComponent(component):
+                    if not contained is None:
+                        if not rel.contained == contained:
                             continue
-                    else:
-                        if not rel.type_ in types:
+                    if not first is None:
+                        if not rel.first(component) == first:
                             continue
+                    if not types is None:
+                        if isinstance(types, basestring):
+                            if rel.type_ == types:
+                                continue
+                        else:
+                            if not rel.type_ in types:
+                                continue
 
-                rels.append(rel)
+                    rels.append(rel)
         return sorted(rels)
 
     def first(self, component):
@@ -156,40 +172,74 @@ class Relationship(object):
             return True
         return False
 
+    def parent(self):
+        '''Return the parent component.'''
+        return self.components[0]
+
     def child(self):
         '''Return the child component.'''
         return self.components[1]
 
-    def relname(self, component):
+    def other_component(self, component):
+        '''Given a component that is part of the relationship, return the
+        other one'''
+        if self.components[0] == component:
+            return self.components[1]
+        else:
+            return self.components[0]
+
+    def default_relname_from_component(self, component):
         '''Return the singular or plural form of the relname based on the
-        component as the frame of reference'''
+        component as the frame of reference (that is, the relationship as
+        seen from that component toward the other one)'''
 
         typeTuple = self.type_.split('-')
+        other_component = self.other_component(component)
 
-        if self.first(component):
+        if self.first(other_component):
             type_ = typeTuple[0]
         else:
             type_ = typeTuple[1]
 
         if type_ == '1':
-            return component.relname
+            return other_component.shortklass.lower()
         else:
-            return component.relnames
+            return plural(other_component.shortklass.lower())
+
+    def relname_from_component(self, component):
+        '''Return the proper relname based on the component as the frame
+        of reference (that is, the relationship as seen from that
+        component toward the other one)'''
+
+        if not self.hasComponent(component):
+            raise ValueError('Relationship %s does not have component %s' %
+                            (self, component))
+
+        if self.first(component):
+            if self.custom_relnames[0] is not None:
+                return self.custom_relnames[0]
+        else:
+            if self.custom_relnames[1] is not None:
+                return self.custom_relnames[1]
+
+        return self.default_relname_from_component(component)
+
+    def relname_to_component(self, component):
+        '''Return the proper relname based on the component as the frame
+        of reference (that is, the relationship as seen to that component
+        from the other one)'''
+
+        return(self.relname_from_component(self.other_component(component)))
 
     def toString(self, component):
         '''Write the relationship into a string format based on the component
            as a frame of reference. This is a 3.X and 4.X string format.'''
 
-        if self.first(component):
-            compA = self.components[1]
-            relnameB = self.relnames[1]
-            compB = self.components[0]
-            relnameA = self.relnames[0]
-        else:
-            compA = self.components[0]
-            relnameB = self.relnames[0]
-            compB = self.components[1]
-            relnameA = self.relnames[1]
+        compA = component
+        compB = self.other_component(component)
+
+        relnameA = self.relname_from_component(compA)
+        relnameB = self.relname_from_component(compB)
 
         if self.contained:
             contained = 'Cont'
@@ -198,23 +248,23 @@ class Relationship(object):
 
         if self.type_ == '1-1':
             direction = 'ToOne(\n    ToOne'
-            return "('{0}', {1}, '{2}', '{3}',\n)),".format(relnameB,
+            return "('{0}', {1}, '{2}', '{3}',\n)),".format(relnameA,
                                                             direction,
-                                                            compA.id,
-                                                            relnameA)
+                                                            compB.id,
+                                                            relnameB)
         elif self.type_ == '1-M':
             if self.first(component):
                 direction = 'ToMany{0}(\n    ToOne'.format(contained)
-                return "('{0}', {1}, '{2}', '{3}',\n)),".format(relnameB,
+                return "('{0}', {1}, '{2}', '{3}',\n)),".format(relnameA,
                                                                 direction,
-                                                                compA.id,
-                                                                relnameA)
+                                                                compB.id,
+                                                                relnameB)
             else:
                 direction = 'ToOne(\n    ToMany{0}'.format(contained)
-                return "('{0}', {1}, '{2}', '{3}',\n)),".format(relnameB,
+                return "('{0}', {1}, '{2}', '{3}',\n)),".format(relnameA,
                                                                 direction,
-                                                                compA.id,
-                                                                relnameA)
+                                                                compB.id,
+                                                                relnameB)
         elif self.type_ == 'M-M':
             if self.first(component):
                 direction = 'ToMany(\n    ToMany{0}'.format(contained)
@@ -222,7 +272,7 @@ class Relationship(object):
             else:
                 direction = 'ToMany{0}(\n    ToMany'.format(contained)
 
-            return "('{0}', {1}, '{2}', '{3}',\n)),".format(relnameB,
+            return "('{0}', {1}, '{2}', '{3}',\n)),".format(relnameA,
                                                             direction,
-                                                            compA.id,
-                                                            relnameA)
+                                                            compB.id,
+                                                            relnameB)

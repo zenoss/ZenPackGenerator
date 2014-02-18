@@ -46,6 +46,7 @@ class Opts(object):
     def __init__(self):
         self.skip = False
         self.dest = os.getcwd()
+        self.git = True
 
 
 class ZenPack(object):

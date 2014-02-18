@@ -34,6 +34,7 @@ Ext.apply(Zenoss.render, {
 });
 
 #for $c in $components
+#if not $c.abstract 
 ZC.${c.unique_name}Panel = Ext.extend(ZC.ComponentGridPanel, {
     constructor: function(config) {
         config = Ext.applyIf(config||{}, {
@@ -113,7 +114,7 @@ Ext.reg('${c.unique_name}Panel', ZC.${c.unique_name}Panel);
 
 #if $c.dropdowncomponents
 Zenoss.nav.appendTo('Component', [{
-    id: 'component_${c.relnames}',
+    id: 'component_${c.shortklassplural}',
     text: _t('${c.names}'),
     xtype: '${c.unique_name}Panel',
     subComponentGridPanel: true,
@@ -130,6 +131,7 @@ Zenoss.nav.appendTo('Component', [{
     }
 }]);
 
+#end if
 #end if
 #end for
 

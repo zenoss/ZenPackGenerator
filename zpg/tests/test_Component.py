@@ -266,14 +266,13 @@ class TestCustomPaths(SimpleSetup):
         Relationship(self.zp, 'Enclosure',
                      'Blade', type_='1-M', contained=False)
 
-        self.assertEqual(
-            [c.id for c in f.custompaths(
-            )['1-M'][0]], ['%s.Enclosure' % DEFAULT_NAME,
-                           '%s.d.Device' % DEFAULT_NAME])
-        self.assertEqual(
-            [c.id for c in b.custompaths(
-            )['1-M'][0]], ['%s.Enclosure' % DEFAULT_NAME,
-                           '%s.d.Device' % DEFAULT_NAME])
+        fcp = f.custompaths()[0]
+        self.assertEqual(fcp[0].id, '%s.Enclosure' % DEFAULT_NAME)
+        self.assertEqual(fcp[2].id, '%s.d.Device' % DEFAULT_NAME)
+
+        bcp = b.custompaths()[0]
+        self.assertEqual(bcp[0].id, '%s.Enclosure' % DEFAULT_NAME)
+        self.assertEqual(bcp[2].id, '%s.d.Device' % DEFAULT_NAME)
 
 
 class TestDropDownComponents(SimpleSetup):

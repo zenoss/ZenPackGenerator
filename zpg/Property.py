@@ -50,7 +50,7 @@ class Property(object):
                    If a value is set and no type is set the type will be
                    determined from the value'
              width: pixel width of the column in the ui
-             comment: A sample value to insert in the generated code 
+             comment: A sample value to insert in the generated code
                       (as a comment)
              detailDisplay: Show this property in the details section of
                             the UI [True/False]
@@ -197,7 +197,7 @@ class Property(object):
         return value
 
     def to_assignment(self):
-        assignment = "%s = %s" % (self.id, self.quoted_value)        
+        assignment = "%s = %s" % (self.id, self.quoted_value)
         if self.comment:
             return "%-30s # %s" % (assignment, self.comment)
         else:
