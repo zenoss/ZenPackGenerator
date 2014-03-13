@@ -254,7 +254,7 @@ class Component(Template):
            {Type: component, parent component of the parent components}
         """
         custompaths = []
-        rels = Relationship.find(self, contained=False, first=False)
+        rels = Relationship.find(self, contained=False)
 
         for rel in rels:
             for component in rel.components:
