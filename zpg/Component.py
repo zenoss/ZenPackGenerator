@@ -265,11 +265,13 @@ class Component(Template):
 
                 if prel:
                     prel = prel[0]
+                    parent = prel.parent()
+
                     custompaths.append(
                         (component,
-                         rel.relname_from_component(component),
+                         rel.relname_from_component(self),
                          prel.components[0],
-                         prel.relname_from_component(prel.components[0])
+                         prel.relname_to_component(parent)
                          ))
 
         if custompaths:
